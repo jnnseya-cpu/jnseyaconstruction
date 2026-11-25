@@ -39,7 +39,6 @@ for (const p of all) {
       titles.set(title, p);
       await page.addScriptTag({ content: axeSource });
       const result = await page.evaluate(async () =>
-        // eslint-disable-next-line no-undef
         axe.run(document, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"] } }),
       );
       for (const v of result.violations.filter((v) => ["serious", "critical"].includes(v.impact)))
