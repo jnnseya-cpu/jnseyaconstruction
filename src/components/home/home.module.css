@@ -1,0 +1,53 @@
+/* Hero */
+.heroGrid { display: grid; gap: 32px; align-items: center; }
+@media (min-width: 960px) { .heroGrid { grid-template-columns: 6fr 6fr; gap: 48px; } }
+.heroDrawing { max-width: 560px; }
+@media (max-width: 959px) { .heroDrawing { max-width: 420px; } }
+
+/* Company cards */
+.companyGrid { list-style: none; padding: 0; margin: 0; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+.companyGrid > li { margin: 0; }
+.companyCard h3 { font-size: 1.5rem; }
+.cardLink { color: var(--ink); text-decoration: none; }
+.cardLink:hover { text-decoration: underline; }
+.companyCard :global(.link-arrow) { color: var(--accent-text); }
+.miniList { list-style: none; padding: 0; margin: 6px 0 0; border-top: 1px solid var(--line); }
+.miniList li { margin: 0; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: var(--fs-small); color: var(--ink-2); font-family: var(--font-sans); }
+.above { position: relative; z-index: 2; display: inline-flex; }
+.foot { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+
+/* Intro split */
+.split { display: grid; gap: 32px; }
+@media (min-width: 900px) { .split { grid-template-columns: 4fr 8fr; gap: 56px; } }
+
+/* Who we work for */
+.clients { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); border-top: 2px solid var(--navy); }
+.clients li { margin: 0; padding: 20px 20px 20px 0; border-bottom: 1px solid var(--line); }
+@media (min-width: 900px) { .clients li + li { padding-left: 20px; border-left: 1px solid var(--line); } }
+.clients h3 { font-size: 1.125rem; margin: 8px 0 6px; }
+.clients p { font-size: var(--fs-small); color: var(--ink-2); margin: 0 0 10px; }
+.clientCode { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-2); letter-spacing: 0.06em; }
+.dots { display: flex; gap: 6px; flex-wrap: wrap; }
+.dots span { font-family: var(--font-mono); font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 6px; border-left: 3px solid var(--accent); background: var(--white); }
+
+/* Facts */
+.facts { display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+
+/* Two audiences */
+.audiences { display: grid; gap: 0; }
+@media (min-width: 900px) { .audiences { grid-template-columns: 1fr 1fr; } }
+.aud { padding: clamp(32px, 5vw, 56px); }
+.audCareers { background: var(--concrete-2); border: 1px solid var(--line); }
+.audSuppliers { background: var(--navy); color: var(--white); }
+.audSuppliers p, .audSuppliers li { color: rgba(255,255,255,0.86); }
+.audSuppliers :global(.label) { color: var(--accent-on-dark); }
+.checks { list-style: none; padding: 0; margin: 0 0 24px; }
+.checks li { padding-left: 26px; position: relative; margin-bottom: 8px; }
+.checks li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 12px; height: 6px; border-left: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(-45deg); }
+.audSuppliers .checks li::before { border-color: var(--accent-on-dark); }
+
+/* Start statement */
+.statement { border: 1px solid var(--line); padding: clamp(24px, 4vw, 40px); background: var(--white); position: relative; }
+.statement::before { content: "NOTE 01"; position: absolute; top: -10px; left: 20px; background: var(--white); padding: 0 8px; font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; color: var(--ink-2); }
+/* Works around .start-8 losing its span in globals.css */
+@media (min-width: 900px) { .rightCol { grid-column: 8 / span 5 !important; } }
