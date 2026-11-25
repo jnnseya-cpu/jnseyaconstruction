@@ -491,3 +491,8 @@ p a, li a, dd a, .newsletter__consent a, .choice a { text-decoration: underline;
 .site-footer li a, .breadcrumb a, .switcher a { display: inline-block; min-height: 24px; padding-block: 2px; }
 .skip-link { min-height: 44px; }
 .hero a:not(.btn), .cta-band a:not(.btn) { color: var(--accent-on-dark); }
+
+/* Group logo (supplied artwork, public/brand) */
+.brand__mark { width: auto; height: 40px; flex-shrink: 0; transition: height 0.2s var(--ease); }
+.site-header[data-scrolled="true"] .brand__mark { height: 32px; }
+.brand__logo { width: 220px; height: auto; }

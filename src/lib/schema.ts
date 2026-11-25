@@ -20,7 +20,7 @@ export function organizationSchema() {
       name: group.name,
       legalName: groupLegalEntity.legalName,
       url,
-      logo: `${url}/icon.svg`,
+      logo: `${url}/brand/nseya-group-logo.png`,
       identifier: { "@type": "PropertyValue", propertyID: "Companies House company number", value: groupLegalEntity.companyNumber },
       address,
       sameAs: [group.etablixUrl],
@@ -77,7 +77,7 @@ export function jobPostingSchema(v: Vacancy, description: string) {
     datePosted: v.postedDate,
     validThrough: closingInstant(v.closingDate).toISOString(),
     employmentType: employmentType[v.contractType],
-    hiringOrganization: { "@type": "Organization", name: v.employer, sameAs: siteUrl(), logo: `${siteUrl()}/icon.svg` },
+    hiringOrganization: { "@type": "Organization", name: v.employer, sameAs: siteUrl(), logo: `${siteUrl()}/brand/nseya-group-logo.png` },
     jobLocation: { "@type": "Place", address: { ...address, streetAddress: undefined, addressLocality: v.location } },
     baseSalary: {
       "@type": "MonetaryAmount",

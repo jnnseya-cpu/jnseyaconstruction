@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { HexMark } from "./Logo";
+import Image from "next/image";
 
 type CompanyKey = "group" | "consultancy" | "etablix" | "construction";
 
@@ -85,7 +85,7 @@ export function Header() {
       <header className="site-header" data-company={company} data-scrolled={scrolled}>
         <div className="container site-header__inner">
           <Link href="/" className="brand">
-            <HexMark />
+            <Image src="/brand/nseya-group-mark-on-dark.png" alt="" width={256} height={327} priority className="brand__mark" />
             <span className="brand__text">
               <span className="brand__name">Nseya Group</span>
               <span className="brand__sub">Construction</span>

@@ -19,7 +19,6 @@ export const metadata: Metadata = {
   title: { default: "Nseya Group Construction", template: "%s | Nseya Group" },
   description: "Birmingham construction group: Nseya Consultancy, ETABLIX site services and Nseya Construction. Trading from 2027.",
   openGraph: { siteName: "Nseya Group Construction", locale: "en_GB", type: "website" },
-  icons: { icon: "/icon.svg" },
 };
 
 export const viewport: Viewport = { themeColor: "#0e2a3b", width: "device-width", initialScale: 1 };

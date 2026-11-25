@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getLegalEntity } from "@/lib/cms";
 import { contact } from "@/content/settings";
 import type { CompanyId } from "@/content/types";
-import { HexMark } from "./Logo";
+import Image from "next/image";
 import { NewsletterForm } from "./forms/NewsletterForm";
 
 /** Legal-entity block: mandatory on every page (Companies Act 2006, section 3 of the spec). */
@@ -70,11 +70,7 @@ export function Footer() {
         <div className="site-footer__top">
           <div>
             <Link href="/" className="brand">
-              <HexMark />
-              <span className="brand__text">
-                <span className="brand__name">Nseya Group</span>
-                <span className="brand__sub">Construction</span>
-              </span>
+              <Image src="/brand/nseya-group-logo-on-dark.png" alt="Nseya Group Construction, home" width={1200} height={447} className="brand__logo" sizes="220px" />
             </Link>
             <p style={{ marginTop: 16 }}>Birmingham, West Midlands.</p>
             {contact.email && (

@@ -116,18 +116,17 @@ async function fontFace(weight, family, pkg) {
 }
 
 function html(c, fonts, site) {
-  const hex = `<svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,2 36,11 36,29 20,38 4,29 4,11" fill="none" stroke="${c.accent}" stroke-width="2.5"/>${
-    c.mark === "N" ? `<path d="M13 28V12l14 16V12" fill="none" stroke="#fff" stroke-width="3"/>` : `<path d="M27 12H14v16h13M14 20h11" fill="none" stroke="#fff" stroke-width="3"/>`
-  }</svg>`;
+  // Group mark until each company's own logo file is supplied (then set `logo` on the company).
+  const hex = `<img src="data:image/png;base64,${readFileSync("public/brand/nseya-group-mark-on-dark.png").toString("base64")}" alt="" style="height:10mm;width:auto">`;
   return `<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><title>${esc(c.name)} capability statement</title><style>
 ${fonts}
 @page{size:A4;margin:0}
 *{box-sizing:border-box}
-body{margin:0;font-family:"IBM Plex Sans",sans-serif;color:#0E2A3B;font-size:10pt;line-height:1.5;font-variant-numeric:tabular-nums}
+body{margin:0;font-family:"IBM Plex Sans",sans-serif;color:#0E2A3B;font-size:10pt;line-height:1.42;font-variant-numeric:tabular-nums}
 .page{width:210mm;height:297mm;position:relative;overflow:hidden;page-break-after:always}
 .page:last-child{page-break-after:auto}
 .mono{font-family:"IBM Plex Mono",monospace}
-header{background:#0E2A3B;color:#fff;padding:13mm 16mm 10mm;position:relative;
+header{background:#0E2A3B;color:#fff;padding:10mm 16mm 8mm;position:relative;
 background-image:linear-gradient(to right,rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.05) 1px,transparent 1px);background-size:8mm 8mm}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2mm;background:${c.accent}}
 .brand{display:flex;align-items:center;gap:4mm}
@@ -137,18 +136,18 @@ header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2mm;ba
 h1{font-size:26pt;line-height:1.05;margin:2mm 0 3mm;font-weight:600;letter-spacing:-.01em}
 .intro{font-size:11pt;max-width:150mm;color:rgba(255,255,255,.88);margin:0}
 .meta{display:flex;gap:8mm;margin-top:5mm;font-family:"IBM Plex Mono",monospace;font-size:7.5pt;letter-spacing:.06em;text-transform:uppercase;opacity:.8}
-main{padding:8mm 16mm 0}
+main{padding:6mm 16mm 0}
 h2{font-size:13pt;margin:0 0 4mm;font-weight:600}
 h2 .label{display:block;color:${c.accentText};margin-bottom:1mm}
 .svc{display:grid;grid-template-columns:1fr 1fr;gap:0 8mm;border-top:.6mm solid #0E2A3B}
-.svc div{border-bottom:.25mm solid #C9CED2;padding:2.4mm 0}
+.svc div{border-bottom:.25mm solid #C9CED2;padding:1.9mm 0}
 .svc b{display:block;font-size:10.5pt;font-weight:600}
 .svc span{color:#47535B;font-size:9pt}
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:10mm;margin-top:7mm}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10mm;margin-top:5mm}
 ul{margin:0;padding-left:4.5mm}li{margin-bottom:1.5mm}
 .tags{display:flex;flex-wrap:wrap;gap:2mm}
 .tags span{font-family:"IBM Plex Mono",monospace;font-size:7.5pt;text-transform:uppercase;letter-spacing:.04em;border:.25mm solid #47535B;padding:.8mm 2mm;color:#47535B}
-.box{border-left:1mm solid ${c.accent};background:#F3F4F5;padding:3.5mm 5mm;margin-top:7mm;font-size:9pt}
+.box{border-left:1mm solid ${c.accent};background:#F3F4F5;padding:3mm 5mm;margin-top:5mm;font-size:9pt}
 .box p{margin:0 0 1.5mm}
 footer{position:absolute;left:16mm;right:16mm;bottom:9mm;background:#fff;border-top:.25mm solid #C9CED2;padding-top:3mm;display:grid;grid-template-columns:1fr auto;gap:6mm;font-size:7pt;color:#47535B}
 .tb{border:.3mm solid #0E2A3B;font-family:"IBM Plex Mono",monospace;font-size:6.5pt;padding:1.5mm 2.5mm;text-transform:uppercase;letter-spacing:.05em;color:#0E2A3B;text-align:right}
@@ -156,7 +155,7 @@ footer{position:absolute;left:16mm;right:16mm;bottom:9mm;background:#fff;border-
 <section class="page">
 <header>
 <div class="brand">${c.logo ? `<img src="data:image/png;base64,${readFileSync(c.logo).toString("base64")}" alt="${esc(c.name)}" style="height:15mm;width:auto"><div><small>A Nseya Group Construction company</small></div>` : `${hex}<div><small>Nseya Group Construction</small><b>${esc(c.name)}</b></div>`}</div>
-<p class="label" style="margin-top:9mm">Capability statement</p>
+<p class="label" style="margin-top:7mm">Capability statement</p>
 <h1>${esc(c.name)}</h1>
 <p class="intro">${esc(c.intro)}</p>
 <div class="meta"><span>Birmingham, West Midlands</span><span>Trading from 2027</span><span>${EDITION}</span></div>
@@ -193,6 +192,13 @@ try {
   const page = await browser.newPage();
   for (const [id, c] of Object.entries(COMPANIES)) {
     await page.setContent(html(c, fonts, site), { waitUntil: "load" });
+    // The statement is one A4 page: stop if the content runs into the footer.
+    const overlap = await page.evaluate(() => {
+      const footer = document.querySelector("footer").getBoundingClientRect().top;
+      const last = Math.max(...[...document.querySelectorAll("main *")].map((e) => e.getBoundingClientRect().bottom));
+      return last - footer;
+    });
+    if (overlap > 0) throw new Error(`${c.name}: content runs ${Math.ceil(overlap)}px into the footer. Shorten the copy.`);
     const file = path.join(out, `${id}-capability-statement.pdf`);
     await page.pdf({ path: file, format: "A4", printBackground: true, preferCSSPageSize: true });
     console.log("Wrote", path.relative(root, file));
