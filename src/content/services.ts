@@ -1,6 +1,7 @@
 import type { Service } from "./types";
 
 /**
+ * Consultancy wording: Phase 1 copy deck (25 Nov 2026).
  * All services across the three companies (PG-06). Each gets its own page in
  * Phase 2 (PG-07 to PG-18); in Phase 1 they are anchored sections on the
  * company pages.
@@ -10,8 +11,8 @@ export const services: Service[] = [
   {
     slug: "project-management",
     company: "consultancy",
-    name: "Project management",
-    summary: "Client-side project management from brief to handover, run to RIBA Plan of Work stages and NEC4 contract management.",
+    name: "Project and programme management",
+    summary: "From business case to handover. One accountable lead, one plan, no drift.",
     sectors: ["public-estate", "social-housing", "energy-grid", "data-centres", "commercial-mixed-use"],
     pagePhase: "P2",
   },
@@ -19,7 +20,7 @@ export const services: Service[] = [
     slug: "cost-management",
     company: "consultancy",
     name: "Cost management",
-    summary: "Cost plans, estimates, valuations and final accounts, with cost reported against budget every month.",
+    summary: "Estimates, cost plans, value engineering, valuations and final accounts. Every pound tracked from day one.",
     sectors: ["public-estate", "social-housing", "commercial-mixed-use", "residential"],
     pagePhase: "P2",
   },
@@ -27,7 +28,7 @@ export const services: Service[] = [
     slug: "project-controls",
     company: "consultancy",
     name: "Project controls",
-    summary: "Programme, risk and change control, with earned value reported from one set of project data.",
+    summary: "Baseline programmes, earned value, risk and change control, live in CONSTRUX dashboards. You'll know you're slipping before it happens.",
     sectors: ["public-estate", "energy-grid", "data-centres", "commercial-mixed-use"],
     pagePhase: "P2",
   },
@@ -35,31 +36,39 @@ export const services: Service[] = [
     slug: "feasibility-studies",
     company: "consultancy",
     name: "Feasibility studies",
-    summary: "Site, cost and programme feasibility to test whether a scheme is worth taking forward, before design spend.",
+    summary: "Site, options, cost, programme and funding route, answered before you spend real money.",
     sectors: ["public-estate", "social-housing", "commercial-mixed-use", "residential"],
     pagePhase: "P2",
   },
   {
     slug: "bim-information-management",
     company: "consultancy",
-    name: "BIM and information management",
-    summary: "Information management to ISO 19650: information requirements, the delivery plan and a common data environment run for the whole team.",
+    name: "BIM and information management (ISO 19650)",
+    summary: "Solve it in the model, not on site.",
     sectors: ["public-estate", "social-housing", "energy-grid", "data-centres", "commercial-mixed-use"],
+    pagePhase: "P2",
+  },
+  {
+    slug: "building-safety",
+    company: "consultancy",
+    name: "Building safety and compliance",
+    summary: "Gateway 2 and 3 readiness, golden thread, CDM client advice.",
+    sectors: ["public-estate", "social-housing", "commercial-mixed-use"],
     pagePhase: "P2",
   },
   {
     slug: "tender-and-procurement",
     company: "consultancy",
     name: "Tender and procurement management",
-    summary: "Procurement strategy, tender documents, evaluation and contract award under the Procurement Act 2023.",
+    summary: "Procurement strategy, tender packs and evaluation that stand up under the Procurement Act.",
     sectors: ["public-estate", "social-housing", "energy-grid", "commercial-mixed-use"],
     pagePhase: "P2",
   },
   {
     slug: "bid-on",
     company: "consultancy",
-    name: "Bid-On",
-    summary: "Bid management for contractors and suppliers: bid/no-bid review, quality answers, pricing support and compliance checks.",
+    name: "Bid-On for contractors",
+    summary: "Prequalification, framework and tender packs for SME contractors entering energy and public-sector supply chains.",
     sectors: ["public-estate", "social-housing", "energy-grid", "data-centres"],
     pagePhase: "P2",
   },

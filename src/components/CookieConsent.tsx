@@ -53,13 +53,11 @@ export function CookieConsent() {
       {consent === null && (
         <div className="cookie-banner" role="region" aria-label="Cookie choices">
           <div className="container cookie-banner__inner">
-            <p>
-              We use one cookie to remember this choice. With your consent we also use analytics cookies to see which pages
-              help visitors. <Link href="/cookies">Read about cookies</Link>.
-            </p>
+            <p>We use cookies only to understand which pages help people. Nothing is shared or sold.</p>
             <div className="btn-row">
-              <button type="button" className="btn btn--navy" onClick={() => setConsent("rejected")}>Reject all</button>
-              <button type="button" className="btn btn--navy" onClick={() => setConsent("accepted")}>Accept all</button>
+              <button type="button" className="btn btn--navy" onClick={() => setConsent("accepted")}>Accept</button>
+              <button type="button" className="btn btn--navy" onClick={() => setConsent("rejected")}>Reject</button>
+              <Link className="btn btn--ghost" href="/cookies">Settings</Link>
             </div>
           </div>
         </div>

@@ -7,50 +7,42 @@ import { legalEntityName, structureCompanies } from "@/components/home/structure
 import { GroupStructure } from "@/components/modules/GroupStructure";
 import { HeroDrawing } from "@/components/modules/HeroDrawing";
 import { HowWeDeliver } from "@/components/modules/HowWeDeliver";
-import { Stat } from "@/components/Stat";
 import { group } from "@/content/settings";
-import { getCompanies, getLegalEntity, getServices } from "@/lib/cms";
+import { getCompanies, getLegalEntity } from "@/lib/cms";
+
+/* Copy: Phase 1 copy deck, revision 1 (25 Nov 2026), Home. */
 
 export const metadata: Metadata = {
-  title: { absolute: "Nseya Group Construction | Birmingham" },
+  title: { absolute: "Nseya Group Construction | Build with certainty" },
   description:
-    "Nseya Consultancy, ETABLIX and Nseya Construction: one Birmingham construction group for public and private clients across the UK.",
+    "Project management, BIM, site services and construction for buildings, power and data centres. Fixed-fee proposal in 5 working days.",
   alternates: { canonical: "/" },
 };
 
-const clients = [
+const reasons = [
   {
-    code: "S-01",
-    name: "Public sector",
-    text: "Councils, NHS trusts and public bodies buying through tenders and frameworks.",
-    companies: ["consultancy", "etablix", "construction"] as const,
+    title: "Senior from day one.",
+    text: "Every appointment is led by a chartered professional, not handed to a junior. Our founder brings 14+ years on data centres, grid, offshore wind and rail.",
   },
+  { title: "You see everything.", text: "Live cost, programme and risk in CONSTRUX, and a written report every week. No surprises at month end." },
+  { title: "Solved in the model, not on site.", text: "BIM-led delivery to ISO 19650. Clashes are found on screen, before they cost you money on site." },
   {
-    code: "S-02",
-    name: "Energy and grid",
-    text: "Generation, substations and 33kV and 132kV cable routes, for clients and EPC contractors.",
-    companies: ["etablix", "construction"] as const,
-  },
-  {
-    code: "S-03",
-    name: "Housing",
-    text: "Housing associations and developers: feasibility, cost control and small-site design and build.",
-    companies: ["consultancy", "construction"] as const,
-  },
-  {
-    code: "S-04",
-    name: "Data centres",
-    text: "Civils, power and cooling packages, and the site services a large workforce needs.",
-    companies: ["etablix", "construction"] as const,
-  },
-  {
-    code: "S-05",
-    name: "Commercial and private",
-    text: "Developers, landlords, businesses and homeowners: commercial and mixed-use schemes, fit-out and residential work.",
-    companies: ["consultancy", "construction"] as const,
+    title: "A supply chain that turns up.",
+    text: "Every subcontractor vetted, two per critical trade, paid in 30 days — so the best firms put our jobs first.",
   },
 ];
-const shortName = { consultancy: "Consultancy", etablix: "ETABLIX", construction: "Construction" };
+
+const sectors = ["Public estate", "Social housing", "Energy and grid", "Data centres", "Commercial and mixed-use", "Homeowners"];
+
+/** TO CONFIRM (copy deck sign-off): all six published commitments, especially the five-working-day proposal. */
+const promises: [string, string, string][] = [
+  ["A reply within ", "one working day", "."],
+  ["A fixed-fee proposal within ", "five working days", "."],
+  ["A ", "named director", " accountable for your project."],
+  ["A written progress report ", "every week", "."],
+  ["Subcontractors paid within ", "30 days", "."],
+  ["", "No claim we cannot evidence.", ""],
+];
 
 export default function HomePage() {
   const companies = getCompanies();
@@ -64,12 +56,12 @@ export default function HomePage() {
             <p className="label">Nseya Group Construction · Birmingham</p>
             <h1>{group.promise}</h1>
             <p className="lede">
-              Nseya Consultancy, ETABLIX and Nseya Construction work as one group for public and private clients across the UK:
-              councils and the NHS, energy and grid, housing, data centres, and commercial developers.
+              Consultancy, site services and construction for buildings, power and data centres — led by a chartered
+              construction manager and controlled live, every week.
             </p>
             <div className="btn-row">
-              <Link className="btn" href="#companies">Find the right company</Link>
-              <Link className="btn btn--ghost" href="/contact">Send an enquiry</Link>
+              <Link className="btn" href="/contact">Get a fixed-fee proposal in 5 working days</Link>
+              <Link className="btn btn--ghost" href="#how-we-deliver">See how we deliver</Link>
             </div>
             <p className="hero__meta">
               <span>Trading from January {group.tradingStart}</span>
@@ -82,41 +74,47 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Companies */}
+      {/* Three companies */}
       <section className="section" id="companies" aria-labelledby="companies-title">
         <div className="container">
-          <div className={styles.split} style={{ marginBottom: 40 }}>
-            <div>
-              <p className="label">Three companies</p>
-              <h2 id="companies-title">Go straight to the company you want to buy from</h2>
-            </div>
-            <p className="muted" style={{ alignSelf: "end" }}>
-              Each company has its own colour on this site, so you always know which one you are dealing with. ETABLIX
-              also has its own website, etablix.com.
-            </p>
+          <p className="label">Three companies</p>
+          <h2 id="companies-title" style={{ marginBottom: 40 }}>Three companies. One standard.</h2>
+          <CompanyCards companies={companies} />
+        </div>
+      </section>
+
+      {/* Why clients choose us */}
+      <section className="section section--concrete drawing-grid--light" aria-labelledby="why-title">
+        <div className="container">
+          <p className="label">Why clients choose us</p>
+          <h2 id="why-title">Why clients choose us</h2>
+          <div className={styles.reasons}>
+            {reasons.map((r) => (
+              <div key={r.title} data-reveal>
+                <h3>{r.title}</h3>
+                <p>{r.text}</p>
+              </div>
+            ))}
           </div>
-          <CompanyCards companies={companies} servicesFor={(id) => getServices(id)} />
+        </div>
+      </section>
+
+      {/* How we deliver */}
+      <section className="section section--dark drawing-grid" id="how-we-deliver" aria-labelledby="deliver-title">
+        <div className="container">
+          <p className="label">How we deliver</p>
+          <h2 id="deliver-title">How we deliver</h2>
+          <HowWeDeliver />
         </div>
       </section>
 
       {/* Who we work for */}
-      <section className="section section--concrete drawing-grid--light" aria-labelledby="clients-title">
+      <section className="section section--tight" aria-labelledby="clients-title">
         <div className="container">
           <p className="label">Who we work for</p>
-          <h2 id="clients-title">Five kinds of client</h2>
-          <ul className={styles.clients}>
-            {clients.map((c) => (
-              <li key={c.code} data-reveal>
-                <span className={styles.clientCode}>{c.code}</span>
-                <h3>{c.name}</h3>
-                <p>{c.text}</p>
-                <div className={styles.dots} aria-label="Companies that serve this sector">
-                  {c.companies.map((id) => (
-                    <span key={id} data-company={id}>{shortName[id]}</span>
-                  ))}
-                </div>
-              </li>
-            ))}
+          <h2 id="clients-title" className="visually-hidden">Who we work for</h2>
+          <ul className={styles.sectorList}>
+            {sectors.map((s) => <li key={s}>{s}</li>)}
           </ul>
           <p style={{ marginTop: 24 }}>
             <Link className="link-arrow" href="/services">See every service by company and sector</Link>
@@ -124,44 +122,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How we deliver */}
-      <section className="section section--dark drawing-grid" aria-labelledby="deliver-title">
+      {/* Our promises */}
+      <section className="section section--dark drawing-grid" aria-labelledby="promises-title">
         <div className="container">
-          <p className="label">How we deliver</p>
-          <h2 id="deliver-title" style={{ maxWidth: "20ch" }}>A small team that manages a large, checked supply chain</h2>
-          <HowWeDeliver />
+          <p className="label">Our promises to you</p>
+          <h2 id="promises-title">Our promises to you</h2>
+          <ul className={styles.promises}>
+            {promises.map(([a, b, c]) => (
+              <li key={b} data-reveal>{a}<strong>{b}</strong>{c}</li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* Group structure explorer */}
+      {/* Group structure explorer (spec section 7a) */}
       <section className="section" aria-labelledby="structure-title">
         <div className="container">
           <p className="label">Group structure</p>
-          <h2 id="structure-title">Choose a company to see what it does</h2>
+          <h2 id="structure-title">How the group works</h2>
           <GroupStructure companies={structureCompanies()} legalEntity={legalEntityName()} />
-        </div>
-      </section>
-
-      {/* Honest start */}
-      <section className="section section--concrete section--tight" aria-labelledby="start-title">
-        <div className="container grid">
-          <div className={`span-5 ${styles.statement}`}>
-            <h2 id="start-title" style={{ fontSize: "var(--fs-h3)" }}>We start trading in January {group.tradingStart}</h2>
-            <p>
-              The group is new. We do not have a trading history, turnover or completed projects to show yet, and we will
-              not pretend otherwise. Case studies will appear here as our first jobs finish, with each client&apos;s
-              permission.
-            </p>
-            <p style={{ margin: 0 }}>
-              <Link className="link-arrow" href="/about">About the group and its founder</Link>
-            </p>
-          </div>
-          <div className={`${styles.rightCol} ${styles.facts}`} style={{ alignContent: "center" }}>
-            <Stat value="80%" countTo={80} label="of project work delivered through a vetted supply chain" kind="Group plan" />
-            <Stat value="30 days" countTo={30} label="payment terms for suppliers and subcontractors" kind="Policy" />
-            <Stat value="32" countTo={32} label="staff by 2029, half of them graduates" kind="Target" />
-            <Stat value="60" countTo={60} label="approved suppliers by the end of 2027" kind="Target" />
-          </div>
         </div>
       </section>
 
@@ -170,40 +149,28 @@ export default function HomePage() {
         <div className={styles.audiences}>
           <div className={`${styles.aud} ${styles.audCareers}`}>
             <p className="label">Careers</p>
-            <h2>Start a career in construction</h2>
-            <p>We are hiring graduates, apprentices and trainees, including people who have never worked in construction.</p>
-            <ul className={styles.checks}>
-              <li>A two-year Graduate Academy for any degree subject</li>
-              <li>Paid apprenticeships and trainee roles from age 16</li>
-              <li>A mentor, a CSCS card and site safety training for every starter</li>
-            </ul>
+            <h2>Graduated, still waiting?</h2>
+            <p>Our Graduate Academy is a paid route into construction, with a path to chartership.</p>
             <div className="btn-row">
-              <Link className="btn" href="/careers">Explore careers</Link>
-              <Link className="btn btn--ghost" href="/careers/vacancies">See vacancies</Link>
+              <Link className="btn" href="/careers/graduate-academy">See the Academy</Link>
             </div>
           </div>
           <div className={`${styles.aud} ${styles.audSuppliers}`}>
             <p className="label">Suppliers and subcontractors</p>
-            <h2>Work on our projects</h2>
-            <p>Most of our work goes to specialist firms. Register once, keep your documents current, and we will contact you as work comes up.</p>
-            <ul className={styles.checks}>
-              <li>Payment within 30 days</li>
-              <li>A free seat on the project&apos;s CONSTRUX or VERYX platform</li>
-              <li>Site-services firms register on etablix.com</li>
-            </ul>
+            <h2>Specialist contractor or supplier?</h2>
+            <p>Paid in 30 days, a pipeline you can plan around.</p>
             <div className="btn-row">
-              <Link className="btn" href="/suppliers">Register as a supplier</Link>
+              <Link className="btn" href="/suppliers">Join our supply chain</Link>
             </div>
           </div>
         </div>
       </section>
 
       <CtaBand
-        title="Tell us about your project"
-        text="We reply to every enquiry within one working day."
+        title="Have a project in mind?"
+        text="Tell us about it today and get a fixed-fee proposal within five working days."
         href="/contact"
-        cta="Send an enquiry"
-        secondary={{ href: "/about#company-details", label: "Company details for buyers" }}
+        cta="Start your enquiry"
       />
     </div>
   );

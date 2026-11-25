@@ -36,7 +36,7 @@ const STAGE_TEXT = `What happens next
 2. Shortlisted: we email you if you are shortlisted for a short phone call.
 3. Interview: we invite you to an interview or a site visit.
 4. Outcome: we email you with our decision.
-We reply to every applicant within 10 working days.`;
+We reply to every applicant within five working days, and decide within four weeks of applying.`;
 
 export async function submitApplication(_prev: FormState, form: FormData): Promise<FormState> {
   const values = formToObject(form);

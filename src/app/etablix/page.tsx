@@ -10,8 +10,10 @@ import { getCompany, getServices } from "@/lib/cms";
 import { serviceSchema } from "@/lib/schema";
 import { etablixContent as c } from "./content";
 
+/* Hero copy: Phase 1 copy deck, revision 1 (25 Nov 2026), ETABLIX. */
+
 export const metadata: Metadata = {
-  title: "ETABLIX: integrated site services",
+  title: { absolute: "ETABLIX | Integrated site services and workforce villages" },
   description: "ETABLIX plans, sets up, runs and removes site cabins, welfare, security and workforce villages. A Nseya Group Construction company.",
   alternates: { canonical: "/etablix" },
 };
@@ -36,10 +38,15 @@ export default function EtablixPage() {
             style={{ width: "min(360px, 80vw)", height: "auto", marginBottom: 20 }}
           />
         }
-        title="Site services for the whole life of a project"
-        lede={c.overview}
+        title="One contractor for everything that keeps a site running."
+        lede="Cabins, welfare, security, cleaning, utilities, catering and workforce villages — planned, established, operated and removed by one accountable team."
         aside={<CompanyDrawing kind="etablix" />}
       >
+        <p className="etx-cycle" aria-label="Plan, then establish, then operate, then remove">
+          <span>Plan</span><span aria-hidden="true">→</span><span>Establish</span><span aria-hidden="true">→</span>
+          <span>Operate</span><span aria-hidden="true">→</span><span>Remove</span>
+        </p>
+        <p>ETABLIX is a Nseya Group Construction company with its own website.</p>
         <div className="btn-row" style={{ marginTop: 24 }}>
           <ExternalLink href={site.url} className="btn">
             {site.label} <span aria-hidden="true">↗</span>

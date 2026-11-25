@@ -194,7 +194,7 @@ export function store(): Store {
 }
 
 /** Reference numbers such as ENQ-2027-0001 (section 6, rule 5). */
-export async function nextReference(prefix: "ENQ" | "DIA" | "GEN" | "SUP" | "APP" | "TAL", now = new Date()): Promise<string> {
+export async function nextReference(prefix: "NSY" | "ENQ" | "DIA" | "GEN" | "SUP" | "APP" | "TAL", now = new Date()): Promise<string> {
   const year = new Intl.DateTimeFormat("en-GB", { year: "numeric", timeZone: "Europe/London" }).format(now);
   const n = await store().nextSequence(`${prefix}-${year}`);
   return formatReference(prefix, year, n);

@@ -4,23 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./HowWeDeliver.module.css";
 
 const steps = [
-  {
-    title: "One accountable team leads every job",
-    text: "Our own project managers and site supervisors plan the work, manage safety and answer to the client. You deal with one team, not a chain of firms.",
-  },
-  {
-    title: "About 80% of the work is done by a vetted supply chain",
-    text: "Specialist subcontractors and suppliers deliver most of the work. Each one is checked before it is approved: insurance, health and safety evidence, accreditations and Companies House status.",
-    note: "Group plan",
-  },
-  {
-    title: "Everyone works in one system",
-    text: "Every subcontractor works in CONSTRUX or VERYX, whichever the project uses. Drawings, daily diaries, inspections and payment applications all go through it.",
-  },
-  {
-    title: "The client sees the same data we do",
-    text: "Progress, cost and risk are reported from the same records the site team uses, so the monthly report matches what is happening on site.",
-  },
+  { title: "Plan it.", text: "We fix the brief, the budget and the risks before anyone mobilises." },
+  { title: "Model it.", text: "Every package is coordinated in the model. Problems are solved on screen." },
+  { title: "Build it.", text: "Vetted specialists deliver; our managers control quality, safety and programme." },
+  { title: "Prove it.", text: "Cost, programme, safety and quality reported every week, in writing." },
 ];
 
 /**
@@ -55,7 +42,6 @@ export function HowWeDeliver() {
             <span className={styles.num}>{String(i + 1).padStart(2, "0")}</span>
             <h3>{s.title}</h3>
             <p>{s.text}</p>
-            {s.note && <span className="stat__kind">{s.note}</span>}
           </li>
         ))}
       </ol>

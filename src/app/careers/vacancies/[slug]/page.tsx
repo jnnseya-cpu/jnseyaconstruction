@@ -75,7 +75,7 @@ export default async function VacancyPage({ params }: Props) {
             <h2>How to apply</h2>
             <p>
               Apply online. It takes about five minutes on a phone. You can upload a CV, or answer three short questions instead. We reply
-              to every applicant within 10 working days. <Link href="/careers/how-we-recruit">See how we recruit</Link>.
+              to every applicant within five working days. <Link href="/careers/how-we-recruit">See how we recruit</Link>.
             </p>
             <p>
               If you need the application in another format, or any adjustments, tell us on the form or contact us and we will help.

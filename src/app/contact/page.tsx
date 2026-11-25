@@ -4,15 +4,18 @@ import { ContactForm } from "@/components/forms/ContactForm";
 import { EnquiryForm } from "@/components/forms/EnquiryForm";
 import { contact, group, office } from "@/content/settings";
 import { getLegalEntity } from "@/lib/cms";
+import { enquiryTypes } from "@/lib/forms/enquiry-options";
+
+/* Copy: Phase 1 copy deck, revision 1 (25 Nov 2026), Contact. */
 
 export const metadata: Metadata = {
-  title: "Contact us",
-  description: "Send a project, tender or framework enquiry to Nseya Consultancy, ETABLIX or Nseya Construction. We reply within one working day.",
+  title: { absolute: "Contact Nseya Group Construction | Reply in one working day" },
+  description: "Tell us about the job. We reply within one working day. Or call Justin directly on +44 7493 216101.",
   alternates: { canonical: "/contact" },
 };
 
 const companies = ["consultancy", "etablix", "construction"];
-const types = ["project", "tender", "framework", "quote", "partnership", "other"];
+const types: readonly string[] = enquiryTypes;
 
 export default async function ContactPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const sp = await searchParams;
@@ -24,17 +27,20 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
     <div data-company={company ?? "group"}>
       <PageHero
         label="Contact"
-        title="Tell us what you need to build"
-        lede={`${contact.responseTime} Your enquiry goes straight to the company you choose.`}
+        title="Tell us about the job. We reply in one working day."
         crumbs={[{ name: "Contact", href: "/contact" }]}
-      />
+      >
+        {contact.phone && (
+          <p className="lede">
+            Or call Justin directly on <a href={`tel:${contact.phone.replace(/\s/g, "")}`}>{contact.phone}</a>.
+          </p>
+        )}
+      </PageHero>
 
       <section className="section">
         <div className="container grid">
           <div className="span-7">
-            <p className="label">Project enquiry</p>
-            <h2 id="enquiry">Send an enquiry</h2>
-            <p className="muted">Fields marked optional can be left blank. You will get a reference number on screen and by email.</p>
+            <h2 id="enquiry">Tell us about the job</h2>
             <EnquiryForm company={company} enquiryType={type} sourcePage="/contact" />
           </div>
           <aside className="span-4 start-8" aria-labelledby="details-title">
@@ -45,7 +51,6 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
                 {contact.phone && (<><dt>Phone</dt><dd><a href={`tel:${contact.phone.replace(/\s/g, "")}`}>{contact.phone}</a></dd></>)}
                 <dt>Registered office</dt>
                 <dd>
-                  {e.legalName}<br />
                   {e.registeredOffice}<br />
                   <a href={office.mapUrl} rel="noopener">View on a map<span className="visually-hidden"> (opens OpenStreetMap)</span></a>
                 </dd>

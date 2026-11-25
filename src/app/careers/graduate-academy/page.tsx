@@ -15,7 +15,8 @@ export const metadata: Metadata = {
 };
 
 /** TO CONFIRM (Justin): starting salary range and intake dates before launch. */
-const SALARY_RANGE = "£26,000 to £28,000 a year";
+/** TO CONFIRM (copy deck sign-off): graduate starting salary. */
+const SALARY_RANGE = "£28,000 a year";
 const INTAKES = ["September 2027 (planned)", "January 2028 (planned)"];
 
 const faqs: Faq[] = [

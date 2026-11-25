@@ -115,10 +115,9 @@ export function EnquirySection({ company, title, intro, aside }: { company: Comp
     <section className="section section--concrete" aria-labelledby="enquiry-title" id="enquiry">
       <div className="container grid">
         <div className="span-5">
-          <p className="label">Send an enquiry</p>
+          <p className="label">Enquiry</p>
           <h2 id="enquiry-title">{title}</h2>
           <div className="muted">{intro}</div>
-          <p className="small muted">We reply to every enquiry within one working day.</p>
           {aside}
         </div>
         <div className="span-7">

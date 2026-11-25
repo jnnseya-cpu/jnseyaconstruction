@@ -17,11 +17,11 @@ import { consent, email, formToObject, oneOf, opt, phone, req, zodErrors } from 
 
 const enquirySchema = z.object({
   name: req("your name", 120),
-  organisation: req("your organisation, or 'Private individual'", 160),
+  organisation: opt(160),
   email,
   company: oneOf(companyOptions, "Choose which company you want to talk to"),
-  enquiryType: oneOf(enquiryTypes, "Choose the type of enquiry"),
-  message: req("your message", 5000),
+  enquiryType: z.enum(enquiryTypes).optional().or(z.literal("")).transform((v) => v || "project"),
+  message: req("a few words about your project", 5000),
   consent,
   phone: phone(false),
   location: opt(160),
@@ -65,7 +65,7 @@ export async function submitEnquiry(_prev: FormState, form: FormData): Promise<F
 
   const d = parsed.data;
   try {
-    const ref = await nextReference("ENQ");
+    const ref = await nextReference("NSY");
     await store().insert(
       "enquiry",
       { form: "FM-01", ...d, attachment, status: "new", crm: "pending" },
@@ -77,8 +77,8 @@ export async function submitEnquiry(_prev: FormState, form: FormData): Promise<F
       sendEmail(
         {
           to: d.email,
-          subject: `We have your enquiry: ${ref}`,
-          text: `Dear ${d.name},\n\nThank you for contacting ${companyName[d.company]}. Your reference number is ${ref}.\n\nWe reply to every enquiry within one working day. If you need to add anything, reply to this email and keep the reference in the subject line.\n\nYour message:\n${d.message}${signature}`,
+          subject: `Your enquiry is with us: ${ref}`,
+          text: `Dear ${d.name},\n\nThank you — your enquiry is with us. A named director will reply by the end of the next working day. Your reference is ${ref}.\n\nIf you need to add anything, reply to this email and keep the reference in the subject line.\n\nAbout your project:\n${d.message}${signature}`,
         },
         "FM-01 acknowledgement",
       ),
@@ -92,7 +92,7 @@ export async function submitEnquiry(_prev: FormState, form: FormData): Promise<F
             `Company wanted: ${companyName[d.company]}`,
             `Type: ${enquiryTypeLabels[d.enquiryType]}`,
             `Name: ${d.name}`,
-            `Organisation: ${d.organisation}`,
+            d.organisation && `Organisation: ${d.organisation}`,
             `Email: ${d.email}`,
             d.phone && `Phone: ${d.phone}`,
             d.location && `Location: ${d.location}`,

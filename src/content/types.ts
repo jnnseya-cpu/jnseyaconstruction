@@ -25,6 +25,10 @@ export interface Company {
   path: string;
   /** One-line description used on cards. */
   summary: string;
+  /** Copy deck: the company's line ("Know the cost, the risk and the route before you commit."). */
+  tagline: string;
+  /** Copy deck: the call to action on the home page card. */
+  cardCta: string;
   /** Accent token name used by data-company theming. */
   accent: "teal" | "amber" | "cobalt";
   externalSite?: { url: string; label: string };

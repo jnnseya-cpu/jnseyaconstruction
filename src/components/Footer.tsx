@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getLegalEntity } from "@/lib/cms";
-import { contact } from "@/content/settings";
+import { contact, group } from "@/content/settings";
 import type { CompanyId } from "@/content/types";
 import Image from "next/image";
 import { NewsletterForm } from "./forms/NewsletterForm";
@@ -108,6 +108,9 @@ export function Footer() {
             <NewsletterForm />
           </div>
         </div>
+        <p className="footer-line">
+          <strong>{group.promise}</strong> <span aria-hidden="true">—</span> Nseya Consultancy · ETABLIX · Nseya Construction
+        </p>
         <LegalEntityBlock />
       </div>
     </footer>

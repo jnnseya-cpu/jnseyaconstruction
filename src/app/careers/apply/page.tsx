@@ -18,6 +18,7 @@ const roleFor: Record<string, string> = {
 export default async function GeneralApplyPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const sp = await searchParams;
   const route = typeof sp.route === "string" && roleFor[sp.route] ? sp.route : undefined;
+  const startRoute = sp.mode === "no-cv" ? "no-cv" : "cv";
   return (
     <div data-company="group">
       <PageHero
@@ -28,7 +29,7 @@ export default async function GeneralApplyPage({ searchParams }: { searchParams:
       />
       <section className="section">
         <div className="container">
-          <ApplicationForm role={route ? roleFor[route] : undefined} vacancySlug={route ? `general-${route}` : "general"} graduate={route === "graduate"} />
+          <ApplicationForm role={route ? roleFor[route] : undefined} vacancySlug={route ? `general-${route}` : "general"} graduate={route === "graduate"} startRoute={startRoute} />
         </div>
       </section>
     </div>

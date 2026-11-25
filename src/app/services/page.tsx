@@ -38,7 +38,7 @@ export default function ServicesPage() {
           <p className="small muted" style={{ marginTop: 16 }}>Each service gets its own page during 2027.</p>
         </div>
       </section>
-      <CtaBand title="Not sure which company you need?" text="Send one enquiry and we will pass it to the right team within one working day." href="/contact" cta="Send an enquiry" />
+      <CtaBand title="Not sure which company you need?" text="Send one enquiry and we will pass it to the right team within one working day." href="/contact" cta="Start your enquiry" />
     </>
   );
 }

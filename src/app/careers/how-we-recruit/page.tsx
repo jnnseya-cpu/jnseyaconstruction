@@ -6,17 +6,17 @@ import { PageHero } from "@/components/PageHero";
 
 export const metadata: Metadata = {
   title: "How we recruit",
-  description: "Our four recruitment steps and timings, reasonable adjustments, and our promise to reply to every applicant within 10 working days.",
+  description: "Our four recruitment steps and timings, reasonable adjustments, and our promise to reply to every applicant within 5 working days.",
   alternates: { canonical: "/careers/how-we-recruit" },
 };
 
 /* CR-07. TO CONFIRM with the recruiter: each timing below must be one the
-   recruiter can actually deliver. The 10-working-day reply is a spec commitment. */
+   recruiter can actually deliver. Timings from the Phase 1 copy deck: reply within 5 working days, decision within 4 weeks of applying. */
 const steps = [
   { title: "Apply", time: "About 5 minutes", text: "Apply online with a CV, or answer three short questions instead. You get an email with your reference number straight away." },
-  { title: "Short call", time: "Within 10 working days", text: "If you are shortlisted, we call you for about 15 minutes to talk about the role and answer your questions. If not, we email to tell you." },
+  { title: "Short call", time: "Within 5 working days", text: "If you are shortlisted, we call you for about 15 minutes to talk about the role and answer your questions. If not, we email to tell you." },
   { title: "Interview or site visit", time: "Usually within 2 weeks of the call", text: "Meet the team in person or by video. For site roles, this may be a visit to a site or our office. We tell you what to expect beforehand." },
-  { title: "Offer", time: "Within 5 working days of the interview", text: "We email you our decision. If we offer you the role, we then check your right to work in the UK in person and agree a start date." },
+  { title: "Decision", time: "Within 4 weeks of applying", text: "We email you our decision. If we offer you the role, we then check your right to work in the UK in person and agree a start date." },
 ];
 
 export default function HowWeRecruitPage() {
@@ -26,7 +26,7 @@ export default function HowWeRecruitPage() {
         crumbs={[{ name: "Careers", href: "/careers" }, { name: "How we recruit", href: "/careers/how-we-recruit" }]}
         label="How we recruit"
         title="Four steps, and an answer every time"
-        lede="We reply to every applicant within 10 working days, whatever the outcome."
+        lede="We reply to every applicant within five working days, whatever the outcome, and decide within four weeks of applying."
       />
       <CareersNav current="/careers/how-we-recruit" />
       <section className="section">

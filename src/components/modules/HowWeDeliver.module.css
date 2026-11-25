@@ -3,7 +3,7 @@
 .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; }
 .steps li { margin: 0; padding: 28px 0 28px 0; border-top: 1px solid var(--line-dark); opacity: 0.55; transition: opacity 0.5s var(--ease); }
 .steps li.on { opacity: 1; }
-@media (min-width: 900px) { .steps li { min-height: 42vh; padding-top: 40px; } .steps li:last-child { min-height: auto; } }
+@media (min-width: 900px) { .steps li { min-height: 22vh; padding-top: 32px; } .steps li:last-child { min-height: auto; } }
 .steps h3 { font-size: 1.375rem; margin: 6px 0 8px; }
 .steps p { margin: 0; }
 .num { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--accent-on-dark); letter-spacing: 0.08em; }

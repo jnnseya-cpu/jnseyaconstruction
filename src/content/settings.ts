@@ -46,24 +46,29 @@ export const mailboxes = {
 
 export const contact = {
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? mailboxes.contact,
-  phone: process.env.NEXT_PUBLIC_CONTACT_PHONE ?? "",
-  responseTime: "We reply to every enquiry within one working day.",
+  /** Copy deck: "Or call Justin directly on +44 7493 216101." */
+  phone: process.env.NEXT_PUBLIC_CONTACT_PHONE ?? "+44 7493 216101",
+  responseTime: "We reply within one working day.",
 };
 
 export const leadership = {
   name: "Justin Nseya",
   postNominals: "MCIOB",
-  role: "Founder and Chief Executive",
+  role: "Group Chief Executive",
   /**
-   * Factual CV only (PG-02). Justin to supply. Each line is shown as written.
-   * Project experience listed here is Justin's own, never the companies'.
+   * Factual CV only (PG-02), from the Phase 1 copy deck. Project experience
+   * here is Justin's own, never the companies'.
    */
-  cv: [] as string[],
+  cv: [
+    "Chartered construction manager with 14+ years on major infrastructure: data centres, energy and grid, offshore wind, rail and metro.",
+    "MSc BIM Management. BSc Construction Management. CSCS Professionally Qualified Person.",
+  ] as string[],
 };
 
 export const group = {
   name: "Nseya Group Construction",
-  promise: "Three construction companies, one accountable team, from first study to final handover.",
+  /** Group line (copy deck): hero headline and footer line. */
+  promise: "Certainty, engineered.",
   tradingStart: "2027",
   etablixUrl: "https://etablix.com",
   legacyResidentialUrl: "https://www.jnseya.co.uk",

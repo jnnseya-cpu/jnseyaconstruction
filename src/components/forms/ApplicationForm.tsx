@@ -13,10 +13,10 @@ import styles from "./ApplicationForm.module.css";
 const SAVED_FIELDS = ["name", "email", "phone", "role", "rightToWork", "applyRoute", "aboutYou", "experience", "whyConstruction", "graduationDate", "degree"];
 
 /** FM-04 job application (section 5a). Works on a phone in under five minutes; a CV is never required. */
-export function ApplicationForm({ role, vacancySlug, graduate = false }: { role?: string; vacancySlug?: string; graduate?: boolean }) {
+export function ApplicationForm({ role, vacancySlug, graduate = false, startRoute = "cv" }: { role?: string; vacancySlug?: string; graduate?: boolean; startRoute?: "cv" | "no-cv" }) {
   const [state, dispatch] = useActionState(submitApplication, initialFormState);
   const { onSubmit, uploadStatus } = useDirectUploads(dispatch);
-  const [route, setRoute] = useState<string>("cv");
+  const [route, setRoute] = useState<string>(startRoute);
   const [mounted, setMounted] = useState(false);
   const [restored, setRestored] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -81,7 +81,7 @@ export function ApplicationForm({ role, vacancySlug, graduate = false }: { role?
     }
     formRef.current?.reset();
     setRestored(false);
-    setRoute("cv");
+    setRoute(startRoute);
   };
 
   if (state.status === "success") {
@@ -132,7 +132,7 @@ export function ApplicationForm({ role, vacancySlug, graduate = false }: { role?
       <section className={styles.part} aria-labelledby="part-2">
         <h2 id="part-2" className={styles.partTitle}><span>Part 2 of 3</span>Your experience</h2>
         <ChoiceGroup
-          name="applyRoute" label="How do you want to apply?" required state={state} defaultValue="cv" onChange={setRoute}
+          name="applyRoute" label="How do you want to apply?" required state={state} defaultValue={startRoute} onChange={setRoute}
           options={[
             { value: "cv", label: "Upload my CV", hint: "PDF or Word file, up to 10MB" },
             { value: "no-cv", label: "Apply without a CV", hint: "Answer three short questions instead. This is just as good." },

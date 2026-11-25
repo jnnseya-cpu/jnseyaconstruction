@@ -391,7 +391,7 @@ function Step6({ token, d }: { token: string; d: SupplierDraftData }) {
         </div>
         <Consent state={state} purpose="to assess your application, run the checks described on the Suppliers page, and keep your supplier record while you are active and for 6 years after" />
         <Turnstile />
-        <div><SubmitButton pendingText="Submitting…">Submit application</SubmitButton></div>
+        <div><SubmitButton pendingText="Sending…">Send my application</SubmitButton></div>
       </form>
     </div>
   );

@@ -3,3 +3,6 @@
 .cv { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line-dark); }
 .cv li { margin: 0; padding: 14px 0; border-bottom: 1px solid var(--line-dark); }
 @media (min-width: 900px) { .rightCol { grid-column: 8 / span 5 !important; } }
+
+.valuesList { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; border-top: 2px solid var(--navy); }
+.valuesList li { margin: 0; padding: 18px 0; border-bottom: 1px solid var(--line); font-size: 1.125rem; }

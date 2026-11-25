@@ -496,3 +496,28 @@ p a, li a, dd a, .newsletter__consent a, .choice a { text-decoration: underline;
 .brand__mark { width: auto; height: 40px; flex-shrink: 0; transition: height 0.2s var(--ease); }
 .site-header[data-scrolled="true"] .brand__mark { height: 32px; }
 .brand__logo { width: 220px; height: auto; }
+
+.footer-line { border-top: 1px solid var(--line-dark); margin: 0; max-width: none; padding: 20px 0; font-size: var(--fs-small); color: rgba(255,255,255,0.86); }
+.footer-line strong { color: var(--white); }
+.footer-line + .legal-entity { border-top: 0; padding-top: 0; }
+
+/* Service list (company pages) */
+.service-list { list-style: none; padding: 0; margin: 0; border-top: 2px solid var(--navy); }
+.service-list > li { display: grid; grid-template-columns: 48px 1fr; gap: 12px; margin: 0; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.service-list__no { font: 500 0.875rem var(--font-mono); color: var(--accent-text); padding-top: 4px; }
+.service-list h3 { font-size: 1.125rem; margin: 0 0 4px; }
+.service-list p { margin: 0; color: var(--ink-2); }
+.tick-list { list-style: none; padding: 0; margin: 0; }
+.tick-list li { position: relative; padding-left: 28px; margin-bottom: 10px; }
+.tick-list li::before { content: ""; position: absolute; left: 2px; top: 0.5em; width: 12px; height: 6px; border-left: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(-45deg); }
+.anchor-list { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.anchor-list li { margin: 0; font: 500 0.75rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 8px; border: 1px solid var(--line); color: var(--ink-2); scroll-margin-top: calc(var(--header-h) + 24px); }
+.anchor-list li:target { border-color: var(--accent); color: var(--accent-text); background: var(--accent-tint); }
+.etx-cycle { display: flex; flex-wrap: wrap; gap: 6px 12px; font: 600 1rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-on-dark); margin: 8px 0 12px; }
+.wanted-list li { font-size: 0.8125rem; padding: 8px 12px; border-color: var(--ink); color: var(--ink); background: var(--white); }
+.more-detail { border: 1px solid var(--line); padding: 0 16px; }
+.more-detail > summary { cursor: pointer; padding: 14px 0; font-weight: 600; }
+.more-detail[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+.more-detail > .form { padding-bottom: 16px; }
+.submit-row { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.section--dark a.btn:not(.btn--ghost), .cta-band a.btn:not(.btn--ghost) { color: var(--accent-btn-fg); }
