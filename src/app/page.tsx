@@ -14,7 +14,7 @@ import { getCompanies, getLegalEntity, getServices } from "@/lib/cms";
 export const metadata: Metadata = {
   title: { absolute: "Nseya Groupe Construction | Birmingham" },
   description:
-    "Nseya Consultancy, ETABLIX site services and Nseya Construction: one Birmingham group for public, energy, housing and data-centre clients.",
+    "Nseya Consultancy, ETABLIX and Nseya Construction: one Birmingham construction group for public and private clients across the UK.",
   alternates: { canonical: "/" },
 };
 
@@ -43,6 +43,12 @@ const clients = [
     text: "Civils, power and cooling packages, and the site services a large workforce needs.",
     companies: ["etablix", "construction"] as const,
   },
+  {
+    code: "S-05",
+    name: "Commercial and private",
+    text: "Developers, landlords, businesses and homeowners: commercial and mixed-use schemes, fit-out and residential work.",
+    companies: ["consultancy", "construction"] as const,
+  },
 ];
 const shortName = { consultancy: "Consultancy", etablix: "ETABLIX", construction: "Construction" };
 
@@ -58,8 +64,8 @@ export default function HomePage() {
             <p className="label">Nseya Groupe Construction · Birmingham</p>
             <h1>{group.promise}</h1>
             <p className="lede">
-              Nseya Consultancy, ETABLIX and Nseya Construction work as one group, for public-sector, energy, housing and
-              data-centre clients across the UK.
+              Nseya Consultancy, ETABLIX and Nseya Construction work as one group for public and private clients across the UK:
+              councils and the NHS, energy and grid, housing, data centres, and commercial developers.
             </p>
             <div className="btn-row">
               <Link className="btn" href="#companies">Find the right company</Link>
@@ -97,7 +103,7 @@ export default function HomePage() {
       <section className="section section--concrete drawing-grid--light" aria-labelledby="clients-title">
         <div className="container">
           <p className="label">Who we work for</p>
-          <h2 id="clients-title">Four kinds of client</h2>
+          <h2 id="clients-title">Five kinds of client</h2>
           <ul className={styles.clients}>
             {clients.map((c) => (
               <li key={c.code} data-reveal>

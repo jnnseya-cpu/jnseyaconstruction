@@ -45,7 +45,7 @@ export interface ServiceDetail {
   deliverables: string[];
 }
 
-export function ServiceBlock({ service, detail, index, company }: { service: Service; detail: ServiceDetail; index: number; company: Company }) {
+export function ServiceBlock({ service, detail, index, company, extra }: { service: Service; detail: ServiceDetail; index: number; company: Company; extra?: ReactNode }) {
   const sectors = getSectors().filter((s) => service.sectors.includes(s.id));
   return (
     <article id={service.slug} className={styles.service} aria-labelledby={`${service.slug}-title`} data-reveal>
@@ -73,6 +73,7 @@ export function ServiceBlock({ service, detail, index, company }: { service: Ser
           <p className={styles.tags}>{sectors.map((s) => <span className="tag" key={s.id}>{s.name}</span>)}</p>
         </div>
       </div>
+      {extra}
       <JsonLd data={serviceSchema(service.name, service.summary, company.name, `${company.path}#${service.slug}`)} />
     </article>
   );

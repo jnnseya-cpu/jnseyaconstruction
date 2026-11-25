@@ -53,7 +53,8 @@ export default function AboutPage() {
           </div>
           <div className="span-7">
             <p className="lede" style={{ color: "var(--ink)" }}>
-              To plan, set up and build projects for public, energy, housing and data-centre clients with one accountable
+              To plan, set up and build projects for public and private clients, in energy, housing, data centres and commercial
+              property, with one accountable
               team, a vetted supply chain and one set of project data.
             </p>
             <p>

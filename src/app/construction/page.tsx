@@ -8,7 +8,7 @@ import { group } from "@/content/settings";
 
 export const metadata: Metadata = {
   title: "Nseya Construction: buildings and power",
-  description: "Buildings from renovation to mixed-use, and civils, M&E and HVAC for substations, 33kV and 132kV cable routes and data centres.",
+  description: "Buildings, and civils, M&E and HVAC for substations, 33kV and 132kV cable routes and data centres, delivered BIM-led to ISO 19650.",
   alternates: { canonical: "/construction" },
 };
 
@@ -86,6 +86,30 @@ const disciplines = [
   { name: "M&E", text: "Mechanical and electrical installation, from distribution boards to plant rooms." },
   { name: "HVAC", text: "Heating, ventilation and air-conditioning, including cooling for data halls." },
   { name: "Building services", text: "Coordination, testing and commissioning of all services before handover." },
+];
+
+/** BIM-led delivery to ISO 19650 (PG-05). */
+const bim = [
+  {
+    name: "Federated models",
+    what: "Architectural, structural, civils and M&E models combined into one coordinated model, issued through the common data environment with status codes.",
+    get: "One current model that every trade builds from",
+  },
+  {
+    name: "Clash review",
+    what: "Weekly clash detection between disciplines before work is released to site, with each clash given an owner and a date to resolve it.",
+    get: "Clash report and resolved-issues log",
+  },
+  {
+    name: "4D sequences",
+    what: "The construction programme linked to the model, so the build sequence, logistics and temporary works can be checked before they happen.",
+    get: "4D sequence for key stages and site logistics",
+  },
+  {
+    name: "Digital handover and asset data",
+    what: "As-built models, test certificates and O&M information checked against the client's asset information requirements and handed over as structured data (COBie where required).",
+    get: "Asset information model ready for facilities management",
+  },
 ];
 
 export default function ConstructionPage() {
@@ -182,7 +206,42 @@ export default function ConstructionPage() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="delivery-title">
+      <section className="section" id="bim" aria-labelledby="bim-title">
+        <div className="container grid">
+          <div className="span-4">
+            <p className="label">BIM-led delivery</p>
+            <h2 id="bim-title">Built from the model, handed over as data</h2>
+            <p className="muted">
+              We run projects to BS EN ISO 19650-2. Design and site teams work from one federated model in a common data environment, and the client
+              receives asset data they can use to run the building or network.
+            </p>
+            <p>
+              <Link className="link-arrow" href="/consultancy#bim-information-management">Information management from Nseya Consultancy</Link>
+            </p>
+          </div>
+          <div className="span-8">
+            <div className="table-wrap">
+              <table className="table">
+                <caption className="visually-hidden">The four parts of BIM-led delivery</caption>
+                <thead>
+                  <tr><th scope="col">What</th><th scope="col">What we do</th><th scope="col">What you get</th></tr>
+                </thead>
+                <tbody>
+                  {bim.map((b) => (
+                    <tr key={b.name}>
+                      <th scope="row">{b.name}</th>
+                      <td>{b.what}</td>
+                      <td>{b.get}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--concrete" aria-labelledby="delivery-title">
         <div className="container grid">
           <div className="span-5">
             <p className="label">Delivery model</p>

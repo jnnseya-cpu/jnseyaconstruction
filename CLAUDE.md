@@ -8,6 +8,7 @@ Every page follows sections 5 to 9 of the *Nseya Groupe Construction — Website
 - Records: PostgreSQL via `DATABASE_URL` (`scripts/schema.sql`, `npm run db:migrate`). Without it, development uses `storage/dev-db.json`. Production refuses to start forms without a database.
 - Uploads: private storage (`UPLOAD_DIR`), never under `/public`. Email: SMTP via `SMTP_URL`; dev writes to `storage/outbox`.
 - Hosting target: Google Cloud Run (UK/EU region) with CDN; staging and production.
+- Domain (D1, decided 25 Nov 2026): https://nseyagroup.com. nseyagroup.co.uk, nseya.uk and nseyagroupe.com 301 to it (`src/middleware.ts`, list in `src/content/settings.ts`). Group mailboxes: hello@, careers@, suppliers@, justin@.
 
 ## Brand tokens (section 3) — `src/app/globals.css`
 Navy #0E2A3B base; Teal #1BA996 (group, Consultancy); Amber #F2A20C (ETABLIX); Cobalt #1E5AA8 (Construction); Slate #5B6770; Concrete #E6E8EA; White.

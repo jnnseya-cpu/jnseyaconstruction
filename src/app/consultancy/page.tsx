@@ -3,11 +3,12 @@ import Link from "next/link";
 import { CapabilityCard, CrossLinks, EnquirySection, SectorsServed, ServiceBlock, ServiceIndex, type ServiceDetail } from "@/components/company/CompanyBlocks";
 import { CompanyDrawing } from "@/components/company/CompanyDrawing";
 import { PageHero } from "@/components/PageHero";
+import { InformationCycle } from "@/components/modules/InformationCycle";
 import { getCompany, getServices } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Nseya Consultancy: project and cost managers",
-  description: "Project, cost and controls management, feasibility studies, tender and procurement support and Bid-On from Nseya Consultancy, Birmingham.",
+  description: "Project, cost and controls management, feasibility, BIM to ISO 19650, tender support and Bid-On from Nseya Consultancy, Birmingham.",
   alternates: { canonical: "/consultancy" },
 };
 
@@ -49,6 +50,16 @@ const details: Record<string, ServiceDetail> = {
     ],
     deliverables: ["Feasibility report with options appraisal", "Order of cost estimate per option", "Outline programme", "Risk register"],
   },
+  "bim-information-management": {
+    problem: "Design, cost and site teams each keep their own version of the information. Clients get models and documents at handover that nobody can find, trust or use to run the building.",
+    whatWeDo: [
+      "Write the client's information requirements: organisational, asset, project and exchange information requirements (OIR, AIR, PIR, EIR).",
+      "Assess each team's capability and agree the BIM execution plan and the master information delivery plan (MIDP).",
+      "Set up and run the common data environment, with naming, status codes and approval steps to BS EN ISO 19650-2 and the UK National Annex.",
+      "Check each information exchange against the requirements before it is accepted.",
+    ],
+    deliverables: ["Information requirements (OIR, AIR, PIR, EIR)", "BIM execution plan and MIDP", "Common data environment set up and run", "Information model accepted at handover"],
+  },
   "tender-and-procurement": {
     problem: "A weak procurement route or unclear tender documents lead to bids that cannot be compared, and to claims later.",
     whatWeDo: [
@@ -68,6 +79,8 @@ const details: Record<string, ServiceDetail> = {
     deliverables: ["Bid/no-bid review", "Bid plan and response matrix", "Reviewed quality answers", "Compliance check before submission"],
   },
 };
+
+const numberWord = (n: number) => ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"][n] ?? String(n);
 
 const engagement = [
   { name: "Fixed fee", text: "For a defined scope with clear outputs, such as a feasibility study or a single procurement. You know the cost before we start." },
@@ -98,7 +111,7 @@ export default function ConsultancyPage() {
         <div className="container grid">
           <div className="span-4">
             <div style={{ position: "sticky", top: "calc(var(--header-h) + 24px)" }}>
-              <h2 id="services-title">Six services</h2>
+              <h2 id="services-title">{numberWord(services.length)} services</h2>
               <p className="muted">Each can be bought on its own, or together as client-side project management.</p>
               <div className="section--dark" style={{ padding: "20px 20px 8px", marginTop: 20 }}>
                 <ServiceIndex services={services} />
@@ -107,7 +120,7 @@ export default function ConsultancyPage() {
           </div>
           <div className="span-8">
             {services.map((s, i) => (
-              <ServiceBlock key={s.slug} service={s} detail={details[s.slug]} index={i} company={company} />
+              <ServiceBlock key={s.slug} service={s} detail={details[s.slug]} index={i} company={company} extra={s.slug === "bim-information-management" ? <InformationCycle /> : undefined} />
             ))}
           </div>
         </div>

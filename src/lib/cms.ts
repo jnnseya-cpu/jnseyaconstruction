@@ -6,7 +6,7 @@ import { companies, companyOrder } from "@/content/companies";
 import { accreditations, policies } from "@/content/policies";
 import { sectors } from "@/content/sectors";
 import { services } from "@/content/services";
-import { groupLegalEntity } from "@/content/settings";
+import { domains, groupLegalEntity } from "@/content/settings";
 import type { CompanyId, LegalEntity, Vacancy, VacancyRoute } from "@/content/types";
 import { vacancies } from "@/content/vacancies";
 
@@ -79,5 +79,6 @@ export function getAccreditations(now = new Date()) {
 }
 
 export function siteUrl() {
-  return (process.env.SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+  const fallback = process.env.NODE_ENV === "production" ? `https://${domains.canonical}` : "http://localhost:3000";
+  return (process.env.SITE_URL || fallback).replace(/\/$/, "");
 }

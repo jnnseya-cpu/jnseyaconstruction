@@ -40,6 +40,14 @@ export const services: Service[] = [
     pagePhase: "P2",
   },
   {
+    slug: "bim-information-management",
+    company: "consultancy",
+    name: "BIM and information management",
+    summary: "Information management to ISO 19650: information requirements, the delivery plan and a common data environment run for the whole team.",
+    sectors: ["public-estate", "social-housing", "energy-grid", "data-centres", "commercial-mixed-use"],
+    pagePhase: "P2",
+  },
+  {
     slug: "tender-and-procurement",
     company: "consultancy",
     name: "Tender and procurement management",
