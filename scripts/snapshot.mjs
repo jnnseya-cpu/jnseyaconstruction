@@ -6,7 +6,10 @@ const OUT = process.argv[2];
 const ROOT = process.argv[3];
 mkdirSync(`${OUT}/media`, { recursive: true });
 mkdirSync(`${OUT}/downloads`, { recursive: true });
-const paths = ["/", "/about", "/consultancy", "/etablix", "/construction", "/services", "/careers", "/careers/graduate-academy", "/careers/apprenticeships", "/careers/experienced", "/careers/vacancies", "/careers/how-we-recruit", "/careers/inclusion", "/careers/talent-pool", "/careers/apply", "/suppliers", "/suppliers/apply", "/suppliers/account", "/suppliers/code-and-policies", "/contact", "/privacy", "/cookies", "/terms", "/accessibility", "/modern-slavery"];
+const sitemap = await (await fetch(`${BASE}/sitemap.xml`)).text();
+const fromSitemap = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
+const vacancyApply = fromSitemap.filter((p) => /^\/careers\/vacancies\/[^/]+$/.test(p)).map((p) => `${p}/apply`);
+const paths = [...new Set([...fromSitemap, ...vacancyApply, "/careers/apply", "/suppliers/account"])];
 const fileFor = (p) => (p === "/" ? "home.html" : p.slice(1).replace(/\//g, "-") + ".html");
 const known = new Set(paths);
 const fonts = new Set();
@@ -37,7 +40,7 @@ const enhance = `<script>
   }
 })();
 </script>`;
-const banner = `<div class="preview-banner" role="note">Preview snapshot of the Phase 1 site, 25 November 2026. Forms and sign-in are switched off here.</div>`;
+const banner = `<div class="preview-banner" role="note">Preview snapshot of the Phase 1 site, ${new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}. Forms and sign-in are switched off here.</div>`;
 
 for (const p of paths) {
   let html = await (await fetch(BASE + p)).text();
