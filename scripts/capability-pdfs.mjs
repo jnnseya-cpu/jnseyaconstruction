@@ -8,6 +8,7 @@
  * completed projects. Edit the COMPANIES object, re-run, and commit the PDFs.
  * Keep the legal-entity text in step with src/content/settings.ts.
  */
+import { readFileSync } from "node:fs";
 import { mkdir, readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -53,6 +54,7 @@ const COMPANIES = {
     accent: "#F2A20C",
     accentText: "#9A6200",
     mark: "E",
+    logo: "public/brand/etablix-logo-on-dark.png",
     dwg: "NGC-CS-E01",
     intro:
       "ETABLIX plans, sets up, runs and removes the temporary facilities a construction project needs: site cabins, welfare, security, cleaning and, on the largest projects, workforce villages. Full details are on etablix.com.",
@@ -153,7 +155,7 @@ footer{position:absolute;left:16mm;right:16mm;bottom:9mm;background:#fff;border-
 </style></head><body>
 <section class="page">
 <header>
-<div class="brand">${hex}<div><small>Nseya Group Construction</small><b>${esc(c.name)}</b></div></div>
+<div class="brand">${c.logo ? `<img src="data:image/png;base64,${readFileSync(c.logo).toString("base64")}" alt="${esc(c.name)}" style="height:15mm;width:auto"><div><small>A Nseya Group Construction company</small></div>` : `${hex}<div><small>Nseya Group Construction</small><b>${esc(c.name)}</b></div>`}</div>
 <p class="label" style="margin-top:9mm">Capability statement</p>
 <h1>${esc(c.name)}</h1>
 <p class="intro">${esc(c.intro)}</p>

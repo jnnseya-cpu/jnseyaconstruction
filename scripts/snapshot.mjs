@@ -55,7 +55,10 @@ for (const p of paths) {
   const desc = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || "";
   let body = (html.match(/<body[^>]*>([\s\S]*)<\/body>/) || [])[1] || "";
   body = body.replace(/<script\b[\s\S]*?<\/script>/g, "").replace(/<link[^>]*>/g, "");
-  body = fix(body);
+  body = fix(body)
+    // next/image: point at the original file and drop the optimiser srcset
+    .replace(/\ssrcSet="[^"]*"/gi, "")
+    .replace(/src="\/_next\/image\?url=([^&"]+)[^"]*"/g, (_, u) => `src="${decodeURIComponent(u).replace(/^\//, "")}"`);
   const headBits = `<title>${p === "/" ? "Nseya Group Website" : title}</title>\n<meta name="description" content="${desc}">\n<link rel="stylesheet" href="site.css">`;
   const content = `<div data-company="group" class="snapshot-body">${banner}${body}</div>${enhance}`;
   const doc = p === "/" ? `${headBits}\n${content}` : `<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">${headBits}</head><body data-company="group">${content}</body></html>`;
@@ -70,5 +73,7 @@ for (const f of fonts) {
 }
 css += `\n:root{color-scheme:light}html,body{background:#fff;color:#0e2a3b}body{margin:0;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:var(--fs-body)}.preview-banner{background:#f2a20c;color:#0e2a3b;font:500 .8125rem/1.4 "IBM Plex Mono",monospace;padding:8px max(16px,env(safe-area-inset-left,0px));text-align:center}.cookie-banner{display:none}`;
 writeFileSync(`${OUT}/site.css`, css);
+mkdirSync(`${OUT}/brand`, { recursive: true });
+for (const f of readdirSync(`${ROOT}/public/brand`)) copyFileSync(`${ROOT}/public/brand/${f}`, `${OUT}/brand/${f}`);
 for (const f of readdirSync(`${ROOT}/public/downloads`)) copyFileSync(`${ROOT}/public/downloads/${f}`, `${OUT}/downloads/${f}`);
 console.log("pages", paths.length, "fonts", fonts.size, "css", css.length);

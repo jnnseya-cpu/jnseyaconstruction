@@ -8,6 +8,7 @@ export function PageHero({
   crumbs,
   children,
   aside,
+  brand,
 }: {
   label?: string;
   title: ReactNode;
@@ -15,6 +16,8 @@ export function PageHero({
   crumbs: Crumb[];
   children?: ReactNode;
   aside?: ReactNode;
+  /** A company logo shown above the label. */
+  brand?: ReactNode;
 }) {
   return (
     <section className="hero hero--page drawing-grid">
@@ -22,6 +25,7 @@ export function PageHero({
         <Breadcrumb items={crumbs} />
         <div className="grid" style={{ alignItems: "end" }}>
           <div className={aside ? "span-7" : "span-8"}>
+            {brand}
             {label && <p className="label">{label}</p>}
             <h1>{title}</h1>
             {lede && <p className="lede">{lede}</p>}

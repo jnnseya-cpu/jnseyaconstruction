@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { CapabilityCard, CrossLinks, ExternalLink, SectorsServed } from "@/components/company/CompanyBlocks";
 import { CompanyDrawing } from "@/components/company/CompanyDrawing";
 import { DiagnosticForm } from "@/components/forms/DiagnosticForm";
@@ -23,7 +24,18 @@ export default function EtablixPage() {
     <div data-company="etablix">
       <PageHero
         crumbs={[{ name: "ETABLIX", href: "/etablix" }]}
-        label="ETABLIX · a Nseya Group Construction company"
+        label="A Nseya Group Construction company"
+        brand={
+          <Image
+            src="/brand/etablix-logo-on-dark.png"
+            alt="ETABLIX, integrated site services"
+            width={1200}
+            height={265}
+            priority
+            sizes="(max-width: 600px) 80vw, 360px"
+            style={{ width: "min(360px, 80vw)", height: "auto", marginBottom: 20 }}
+          />
+        }
         title="Site services for the whole life of a project"
         lede={c.overview}
         aside={<CompanyDrawing kind="etablix" />}
