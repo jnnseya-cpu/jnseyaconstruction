@@ -28,7 +28,7 @@ export const heardOptions = [
 ] as const;
 
 export const companyFilterOptions = [
-  { value: "group", label: "Nseya Groupe" },
+  { value: "group", label: "Nseya Group" },
   { value: "consultancy", label: "Nseya Consultancy" },
   { value: "etablix", label: "ETABLIX" },
   { value: "construction", label: "Nseya Construction" },

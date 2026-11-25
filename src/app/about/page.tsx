@@ -11,7 +11,7 @@ import { getCompanies, getLegalEntity, showDrafts } from "@/lib/cms";
 export const metadata: Metadata = {
   title: "About the group",
   description:
-    "Who we are: the structure of Nseya Groupe Construction, its founder Justin Nseya MCIOB, our values and the legal entity you contract with.",
+    "Who we are: the structure of Nseya Group Construction, its founder Justin Nseya MCIOB, our values and the legal entity you contract with.",
   alternates: { canonical: "/about" },
 };
 

@@ -88,7 +88,7 @@ export default function ApprenticeshipsPage() {
           <div className="cards" style={{ marginTop: 24 }}>
             <div className="card">
               <h3 style={{ fontSize: "1.25rem" }}>Jobcentre Plus</h3>
-              <p>Tell your work coach you want to work in construction. Ask them to refer you to Nseya Groupe Construction.</p>
+              <p>Tell your work coach you want to work in construction. Ask them to refer you to Nseya Group Construction.</p>
             </div>
             <div className="card">
               <h3 style={{ fontSize: "1.25rem" }}>SWAP</h3>

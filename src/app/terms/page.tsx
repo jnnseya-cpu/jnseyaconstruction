@@ -5,7 +5,7 @@ import { getLegalEntity } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Terms of use",
-  description: "Terms for using the Nseya Groupe Construction website, operated by JNN Global Ltd.",
+  description: "Terms for using the Nseya Group Construction website, operated by JNN Global Ltd.",
   alternates: { canonical: "/terms" },
 };
 

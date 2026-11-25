@@ -9,7 +9,7 @@ import { getOpenVacancies } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Vacancies",
-  description: "Current graduate, apprentice, trainee and experienced construction vacancies at Nseya Groupe Construction, Birmingham.",
+  description: "Current graduate, apprentice, trainee and experienced construction vacancies at Nseya Group Construction, Birmingham.",
   alternates: { canonical: "/careers/vacancies" },
 };
 

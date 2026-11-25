@@ -62,7 +62,7 @@ export const leadership = {
 };
 
 export const group = {
-  name: "Nseya Groupe Construction",
+  name: "Nseya Group Construction",
   promise: "Three construction companies, one accountable team, from first study to final handover.",
   tradingStart: "2027",
   etablixUrl: "https://etablix.com",

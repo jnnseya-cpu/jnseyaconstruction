@@ -29,7 +29,7 @@ export async function subscribe(_prev: FormState, form: FormData): Promise<FormS
     email: addr,
     status: existing?.data.status === "confirmed" ? "confirmed" : "pending",
     tokenHash: hash,
-    consentText: "Field notes from Nseya Groupe Construction, about once a month. Unsubscribe at any time.",
+    consentText: "Field notes from Nseya Group Construction, about once a month. Unsubscribe at any time.",
   };
   // Unconfirmed sign-ups are removed after 30 days.
   const pendingExpiry = new Date(Date.now() + 30 * 86400_000);
@@ -41,7 +41,7 @@ export async function subscribe(_prev: FormState, form: FormData): Promise<FormS
       {
         to: addr,
         subject: "Please confirm your subscription",
-        text: `Please confirm you want field notes from Nseya Groupe Construction by opening this link:\n\n${siteUrl()}/newsletter/confirm?token=${token}\n\nIf you did not ask for this, ignore this email and we will delete your address within 30 days.${signature}`,
+        text: `Please confirm you want field notes from Nseya Group Construction by opening this link:\n\n${siteUrl()}/newsletter/confirm?token=${token}\n\nIf you did not ask for this, ignore this email and we will delete your address within 30 days.${signature}`,
       },
       "FM-06 confirm",
     );

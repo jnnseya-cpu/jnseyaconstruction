@@ -12,7 +12,7 @@ import { group } from "@/content/settings";
 import { getCompanies, getLegalEntity, getServices } from "@/lib/cms";
 
 export const metadata: Metadata = {
-  title: { absolute: "Nseya Groupe Construction | Birmingham" },
+  title: { absolute: "Nseya Group Construction | Birmingham" },
   description:
     "Nseya Consultancy, ETABLIX and Nseya Construction: one Birmingham construction group for public and private clients across the UK.",
   alternates: { canonical: "/" },
@@ -61,7 +61,7 @@ export default function HomePage() {
       <section className="hero drawing-grid">
         <div className={`container hero__inner ${styles.heroGrid}`}>
           <div>
-            <p className="label">Nseya Groupe Construction · Birmingham</p>
+            <p className="label">Nseya Group Construction · Birmingham</p>
             <h1>{group.promise}</h1>
             <p className="lede">
               Nseya Consultancy, ETABLIX and Nseya Construction work as one group for public and private clients across the UK:

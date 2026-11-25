@@ -30,7 +30,7 @@ const enquirySchema = z.object({
   sourcePage: opt(200),
 });
 
-const companyName = { consultancy: "Nseya Consultancy", etablix: "ETABLIX", construction: "Nseya Construction", "not-sure": "Nseya Groupe Construction" };
+const companyName = { consultancy: "Nseya Consultancy", etablix: "ETABLIX", construction: "Nseya Construction", "not-sure": "Nseya Group Construction" };
 const companyInbox = (c: (typeof companyOptions)[number]) =>
   c === "consultancy" ? inbox.consultancy() : c === "etablix" ? inbox.etablix() : c === "construction" ? inbox.construction() : inbox.group();
 

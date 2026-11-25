@@ -133,7 +133,7 @@ export default function ConstructionPage() {
           <a className="btn" href="#enquiry">Send a project enquiry</a>
           <a className="btn btn--ghost" href="#power-and-digital">Power and digital</a>
         </div>
-        <p className="hero__meta"><span>Part of Nseya Groupe Construction</span><span>Birmingham · West Midlands</span><span>Trading from 2027</span></p>
+        <p className="hero__meta"><span>Part of Nseya Group Construction</span><span>Birmingham · West Midlands</span><span>Trading from 2027</span></p>
       </PageHero>
 
       <section className="section section--tight section--concrete" aria-label="Two markets">

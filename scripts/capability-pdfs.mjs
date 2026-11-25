@@ -153,7 +153,7 @@ footer{position:absolute;left:16mm;right:16mm;bottom:9mm;background:#fff;border-
 </style></head><body>
 <section class="page">
 <header>
-<div class="brand">${hex}<div><small>Nseya Groupe Construction</small><b>${esc(c.name)}</b></div></div>
+<div class="brand">${hex}<div><small>Nseya Group Construction</small><b>${esc(c.name)}</b></div></div>
 <p class="label" style="margin-top:9mm">Capability statement</p>
 <h1>${esc(c.name)}</h1>
 <p class="intro">${esc(c.intro)}</p>
@@ -167,7 +167,7 @@ footer{position:absolute;left:16mm;right:16mm;bottom:9mm;background:#fff;border-
 <div><h2><span class="label">How</span>How we work</h2><ul>${c.how.map((h) => `<li>${esc(h)}</li>`).join("")}</ul></div>
 </div>
 <div class="box">
-<p><b>Part of Nseya Groupe Construction.</b> The group has three companies: Nseya Consultancy, ETABLIX and Nseya Construction. The companies start trading in 2027; this statement describes the services we offer, not past company projects.</p>
+<p><b>Part of Nseya Group Construction.</b> The group has three companies: Nseya Consultancy, ETABLIX and Nseya Construction. The companies start trading in 2027; this statement describes the services we offer, not past company projects.</p>
 <p>Contact us through the enquiry form at <b>${esc(site)}${esc(c.contactPath)}</b>. We reply within one working day.${c.extra ? ` Full ETABLIX details: <b>etablix.com</b>.` : ""}</p>
 </div>
 </main>

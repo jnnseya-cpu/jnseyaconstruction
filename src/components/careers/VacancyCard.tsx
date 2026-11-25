@@ -4,7 +4,7 @@ import { routeLabels } from "@/lib/cms";
 import { formatDate, formatSalary } from "@/lib/format";
 import { companyFilterOptions, contractLabels } from "./schema";
 
-export const companyLabel = (c: Vacancy["company"]) => companyFilterOptions.find((o) => o.value === c)?.label ?? "Nseya Groupe";
+export const companyLabel = (c: Vacancy["company"]) => companyFilterOptions.find((o) => o.value === c)?.label ?? "Nseya Group";
 
 /** Vacancy card (section 7 core component). */
 export function VacancyCard({ v }: { v: Vacancy }) {

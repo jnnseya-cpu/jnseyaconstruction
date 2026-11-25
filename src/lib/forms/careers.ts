@@ -187,7 +187,7 @@ export async function submitJobAlert(_prev: FormState, form: FormData): Promise<
     await sendEmail(
       {
         to: email,
-        subject: "Job alerts from Nseya Groupe Construction",
+        subject: "Job alerts from Nseya Group Construction",
         text: `You will get an email when we open a new role of the type you chose.\n\nTo stop these emails at any time:\n${siteUrl()}/careers/alerts/unsubscribe?token=${unsubscribeToken}${signature}`,
       },
       "CR-05 alert confirmation",

@@ -27,7 +27,7 @@ export default function InclusionPage() {
             <p className="label">Equal opportunity</p>
             <h2>Our equal-opportunity statement</h2>
             <p>
-              Nseya Groupe Construction (JNN Global Ltd) gives everyone an equal chance. We recruit, train, pay and promote people on
+              Nseya Group Construction (JNN Global Ltd) gives everyone an equal chance. We recruit, train, pay and promote people on
               their skills and potential. We do not discriminate because of age, disability, gender reassignment, marriage or civil
               partnership, pregnancy or maternity, race, religion or belief, sex or sexual orientation, the protected characteristics in
               the Equality Act 2010.

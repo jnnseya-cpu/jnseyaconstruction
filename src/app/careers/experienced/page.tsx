@@ -7,7 +7,7 @@ import { PageHero } from "@/components/PageHero";
 
 export const metadata: Metadata = {
   title: "Experienced roles",
-  description: "Project, site, HSEQ, commercial and MEP roles with Nseya Groupe Construction in Birmingham, with growth shares for director roles.",
+  description: "Project, site, HSEQ, commercial and MEP roles with Nseya Group Construction in Birmingham, with growth shares for director roles.",
   alternates: { canonical: "/careers/experienced" },
 };
 

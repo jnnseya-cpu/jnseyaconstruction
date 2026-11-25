@@ -20,7 +20,7 @@ export default function Privacy() {
         Our registered office is {e.registeredOffice}. We are registered with the Information Commissioner&apos;s Office (ICO) under number {e.icoRegistration}.
       </p>
       <p>
-        Nseya Consultancy, ETABLIX and Nseya Construction are the trading companies of Nseya Groupe Construction. Until each company is incorporated, {e.legalName} is the controller for all of them.
+        Nseya Consultancy, ETABLIX and Nseya Construction are the trading companies of Nseya Group Construction. Until each company is incorporated, {e.legalName} is the controller for all of them.
       </p>
       <p>
         To contact us about your data, use the <Link href="/contact">contact form</Link> and choose &quot;Anything else&quot;

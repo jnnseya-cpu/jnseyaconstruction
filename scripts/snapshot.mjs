@@ -51,12 +51,12 @@ for (const p of paths) {
     c = c.replace(/url\((?:\.\.\/)*(?:\/_next\/static\/)?media\/([^)]+)\)/g, (_, f) => { fonts.add(f); return `url(media/${f})`; });
     css += c + "\n";
   }
-  const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || "Nseya Groupe";
+  const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || "Nseya Group";
   const desc = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || "";
   let body = (html.match(/<body[^>]*>([\s\S]*)<\/body>/) || [])[1] || "";
   body = body.replace(/<script\b[\s\S]*?<\/script>/g, "").replace(/<link[^>]*>/g, "");
   body = fix(body);
-  const headBits = `<title>${p === "/" ? "Nseya Groupe Website" : title}</title>\n<meta name="description" content="${desc}">\n<link rel="stylesheet" href="site.css">`;
+  const headBits = `<title>${p === "/" ? "Nseya Group Website" : title}</title>\n<meta name="description" content="${desc}">\n<link rel="stylesheet" href="site.css">`;
   const content = `<div data-company="group" class="snapshot-body">${banner}${body}</div>${enhance}`;
   const doc = p === "/" ? `${headBits}\n${content}` : `<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">${headBits}</head><body data-company="group">${content}</body></html>`;
   if (p === "/") {

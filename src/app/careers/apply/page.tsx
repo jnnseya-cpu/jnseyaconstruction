@@ -3,7 +3,7 @@ import { ApplicationForm } from "@/components/forms/ApplicationForm";
 import { PageHero } from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Apply to Nseya Groupe Construction",
+  title: "Apply to Nseya Group Construction",
   description: "Apply to the Graduate Academy, an apprenticeship or a trainee role. About five minutes on a phone. No CV needed.",
   alternates: { canonical: "/careers/apply" },
 };

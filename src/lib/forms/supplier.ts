@@ -60,7 +60,7 @@ export async function startApplication(_prev: FormState, form: FormData): Promis
       {
         to: parsed.data.email,
         subject: "Your supplier application: link to continue",
-        text: `Thank you for starting your supplier application with Nseya Groupe Construction.\n\nYour progress is saved after each step. To continue at any time in the next ${DRAFT_DAYS} days, use this link:\n\n${siteUrl()}/suppliers/apply?resume=${token}\n\nKeep this link private: anyone with it can see and change your application.${signature}`,
+        text: `Thank you for starting your supplier application with Nseya Group Construction.\n\nYour progress is saved after each step. To continue at any time in the next ${DRAFT_DAYS} days, use this link:\n\n${siteUrl()}/suppliers/apply?resume=${token}\n\nKeep this link private: anyone with it can see and change your application.${signature}`,
       },
       "FM-03 resume link",
     );
@@ -329,7 +329,7 @@ export async function submitApplication(_prev: FormState, form: FormData): Promi
         {
           to: d.email,
           subject: `Supplier application received: ${ref}`,
-          text: `Dear ${d.company.contactName},\n\nThank you for applying to join the Nseya Groupe Construction supply chain. Your reference number is ${ref}.\n\nStatus: ${statusLabels.applied}.\n\nWhat happens next: our supply-chain coordinator checks your evidence and references, normally within 10 working days, and emails you the decision with the reason. You can see your status and keep your documents up to date at ${siteUrl()}/suppliers/account.\n\nWe never ask for bank details by email. After approval we request them through your signed-in supplier account and confirm them by phone on a number we already hold.${signature}`,
+          text: `Dear ${d.company.contactName},\n\nThank you for applying to join the Nseya Group Construction supply chain. Your reference number is ${ref}.\n\nStatus: ${statusLabels.applied}.\n\nWhat happens next: our supply-chain coordinator checks your evidence and references, normally within 10 working days, and emails you the decision with the reason. You can see your status and keep your documents up to date at ${siteUrl()}/suppliers/account.\n\nWe never ask for bank details by email. After approval we request them through your signed-in supplier account and confirm them by phone on a number we already hold.${signature}`,
         },
         "FM-03 acknowledgement",
       ),

@@ -11,7 +11,7 @@ import { etablixContent as c } from "./content";
 
 export const metadata: Metadata = {
   title: "ETABLIX: integrated site services",
-  description: "ETABLIX plans, sets up, runs and removes site cabins, welfare, security and workforce villages. A Nseya Groupe Construction company.",
+  description: "ETABLIX plans, sets up, runs and removes site cabins, welfare, security and workforce villages. A Nseya Group Construction company.",
   alternates: { canonical: "/etablix" },
 };
 
@@ -23,7 +23,7 @@ export default function EtablixPage() {
     <div data-company="etablix">
       <PageHero
         crumbs={[{ name: "ETABLIX", href: "/etablix" }]}
-        label="ETABLIX · a Nseya Groupe Construction company"
+        label="ETABLIX · a Nseya Group Construction company"
         title="Site services for the whole life of a project"
         lede={c.overview}
         aside={<CompanyDrawing kind="etablix" />}

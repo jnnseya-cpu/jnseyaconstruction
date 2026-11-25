@@ -72,7 +72,7 @@ export function Footer() {
             <Link href="/" className="brand">
               <HexMark />
               <span className="brand__text">
-                <span className="brand__name">Nseya Groupe</span>
+                <span className="brand__name">Nseya Group</span>
                 <span className="brand__sub">Construction</span>
               </span>
             </Link>

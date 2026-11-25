@@ -1,6 +1,6 @@
-# Nseya Groupe Construction — group website
+# Nseya Group Construction — group website
 
-Every page follows sections 5 to 9 of the *Nseya Groupe Construction — Website Requirements Specification* (24 Nov 2026). Phase 1 goes live on 4 January 2027.
+Every page follows sections 5 to 9 of the *Nseya Group Construction — Website Requirements Specification* (24 Nov 2026). Phase 1 goes live on 4 January 2027.
 
 ## Stack
 - Next.js 15 (App Router), React 19, TypeScript 5 (strict). Static generation for content pages; server actions for forms.

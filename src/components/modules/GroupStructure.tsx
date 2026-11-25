@@ -39,7 +39,7 @@ export function GroupStructure({ companies, legalEntity, headingLevel = 3 }: { c
       <div className={styles.diagram} aria-label="Group structure">
         <div className={styles.parent}>
           <span className={styles.code}>Group</span>
-          <strong>Nseya Groupe Construction</strong>
+          <strong>Nseya Group Construction</strong>
           <span className={styles.entity}>Contracting entity until incorporation: {legalEntity}</span>
         </div>
         <div className={styles.branches} aria-hidden="true">

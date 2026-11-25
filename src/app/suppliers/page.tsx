@@ -7,7 +7,7 @@ import { gbp, minimums } from "@/lib/suppliers/minimums";
 
 export const metadata: Metadata = {
   title: "Suppliers and subcontractors",
-  description: "Join the Nseya Groupe Construction supply chain: 30-day payment, a free seat on the project platform, and a clear online vetting process.",
+  description: "Join the Nseya Group Construction supply chain: 30-day payment, a free seat on the project platform, and a clear online vetting process.",
   alternates: { canonical: "/suppliers" },
 };
 

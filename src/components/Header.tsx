@@ -11,7 +11,7 @@ const companyFromPath = (p: string): CompanyKey =>
   p.startsWith("/consultancy") ? "consultancy" : p.startsWith("/etablix") ? "etablix" : p.startsWith("/construction") ? "construction" : "group";
 
 const switcherLinks: { key: CompanyKey; href: string; label: string; colour: string }[] = [
-  { key: "group", href: "/", label: "Nseya Groupe", colour: "var(--teal)" },
+  { key: "group", href: "/", label: "Nseya Group", colour: "var(--teal)" },
   { key: "consultancy", href: "/consultancy", label: "Nseya Consultancy", colour: "var(--teal)" },
   { key: "etablix", href: "/etablix", label: "ETABLIX", colour: "var(--amber)" },
   { key: "construction", href: "/construction", label: "Nseya Construction", colour: "var(--cobalt-light)" },
@@ -87,7 +87,7 @@ export function Header() {
           <Link href="/" className="brand">
             <HexMark letter={company === "etablix" ? "E" : "N"} />
             <span className="brand__text">
-              <span className="brand__name">Nseya Groupe</span>
+              <span className="brand__name">Nseya Group</span>
               <span className="brand__sub">Construction</span>
               <span className="visually-hidden">, home</span>
             </span>

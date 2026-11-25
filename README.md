@@ -1,4 +1,4 @@
-# Nseya Groupe Construction — group website
+# Nseya Group Construction — group website
 
 Phase 1 ("Minimum Credible Site") of the group website, built to the *Website Requirements Specification* of 24 November 2026. See `CLAUDE.md` for the rules every change must follow.
 

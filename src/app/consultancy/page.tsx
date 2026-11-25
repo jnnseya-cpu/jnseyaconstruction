@@ -104,7 +104,7 @@ export default function ConsultancyPage() {
           <a className="btn" href="#enquiry">Send an enquiry</a>
           <a className="btn btn--ghost" href="#services">See our services</a>
         </div>
-        <p className="hero__meta"><span>Part of Nseya Groupe Construction</span><span>Birmingham</span><span>Trading from 2027</span></p>
+        <p className="hero__meta"><span>Part of Nseya Group Construction</span><span>Birmingham</span><span>Trading from 2027</span></p>
       </PageHero>
 
       <section className="section" id="services" aria-labelledby="services-title">

@@ -159,7 +159,7 @@ export function Consent({ state, purpose }: { state?: FormState; purpose: string
       <label className="choice" htmlFor={fid("consent")}>
         <input type="checkbox" id={fid("consent")} name="consent" value="yes" required aria-invalid={error ? true : undefined} aria-describedby={error ? fid("consent-error") : undefined} />
         <span>
-          I agree that Nseya Groupe Construction (JNN Global Ltd) can use the information in this form {purpose}. Read our{" "}
+          I agree that Nseya Group Construction (JNN Global Ltd) can use the information in this form {purpose}. Read our{" "}
           <Link href="/privacy" target="_blank">privacy notice<span className="visually-hidden"> (opens in a new tab)</span></Link>.
         </span>
       </label>

@@ -82,3 +82,22 @@ describe("live domain", () => {
     expect(res.status).toBe(200);
   });
 });
+
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import path from "node:path";
+
+describe("group name", () => {
+  it("is spelled Nseya Group, never Groupe, in the site source", () => {
+    const hits: string[] = [];
+    const walk = (dir: string) => {
+      for (const f of readdirSync(dir)) {
+        const p = path.join(dir, f);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.(ts|tsx|css|mjs)$/.test(f) && /Nseya Groupe/i.test(readFileSync(p, "utf8"))) hits.push(p);
+      }
+    };
+    walk("src");
+    walk("scripts");
+    expect(hits).toEqual([]);
+  });
+});

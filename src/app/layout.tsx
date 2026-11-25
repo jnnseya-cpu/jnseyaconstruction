@@ -16,9 +16,9 @@ import { siteUrl } from "@/lib/cms";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
-  title: { default: "Nseya Groupe Construction", template: "%s | Nseya Groupe" },
+  title: { default: "Nseya Group Construction", template: "%s | Nseya Group" },
   description: "Birmingham construction group: Nseya Consultancy, ETABLIX site services and Nseya Construction. Trading from 2027.",
-  openGraph: { siteName: "Nseya Groupe Construction", locale: "en_GB", type: "website" },
+  openGraph: { siteName: "Nseya Group Construction", locale: "en_GB", type: "website" },
   icons: { icon: "/icon.svg" },
 };
 

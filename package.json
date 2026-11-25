@@ -2,7 +2,7 @@
   "name": "nseya-group-site",
   "version": "0.1.0",
   "private": true,
-  "description": "Nseya Groupe Construction group website (Phase 1)",
+  "description": "Nseya Group Construction group website (Phase 1)",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

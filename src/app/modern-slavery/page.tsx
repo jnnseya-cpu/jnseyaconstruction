@@ -5,7 +5,7 @@ import { getLegalEntity } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Modern slavery statement",
-  description: "The steps Nseya Groupe Construction takes to keep modern slavery and human trafficking out of its business and supply chain.",
+  description: "The steps Nseya Group Construction takes to keep modern slavery and human trafficking out of its business and supply chain.",
   alternates: { canonical: "/modern-slavery" },
 };
 
@@ -25,7 +25,7 @@ export default function ModernSlavery() {
       </p>
       <h2>Our business and supply chain</h2>
       <p>
-        Nseya Groupe Construction has three trading companies: Nseya Consultancy, ETABLIX and Nseya Construction. We start trading in 2027 from Birmingham.
+        Nseya Group Construction has three trading companies: Nseya Consultancy, ETABLIX and Nseya Construction. We start trading in 2027 from Birmingham.
         Our supply chain will include trade subcontractors, labour providers, plant and welfare hire, materials suppliers, security and cleaning.
       </p>
       <h2>What we do</h2>

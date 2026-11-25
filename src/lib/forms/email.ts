@@ -22,7 +22,7 @@ export interface Email {
 let transport: ReturnType<typeof nodemailer.createTransport> | null = null;
 
 async function deliver(msg: Email) {
-  const from = process.env.EMAIL_FROM || `Nseya Groupe Construction <${mailboxes.contact}>`;
+  const from = process.env.EMAIL_FROM || `Nseya Group Construction <${mailboxes.contact}>`;
   if (process.env.SMTP_URL) {
     transport ??= nodemailer.createTransport(process.env.SMTP_URL);
     await transport.sendMail({ from, ...msg });
@@ -66,4 +66,4 @@ export const inbox = {
   alerts: () => process.env.INBOX_ALERTS || mailboxes.justin,
 };
 
-export const signature = `\n\nNseya Groupe Construction\nJNN Global Ltd, company number 15405437, registered in England and Wales.\nRegistered office: 30 Fairford Road, Kingstanding, Birmingham B44 8DJ.`;
+export const signature = `\n\nNseya Group Construction\nJNN Global Ltd, company number 15405437, registered in England and Wales.\nRegistered office: 30 Fairford Road, Kingstanding, Birmingham B44 8DJ.`;
