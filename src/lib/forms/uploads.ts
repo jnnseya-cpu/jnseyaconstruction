@@ -1,35 +1,20 @@
 import "server-only";
-import { randomUUID } from "node:crypto";
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
+import { promote, readObject, removeObject, signedPutUrl, sizeOf, writeObject } from "./blob";
+import { RECEIPT_PREFIX, checkUpload, contentTypeFor, extensionOf, uploadErrorField, type UploadKind } from "./upload-rules";
 
 /**
- * Private file storage (section 6, rule 3). Files are never written under
- * /public and are never served on a public URL. In production UPLOAD_DIR
- * points at a mounted private Cloud Storage bucket (or replace saveUpload
- * with the GCS client).
+ * Uploads (section 6, rule 3: virus-scanned, private storage, never public).
+ *
+ * With JavaScript, the browser asks for a ticket, PUTs the file straight to
+ * private storage and sends only a signed receipt with the form, so form
+ * requests stay small (Vercel caps a request body at 4.5MB). Without
+ * JavaScript the file arrives in the form itself and is stored here.
+ * Either way the server checks type, size and file signature, and scans
+ * when a scanner is configured.
  */
 
-export type UploadKind = "cv" | "document" | "attachment";
-
-const LIMITS: Record<UploadKind, { maxBytes: number; types: Record<string, string[]> }> = {
-  cv: { maxBytes: 10 * 1024 * 1024, types: { pdf: ["application/pdf"], docx: ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"] } },
-  document: {
-    maxBytes: 10 * 1024 * 1024,
-    types: { pdf: ["application/pdf"], jpg: ["image/jpeg"], jpeg: ["image/jpeg"], png: ["image/png"] },
-  },
-  attachment: {
-    maxBytes: 20 * 1024 * 1024,
-    types: {
-      pdf: ["application/pdf"],
-      docx: ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
-      xlsx: ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
-      jpg: ["image/jpeg"],
-      jpeg: ["image/jpeg"],
-      png: ["image/png"],
-    },
-  },
-};
+export type { UploadKind };
 
 export interface StoredFile {
   id: string;
@@ -39,8 +24,60 @@ export interface StoredFile {
   scan: "clean" | "pending";
 }
 
+interface Ticket {
+  id: string;
+  kind: UploadKind;
+  name: string;
+  size: number;
+  exp: number;
+}
+
+const TICKET_TTL_MS = 60 * 60 * 1000;
+
+function secret() {
+  const s = process.env.UPLOAD_SECRET || process.env.SESSION_SECRET;
+  if (s) return s;
+  if (process.env.NODE_ENV === "production") throw new Error("UPLOAD_SECRET or SESSION_SECRET must be set");
+  return "development-only-upload-secret";
+}
+
+const sign = (payload: string) => createHmac("sha256", secret()).update(payload).digest("base64url");
+
+export function encodeTicket(t: Ticket): string {
+  const payload = Buffer.from(JSON.stringify(t)).toString("base64url");
+  return `${RECEIPT_PREFIX}${payload}.${sign(payload)}`;
+}
+
+export function decodeTicket(token: string, now = Date.now()): Ticket | null {
+  if (!token.startsWith(RECEIPT_PREFIX)) return null;
+  const [payload, mac] = token.slice(RECEIPT_PREFIX.length).split(".");
+  if (!payload || !mac) return null;
+  const expected = Buffer.from(sign(payload));
+  const given = Buffer.from(mac);
+  if (expected.length !== given.length || !timingSafeEqual(expected, given)) return null;
+  try {
+    const t = JSON.parse(Buffer.from(payload, "base64url").toString()) as Ticket;
+    return t.exp >= now ? t : null;
+  } catch {
+    return null;
+  }
+}
+
+const cleanName = (name: string) => name.replace(/[^\w.\- ]/g, "_").slice(0, 120) || "file";
+
+/** Issue a ticket and a signed URL for one direct upload. */
+export async function createTicket(kind: UploadKind, name: string, size: number) {
+  const problem = checkUpload(kind, name, size);
+  if (problem) return { error: problem };
+  const ext = extensionOf(name);
+  const t: Ticket = { id: `${randomUUID()}.${ext}`, kind, name: cleanName(name), size, exp: Date.now() + TICKET_TTL_MS };
+  const receipt = encodeTicket(t);
+  const contentType = contentTypeFor(kind, name)!;
+  return { receipt, url: await signedPutUrl(t.id, contentType, size, receipt), contentType };
+}
+
 /** Magic-byte check so a renamed executable is rejected. */
-function signatureMatches(ext: string, buf: Buffer) {
+export function signatureMatches(ext: string, buf: Buffer) {
   if (ext === "pdf") return buf.subarray(0, 5).toString("latin1") === "%PDF-";
   if (ext === "docx" || ext === "xlsx") return buf[0] === 0x50 && buf[1] === 0x4b;
   if (ext === "png") return buf.subarray(1, 4).toString("latin1") === "PNG";
@@ -48,19 +85,9 @@ function signatureMatches(ext: string, buf: Buffer) {
   return false;
 }
 
-export function validateUpload(file: File, kind: UploadKind): string | null {
-  const rule = LIMITS[kind];
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
-  if (!rule.types[ext]) return `The file must be ${Object.keys(rule.types).map((t) => t.toUpperCase()).join(", ")}`;
-  if (file.size > rule.maxBytes) return `The file must be smaller than ${Math.round(rule.maxBytes / 1024 / 1024)}MB`;
-  if (file.size === 0) return "The file is empty";
-  return null;
-}
-
 /**
- * Virus scan hook. Set CLAMAV_URL to a ClamAV REST scanner (e.g. a Cloud Run
- * clamav service) in production; files stay "pending" and are not opened by
- * staff until scanned clean.
+ * Virus scan hook. Set CLAMAV_URL to a ClamAV REST scanner in production;
+ * until then files stay "pending" and staff do not open them until scanned.
  */
 async function scan(buf: Buffer): Promise<"clean" | "pending" | "infected"> {
   const url = process.env.CLAMAV_URL;
@@ -74,19 +101,60 @@ async function scan(buf: Buffer): Promise<"clean" | "pending" | "infected"> {
   }
 }
 
-export async function saveUpload(file: File, kind: UploadKind): Promise<StoredFile | { error: string }> {
-  const problem = validateUpload(file, kind);
-  if (problem) return { error: problem };
-  const buf = Buffer.from(await file.arrayBuffer());
-  const ext = file.name.split(".").pop()!.toLowerCase();
-  if (!signatureMatches(ext, buf)) return { error: "The file does not look like a real " + ext.toUpperCase() + " file" };
+async function finalise(id: string, name: string, kind: UploadKind, buf: Buffer, area: "incoming" | "direct"): Promise<StoredFile | { error: string }> {
+  const ext = extensionOf(name);
+  if (!signatureMatches(ext, buf)) {
+    if (area === "incoming") await removeObject("incoming", id);
+    return { error: `The file does not look like a real ${ext.toUpperCase()} file` };
+  }
   const result = await scan(buf);
-  if (result === "infected") return { error: "The file was rejected by our virus scanner" };
-  const id = `${randomUUID()}.${ext}`;
-  const dir = path.resolve(process.cwd(), process.env.UPLOAD_DIR ?? "./storage/uploads");
-  await fs.mkdir(dir, { recursive: true });
-  await fs.writeFile(path.join(dir, id), buf, { mode: 0o600 });
-  return { id, name: file.name.replace(/[^\w.\- ]/g, "_").slice(0, 120), size: file.size, type: ext, scan: result };
+  if (result === "infected") {
+    if (area === "incoming") await removeObject("incoming", id);
+    return { error: "The file was rejected by our virus scanner" };
+  }
+  if (area === "incoming") await promote(id);
+  else await writeObject("files", id, buf, contentTypeFor(kind, name)!);
+  return { id, name: cleanName(name), size: buf.length, type: ext, scan: result };
+}
+
+/** Claim a direct upload from its receipt. Single use: the incoming object is moved. */
+export async function claimReceipt(receipt: string, kind: UploadKind): Promise<StoredFile | { error: string }> {
+  const t = decodeTicket(receipt);
+  if (!t || t.kind !== kind) return { error: "The upload has expired. Please choose the file again" };
+  const size = await sizeOf("incoming", t.id);
+  if (size === null) return { error: "We did not receive the file. Please choose it again" };
+  if (size !== t.size) {
+    await removeObject("incoming", t.id);
+    return { error: "The file did not upload completely. Please choose it again" };
+  }
+  return finalise(t.id, t.name, kind, await readObject("incoming", t.id), "incoming");
+}
+
+/** Store a file that arrived inside the form (no JavaScript). */
+export async function saveUpload(file: File, kind: UploadKind): Promise<StoredFile | { error: string }> {
+  const problem = checkUpload(kind, file.name, file.size);
+  if (problem) return { error: problem };
+  const id = `${randomUUID()}.${extensionOf(file.name)}`;
+  return finalise(id, file.name, kind, Buffer.from(await file.arrayBuffer()), "direct");
 }
 
 export const isFile = (v: FormDataEntryValue | null): v is File => typeof v === "object" && v !== null && "arrayBuffer" in v && v.size > 0;
+
+/** True when the form carries a file or a receipt for this field. */
+export function hasUpload(form: FormData, field: string) {
+  const v = form.get(field);
+  return isFile(v) || (typeof v === "string" && v.startsWith(RECEIPT_PREFIX)) || !!form.get(uploadErrorField(field));
+}
+
+/**
+ * The one call forms use: returns the stored file, an error to show beside
+ * the field, or undefined when nothing was uploaded.
+ */
+export async function takeUpload(form: FormData, field: string, kind: UploadKind): Promise<StoredFile | { error: string } | undefined> {
+  const clientError = form.get(uploadErrorField(field));
+  if (typeof clientError === "string" && clientError) return { error: clientError.slice(0, 200) };
+  const v = form.get(field);
+  if (typeof v === "string" && v.startsWith(RECEIPT_PREFIX)) return claimReceipt(v, kind);
+  if (isFile(v)) return saveUpload(v, kind);
+  return undefined;
+}

@@ -8,7 +8,8 @@ import { logEvent } from "./log";
 import { isSpam } from "./spam";
 import { addYears, nextReference, store } from "./store";
 import type { FormState } from "./types";
-import { isFile, saveUpload, type StoredFile } from "./uploads";
+import { uploadErrorField } from "./upload-rules";
+import { takeUpload, type StoredFile } from "./uploads";
 import { consent, email, formToObject, oneOf, opt, phone, req, zodErrors } from "./validate";
 
 /* FM-02 Site Systems Diagnostic request (ETABLIX). Owner: ETABLIX.
@@ -56,10 +57,13 @@ export async function submitDiagnostic(_prev: FormState, form: FormData): Promis
   const errors = parsed.success ? {} : zodErrors(parsed.error);
 
   let attachment: StoredFile | undefined;
-  const file = form.get("attachment");
-  if (isFile(file)) {
-    const saved = await saveUpload(file, "attachment");
-    if ("error" in saved) errors.attachment = saved.error;
+  // Claim the upload only when the rest of the form is valid, so a failed
+  // submission never leaves an orphaned file (unclaimed uploads expire in a day).
+  const uploadError = form.get(uploadErrorField("attachment"));
+  if (typeof uploadError === "string" && uploadError) errors.attachment = uploadError.slice(0, 200);
+  if (parsed.success && !Object.keys(errors).length) {
+    const saved = await takeUpload(form, "attachment", "attachment");
+    if (saved && "error" in saved) errors.attachment = saved.error;
     else attachment = saved;
   }
   if (!parsed.success || Object.keys(errors).length) return { status: "error", errors, values };

@@ -3,13 +3,14 @@
 import { useActionState } from "react";
 import { submitContact } from "@/lib/forms/enquiry";
 import { initialFormState } from "@/lib/forms/types";
-import { Consent, ErrorSummary, Honeypot, SubmitButton, Success, TextArea, TextField, Turnstile } from "./Fields";
+import { Consent, FieldIdPrefix, ErrorSummary, Honeypot, SubmitButton, Success, TextArea, TextField, Turnstile } from "./Fields";
 
 /** FM-05 General contact and press. */
 export function ContactForm() {
   const [state, action] = useActionState(submitContact, initialFormState);
   if (state.status === "success") return <Success state={state} title="Thank you. We have your message" />;
   return (
+    <FieldIdPrefix value="gen-">
     <form action={action} className="form" noValidate>
       <ErrorSummary state={state} />
       <Honeypot />
@@ -20,5 +21,6 @@ export function ContactForm() {
       <Turnstile />
       <div><SubmitButton>Send message</SubmitButton></div>
     </form>
+    </FieldIdPrefix>
   );
 }

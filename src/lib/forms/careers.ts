@@ -15,7 +15,8 @@ import { logEvent } from "./log";
 import { isSpam } from "./spam";
 import { addMonths, nextReference, store } from "./store";
 import type { FormState } from "./types";
-import { isFile, saveUpload, type StoredFile } from "./uploads";
+import { uploadErrorField } from "./upload-rules";
+import { hasUpload, takeUpload, type StoredFile } from "./uploads";
 import { formToObject, zodErrors } from "./validate";
 
 /* FM-04 Job application, CR-09 talent pool, CR-05 job alerts.
@@ -47,14 +48,16 @@ export async function submitApplication(_prev: FormState, form: FormData): Promi
   const errors = parsed.success ? {} : zodErrors(parsed.error);
 
   let cv: StoredFile | undefined;
-  const file = form.get("cv");
   if (values.applyRoute === "cv") {
-    if (isFile(file)) {
-      const saved = await saveUpload(file, "cv");
-      if ("error" in saved) errors.cv = saved.error;
+    if (!hasUpload(form, "cv")) errors.cv = "Upload your CV, or choose 'Apply without a CV'";
+    else if (parsed.success && !Object.keys(errors).length) {
+      // Claimed only once everything else is valid (unclaimed uploads expire in a day).
+      const saved = await takeUpload(form, "cv", "cv");
+      if (saved && "error" in saved) errors.cv = saved.error;
       else cv = saved;
     } else {
-      errors.cv = "Upload your CV, or choose 'Apply without a CV'";
+      const uploadError = form.get(uploadErrorField("cv"));
+      if (typeof uploadError === "string" && uploadError) errors.cv = uploadError.slice(0, 200);
     }
   }
   if (!parsed.success || Object.keys(errors).length) return { status: "error", errors, values };

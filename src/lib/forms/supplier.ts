@@ -18,7 +18,7 @@ import { logEvent } from "./log";
 import { isSpam } from "./spam";
 import { nextReference, store } from "./store";
 import type { FieldErrors, FormState } from "./types";
-import { isFile, saveUpload } from "./uploads";
+import { hasUpload, takeUpload } from "./uploads";
 import { consent, email, formToObject, phone, req, zodErrors } from "./validate";
 
 /*
@@ -92,9 +92,8 @@ function putDoc(docs: SupplierDoc[], doc: SupplierDoc) {
 }
 
 async function handleUpload(form: FormData, field: string, type: string, expiry: string | undefined, errors: FieldErrors): Promise<SupplierDoc | undefined> {
-  const file = form.get(field);
-  if (!isFile(file)) return undefined;
-  const saved = await saveUpload(file, "document");
+  const saved = await takeUpload(form, field, "document");
+  if (!saved) return undefined;
   if ("error" in saved) {
     errors[field] = saved.error;
     return undefined;
@@ -216,7 +215,7 @@ export async function saveStep(_prev: FormState, form: FormData): Promise<FormSt
     for (const c of covers) {
       const limitRaw = String(values[`${c.key}Limit`] ?? "");
       const expiryRaw = String(values[`${c.key}Expiry`] ?? "");
-      const given = limitRaw.trim() || expiryRaw.trim() || isFile(form.get(`${c.key}Cert`));
+      const given = limitRaw.trim() || expiryRaw.trim() || hasUpload(form, `${c.key}Cert`);
       if (!c.required && !given) {
         docs = docs.filter((x) => x.type !== c.key);
         continue;

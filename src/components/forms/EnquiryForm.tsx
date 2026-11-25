@@ -3,8 +3,9 @@
 import { useActionState } from "react";
 import { submitEnquiry } from "@/lib/forms/enquiry";
 import { budgetBands, enquiryTypeLabels, enquiryTypes } from "@/lib/forms/enquiry-options";
+import { useDirectUploads } from "@/components/forms/useDirectUploads";
 import { initialFormState } from "@/lib/forms/types";
-import { ChoiceGroup, Consent, ErrorSummary, FileField, Honeypot, SelectField, SubmitButton, Success, TextArea, TextField, Turnstile } from "./Fields";
+import { ChoiceGroup, Consent, ErrorSummary, FileField, Honeypot, SelectField, SubmitButton, Success, TextArea, TextField, Turnstile, UploadStatus } from "./Fields";
 
 const budgetLabels: Record<(typeof budgetBands)[number], string> = {
   "under-50k": "Under £50,000",
@@ -17,14 +18,15 @@ const budgetLabels: Record<(typeof budgetBands)[number], string> = {
 
 /** FM-01 Project enquiry. `company` pre-selects the company (PG-03 acceptance criterion). */
 export function EnquiryForm({ company, enquiryType, sourcePage }: { company?: string; enquiryType?: string; sourcePage: string }) {
-  const [state, action] = useActionState(submitEnquiry, initialFormState);
+  const [state, dispatch] = useActionState(submitEnquiry, initialFormState);
+  const { onSubmit, uploadStatus } = useDirectUploads(dispatch);
   if (state.status === "success") {
     return <Success state={state} title="Thank you. We have your enquiry">
       <p>We reply to every enquiry within one working day.</p>
     </Success>;
   }
   return (
-    <form action={action} className="form" noValidate>
+    <form action={dispatch} onSubmit={onSubmit} className="form" noValidate>
       <ErrorSummary state={state} />
       <Honeypot />
       <input type="hidden" name="sourcePage" value={sourcePage} />
@@ -53,9 +55,10 @@ export function EnquiryForm({ company, enquiryType, sourcePage }: { company?: st
         <SelectField name="budget" label="Budget band" state={state} placeholder="Choose a band" options={budgetBands.map((b) => ({ value: b, label: budgetLabels[b] }))} />
       </div>
       <TextField name="startDate" label="Expected start" hint="For example, June 2027" state={state} />
-      <FileField name="attachment" label="Attach a file" hint="PDF, Word, Excel, JPG or PNG. Up to 20MB." accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" state={state} />
+      <FileField name="attachment" label="Attach a file" hint="PDF, Word, Excel, JPG or PNG. Up to 20MB." accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" state={state} uploadKind="attachment" />
       <Consent state={state} purpose="to reply to your enquiry and keep a record of it for 2 years" />
       <Turnstile />
+      <UploadStatus status={uploadStatus} />
       <div><SubmitButton>Send enquiry</SubmitButton></div>
     </form>
   );

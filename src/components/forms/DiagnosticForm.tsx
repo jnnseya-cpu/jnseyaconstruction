@@ -3,12 +3,14 @@
 import { useActionState } from "react";
 import { submitDiagnostic } from "@/lib/forms/diagnostic";
 import { projectTypeLabels, projectTypes } from "@/lib/forms/diagnostic-options";
+import { useDirectUploads } from "@/components/forms/useDirectUploads";
 import { initialFormState } from "@/lib/forms/types";
-import { ChoiceGroup, Consent, ErrorSummary, FileField, Honeypot, SelectField, SubmitButton, Success, TextArea, TextField, Turnstile } from "./Fields";
+import { ChoiceGroup, Consent, ErrorSummary, FileField, Honeypot, SelectField, SubmitButton, Success, TextArea, TextField, Turnstile, UploadStatus } from "./Fields";
 
 /** FM-02 Site Systems Diagnostic request (ETABLIX). */
 export function DiagnosticForm({ sourcePage = "/etablix" }: { sourcePage?: string }) {
-  const [state, action] = useActionState(submitDiagnostic, initialFormState);
+  const [state, dispatch] = useActionState(submitDiagnostic, initialFormState);
+  const { onSubmit, uploadStatus } = useDirectUploads(dispatch);
   const booking = process.env.NEXT_PUBLIC_BOOKING_URL;
   if (state.status === "success") {
     return (
@@ -25,7 +27,7 @@ export function DiagnosticForm({ sourcePage = "/etablix" }: { sourcePage?: strin
     );
   }
   return (
-    <form action={action} className="form" noValidate>
+    <form action={dispatch} onSubmit={onSubmit} className="form" noValidate>
       <ErrorSummary state={state} />
       <Honeypot />
       <input type="hidden" name="sourcePage" value={sourcePage} />
@@ -52,9 +54,10 @@ export function DiagnosticForm({ sourcePage = "/etablix" }: { sourcePage?: strin
       />
       <TextField name="tradesNeeded" label="Site services you think you need" hint="For example: cabins, welfare, security, cleaning, accommodation" state={state} />
       <TextArea name="message" label="Tell us about the project" hint="What is being built, who the client is, and what worries you about the site set-up." required state={state} rows={5} />
-      <FileField name="attachment" label="Attach a site plan or programme" hint="PDF, Word, Excel, JPG or PNG. Up to 20MB." accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" state={state} />
+      <FileField name="attachment" label="Attach a site plan or programme" hint="PDF, Word, Excel, JPG or PNG. Up to 20MB." accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" state={state} uploadKind="attachment" />
       <Consent state={state} purpose="to arrange your diagnostic call and keep a record of your request for 2 years" />
       <Turnstile />
+      <UploadStatus status={uploadStatus} />
       <div><SubmitButton>Request a diagnostic call</SubmitButton></div>
     </form>
   );

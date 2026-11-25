@@ -6,8 +6,9 @@ Every page follows sections 5 to 9 of the *Nseya Groupe Construction — Website
 - Next.js 15 (App Router), React 19, TypeScript 5 (strict). Static generation for content pages; server actions for forms.
 - Content: typed files in `src/content/*` read only through `src/lib/cms.ts`. These mirror the CMS content types (page, service, sector, vacancy, policy document, accreditation, article, case study, company settings). Moving to Payload CMS (WEB-03) means re-implementing `src/lib/cms.ts` only.
 - Records: PostgreSQL via `DATABASE_URL` (`scripts/schema.sql`, `npm run db:migrate`). Without it, development uses `storage/dev-db.json`. Production refuses to start forms without a database.
-- Uploads: private storage (`UPLOAD_DIR`), never under `/public`. Email: SMTP via `SMTP_URL`; dev writes to `storage/outbox`.
-- Hosting target: Google Cloud Run (UK/EU region) with CDN; staging and production.
+- Uploads: browsers PUT files straight to a private S3-compatible bucket with signed URLs (`useDirectUploads` + `takeUpload`); forms carry only a signed receipt, so requests stay under Vercel's 4.5MB limit. Never under `/public`. Dev without `S3_BUCKET` uses `UPLOAD_DIR`. Every form with a file field uses `<form action={dispatch} onSubmit={onSubmit}>` so it still works without JavaScript.
+- Email: SMTP via `SMTP_URL`; dev writes to `storage/outbox`.
+- Hosting: Vercel Pro, functions in London (`lhr1`, `vercel.json`), PostgreSQL and the upload bucket in London. Daily job by Vercel Cron. Setup: `docs/deploy-vercel.md`.
 - Live address: https://www.nseyagroup.com. nseyagroup.com, nseyagroup.co.uk, nseya.uk and nseyagroupe.com 301 to it (`src/middleware.ts`, list in `src/content/settings.ts`). Main contact email: contact@nseyagroup.com. Other mailboxes: careers@, suppliers@, justin@.
 
 ## Brand tokens (section 3) — `src/app/globals.css`

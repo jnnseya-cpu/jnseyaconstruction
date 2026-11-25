@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useActionState, useEffect, useState, type ReactNode } from "react";
 import { saveStep, startApplication, submitApplication } from "@/lib/forms/supplier";
+import { useDirectUploads } from "@/components/forms/useDirectUploads";
 import { initialFormState, type FormState } from "@/lib/forms/types";
 import {
   businessTypeLabel, businessTypes, capabilities, categories, cisStatuses, companySizes, isRegisteredBusiness, docTypeLabels, isoStandards, jobSizes, otherAccreditations, regions, ssipSchemes,
 } from "@/lib/suppliers/catalogue";
 import type { SupplierDoc, SupplierDraftData } from "@/lib/suppliers/model";
 import { skipsHealthAndSafety } from "@/lib/suppliers/rules";
-import { ChoiceGroup, Consent, ErrorSummary, FileField, Honeypot, SelectField, SubmitButton, TextField, Turnstile } from "./Fields";
+import { ChoiceGroup, Consent, ErrorSummary, FileField, Honeypot, SelectField, SubmitButton, TextField, Turnstile, UploadStatus } from "./Fields";
 
 export const STEPS = ["Company", "What you do", "Accreditations", "Insurance", "Policies and declarations", "Review and submit"];
 const STORAGE_KEY = "nseya_supplier_resume";
@@ -70,15 +71,17 @@ function Progress({ step }: { step: number }) {
 /* ---------------- Shell for steps 1-5 ---------------- */
 
 function StepForm({ token, step, title, intro, children }: { token: string; step: number; title: string; intro?: ReactNode; children: (state: FormState) => ReactNode }) {
-  const [state, action] = useActionState(saveStep, initialFormState);
+  const [state, dispatch] = useActionState(saveStep, initialFormState);
+  const { onSubmit, uploadStatus } = useDirectUploads(dispatch);
   return (
-    <form action={action} className="form" noValidate>
+    <form action={dispatch} onSubmit={onSubmit} className="form" noValidate>
       <h2 style={{ marginBottom: 0 }}>{title}</h2>
       {intro && <div className="muted">{intro}</div>}
       <ErrorSummary state={state} />
       <input type="hidden" name="resume" value={token} />
       <input type="hidden" name="step" value={step} />
       {children(state)}
+      <UploadStatus status={uploadStatus} />
       <div className="btn-row">
         {step > 1 && (
           <button type="submit" name="intent" value="back" className="btn btn--ghost" formNoValidate>Back</button>

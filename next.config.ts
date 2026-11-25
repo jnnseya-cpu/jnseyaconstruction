@@ -2,6 +2,14 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
 
+/** Origin the browser PUTs uploads to (the private S3-compatible bucket). */
+function uploadOrigin() {
+  const bucket = process.env.S3_BUCKET;
+  if (!bucket) return "";
+  if (process.env.S3_ENDPOINT) return new URL(process.env.S3_ENDPOINT).origin;
+  return `https://${bucket}.s3.${process.env.S3_REGION || "eu-west-2"}.amazonaws.com`;
+}
+
 // NF-05: security headers. Scripts allow 'unsafe-inline' because Next.js injects
 // inline bootstrap scripts; move to nonces via middleware if a stricter CSP is needed.
 const csp = [
@@ -10,7 +18,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
-  "connect-src 'self' https://plausible.io https://www.google-analytics.com https://*.google-analytics.com",
+  `connect-src 'self' ${uploadOrigin()} https://plausible.io https://www.google-analytics.com https://*.google-analytics.com`,
   "frame-src https://challenges.cloudflare.com",
   "form-action 'self'",
   "frame-ancestors 'none'",

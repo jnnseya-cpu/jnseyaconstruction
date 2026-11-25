@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { heardOptions } from "@/components/careers/schema";
 import { submitApplication } from "@/lib/forms/careers";
+import { useDirectUploads } from "@/components/forms/useDirectUploads";
 import { initialFormState } from "@/lib/forms/types";
-import { ChoiceGroup, Consent, ErrorSummary, FileField, Honeypot, SubmitButton, Success, TextArea, TextField, Turnstile } from "./Fields";
+import { ChoiceGroup, Consent, ErrorSummary, FileField, Honeypot, SubmitButton, Success, TextArea, TextField, Turnstile, UploadStatus } from "./Fields";
 import styles from "./ApplicationForm.module.css";
 
 /** Fields saved on this device while the person fills the form in. Never files, never equality or referral answers. */
@@ -13,7 +14,8 @@ const SAVED_FIELDS = ["name", "email", "phone", "role", "rightToWork", "applyRou
 
 /** FM-04 job application (section 5a). Works on a phone in under five minutes; a CV is never required. */
 export function ApplicationForm({ role, vacancySlug, graduate = false }: { role?: string; vacancySlug?: string; graduate?: boolean }) {
-  const [state, action] = useActionState(submitApplication, initialFormState);
+  const [state, dispatch] = useActionState(submitApplication, initialFormState);
+  const { onSubmit, uploadStatus } = useDirectUploads(dispatch);
   const [route, setRoute] = useState<string>("cv");
   const [mounted, setMounted] = useState(false);
   const [restored, setRestored] = useState(false);
@@ -96,7 +98,7 @@ export function ApplicationForm({ role, vacancySlug, graduate = false }: { role?
   const showGuided = !mounted || route === "no-cv";
 
   return (
-    <form ref={formRef} action={action} className="form" noValidate onInput={save} onChange={save}>
+    <form ref={formRef} action={dispatch} onSubmit={onSubmit} className="form" noValidate onInput={save} onChange={save}>
       <ErrorSummary state={state} />
       {restored && (
         <div className="notice" role="status">
@@ -139,7 +141,7 @@ export function ApplicationForm({ role, vacancySlug, graduate = false }: { role?
         {showCv && (
           <div className={styles.branch}>
             {!mounted && <p className="hint">If you chose “Upload my CV”:</p>}
-            <FileField name="cv" label="Your CV" hint="PDF or Word (.docx). Up to 10MB." accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" state={state} required={mounted} />
+            <FileField name="cv" label="Your CV" hint="PDF or Word (.docx). Up to 10MB." accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" state={state} required={mounted} uploadKind="cv" />
           </div>
         )}
         {showGuided && (
@@ -171,6 +173,7 @@ export function ApplicationForm({ role, vacancySlug, graduate = false }: { role?
 
       <Consent state={state} purpose="to consider you for this and similar roles. We delete it 6 months after the outcome if you are not hired" />
       <Turnstile />
+      <UploadStatus status={uploadStatus} />
       <div><SubmitButton pendingText="Sending your application…">Send application</SubmitButton></div>
     </form>
   );

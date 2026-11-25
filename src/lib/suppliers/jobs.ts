@@ -1,10 +1,9 @@
 import "server-only";
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import { siteUrl } from "@/lib/cms";
 import { inbox, sendEmail, signature } from "@/lib/forms/email";
 import { logEvent } from "@/lib/forms/log";
 import { store } from "@/lib/forms/store";
+import { collectFileIds, purgeIncoming, removeObject, writeExport } from "@/lib/forms/blob";
 import { construxCsv } from "./export";
 import type { SupplierRecord } from "./model";
 import { expiredDocs, reminderKey, remindersDue } from "./rules";
@@ -72,14 +71,24 @@ export async function runDaily(now = new Date()) {
     }
   }
 
+  // Retention (section 9): delete the files of records that are about to expire, then the records.
+  let filesDeleted = 0;
+  for (const kind of ["enquiry", "diagnostic", "application", "supplier_draft", "supplier"] as const) {
+    for (const r of await s.list(kind)) {
+      if (!r.expiresAt || new Date(r.expiresAt) >= now) continue;
+      for (const id of collectFileIds(r.data)) {
+        await removeObject("files", id);
+        filesDeleted++;
+      }
+    }
+  }
   const purged = await s.purgeExpired(now);
+  const incomingPurged = await purgeIncoming();
   const csv = construxCsv((await supplierRecords()).map((x) => ({ ref: x.ref, data: x.data })));
-  const dir = path.resolve(process.cwd(), process.env.EXPORT_DIR ?? "./storage/exports");
-  await fs.mkdir(dir, { recursive: true });
   const file = `construx-suppliers-${now.toISOString().slice(0, 10)}.csv`;
-  await fs.writeFile(path.join(dir, file), csv, { mode: 0o600 });
+  await writeExport(file, csv);
 
-  const summary = { reminders, suspended, reinstated, purged, exported: records.length, file };
+  const summary = { reminders, suspended, reinstated, purged, filesDeleted, incomingPurged, exported: records.length, file };
   await logEvent("daily_job", summary);
   return summary;
 }
