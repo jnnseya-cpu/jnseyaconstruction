@@ -14,7 +14,10 @@ export interface SupplierDoc {
 }
 
 export interface SupplierCompany {
+  /** limited | llp | sole-trader | partnership. Older records without it are limited companies. */
+  businessType?: string;
   legalName: string;
+  /** Empty for sole traders and partnerships. */
   companyNumber: string;
   registeredAddress: string;
   vatNumber?: string;

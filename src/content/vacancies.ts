@@ -2,11 +2,9 @@ import type { Vacancy } from "./types";
 
 /**
  * Vacancies (CMS "vacancy" type, edited by the Recruiter role).
- *
- * The two entries below are DRAFT examples built from the job description
- * template, so the vacancy template, filters and JobPosting schema can be
- * reviewed on staging. They never show in production unless SHOW_DRAFTS is
- * set. Replace them with real roles from the outreach pack before publishing.
+ * A vacancy hides automatically after its closing date. Set status "draft"
+ * to hold one back; drafts show only where SHOW_DRAFTS is set (staging).
+ * TO CONFIRM before launch: salary, hours and closing dates of both roles.
  */
 export const vacancies: Vacancy[] = [
   {
@@ -39,7 +37,7 @@ export const vacancies: Vacancy[] = [
       "Comfortable with numbers and spreadsheets.",
       "Reliable, and willing to learn on site as well as in the office.",
     ],
-    status: "draft",
+    status: "published",
   },
   {
     slug: "trainee-document-controller-2027",
@@ -70,6 +68,6 @@ export const vacancies: Vacancy[] = [
       "Organised and careful with detail.",
       "Happy to use a computer every day. We will teach you the rest.",
     ],
-    status: "draft",
+    status: "published",
   },
 ];

@@ -5,7 +5,7 @@ import { useActionState, useEffect, useState, type ReactNode } from "react";
 import { saveStep, startApplication, submitApplication } from "@/lib/forms/supplier";
 import { initialFormState, type FormState } from "@/lib/forms/types";
 import {
-  capabilities, categories, cisStatuses, companySizes, docTypeLabels, isoStandards, jobSizes, otherAccreditations, regions, ssipSchemes,
+  businessTypeLabel, businessTypes, capabilities, categories, cisStatuses, companySizes, isRegisteredBusiness, docTypeLabels, isoStandards, jobSizes, otherAccreditations, regions, ssipSchemes,
 } from "@/lib/suppliers/catalogue";
 import type { SupplierDoc, SupplierDraftData } from "@/lib/suppliers/model";
 import { skipsHealthAndSafety } from "@/lib/suppliers/rules";
@@ -142,14 +142,27 @@ function CompanyLookup() {
 
 function Step1({ token, d }: { token: string; d: SupplierDraftData }) {
   const c = d.company;
+  const [type, setType] = useState<string>(c?.businessType ?? "");
+  const registered = !type || isRegisteredBusiness(type);
   return (
-    <StepForm token={token} step={1} title="Your company" intro="Sole traders and partnerships without a company number can contact us instead.">
+    <StepForm token={token} step={1} title="Your business" intro="Limited companies, LLPs, sole traders and partnerships can all apply.">
       {(state) => (
         <>
-          <TextField name="companyNumber" label="Company number" hint="8 characters, like 12345678 or SC123456" required state={state} defaultValue={c?.companyNumber} maxLength={10} />
-          <CompanyLookup />
-          <TextField name="legalName" label="Company legal name" required autoComplete="organization" state={state} defaultValue={c?.legalName} />
-          <TextField name="registeredAddress" label="Registered office address" required state={state} defaultValue={c?.registeredAddress} />
+          <ChoiceGroup name="businessType" label="What type of business are you?" required state={state} defaultValue={c?.businessType} columns
+            onChange={setType} options={businessTypes.map((b) => ({ value: b.value, label: b.label, hint: b.hint }))} />
+          {registered ? (
+            <>
+              <TextField name="companyNumber" label="Company number" hint="8 characters, like 12345678 or SC123456" required state={state} defaultValue={c?.companyNumber} maxLength={10} />
+              <CompanyLookup />
+            </>
+          ) : (
+            <p className="notice small" style={{ margin: 0 }}>
+              You do not need a company number. After you apply, our supply-chain coordinator will call you to confirm your identity, your Unique Taxpayer Reference and your CIS status.
+            </p>
+          )}
+          <TextField name="legalName" label={registered ? "Company legal name" : type === "partnership" ? "Partnership or trading name" : "Your name and any trading name"}
+            hint={registered ? undefined : "For example, Sam Patel trading as Patel Groundworks"} required autoComplete="organization" state={state} defaultValue={c?.legalName} />
+          <TextField name="registeredAddress" label={registered ? "Registered office address" : "Business address"} required state={state} defaultValue={c?.registeredAddress} />
           <div className="form-row">
             <TextField name="vatNumber" label="VAT number" hint="If registered" state={state} defaultValue={c?.vatNumber} />
             <SelectField name="yearsTrading" label="Years trading" required state={state} defaultValue={c?.yearsTrading}
@@ -324,7 +337,8 @@ function Step6({ token, d }: { token: string; d: SupplierDraftData }) {
         <h3 id="sum-company" style={{ fontSize: "1.125rem" }}>Company</h3>
         <dl className="dl">
           <Row k="Legal name" v={c?.legalName} />
-          <Row k="Company number" v={c?.companyNumber} />
+          <Row k="Business type" v={businessTypeLabel(c?.businessType)} />
+          {c?.companyNumber ? <Row k="Company number" v={c.companyNumber} /> : null}
           <Row k="Registered office" v={c?.registeredAddress} />
           <Row k="VAT number" v={c?.vatNumber} />
           <Row k="Contact" v={c && `${c.contactName}${c.contactRole ? `, ${c.contactRole}` : ""} · ${c.phone} · ${d.email}`} />

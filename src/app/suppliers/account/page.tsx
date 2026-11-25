@@ -115,7 +115,7 @@ export default async function AccountPage() {
             <div className="notice">
               <h2 style={{ fontSize: "1.125rem" }}>Your details</h2>
               <p className="small" style={{ margin: 0 }}>
-                {r.company.contactName}<br />{r.company.phone}<br />{r.company.registeredAddress}<br />Company number {r.company.companyNumber}
+                {r.company.contactName}<br />{r.company.phone}<br />{r.company.registeredAddress}{r.company.companyNumber ? <><br />Company number {r.company.companyNumber}</> : null}
               </p>
               <p className="small" style={{ marginTop: 12, marginBottom: 0 }}>To change these, reply to any email from us with your reference number.</p>
             </div>

@@ -11,6 +11,7 @@ import { lookupCompany } from "@/lib/suppliers/companiesHouse";
 import { clearSupplierSession, hashToken, newToken, setSupplierSession } from "@/lib/suppliers/auth";
 import { getSignedInSupplier, loadDraft } from "@/lib/suppliers/data";
 import type { SupplierDoc, SupplierDraftData, SupplierRecord } from "@/lib/suppliers/model";
+import { businessTypeLabel, isRegisteredBusiness } from "@/lib/suppliers/catalogue";
 import { daysUntil, expiredDocs, normaliseCompanyNumber, skipsHealthAndSafety } from "@/lib/suppliers/rules";
 import { inbox, sendEmail, signature } from "./email";
 import { logEvent } from "./log";
@@ -106,13 +107,10 @@ const has = (docs: SupplierDoc[], type: string) => docs.some((d) => d.type === t
 /* ---------------- Steps 1-5 ---------------- */
 
 const step1 = z.object({
-  legalName: req("the company's legal name", 200),
-  companyNumber: z.string().trim().min(1, "Enter your company number").transform((v, ctx) => {
-    const n = normaliseCompanyNumber(v);
-    if (!n) ctx.addIssue({ code: "custom", message: "Enter an 8-character company number, like 12345678 or SC123456" });
-    return n ?? v;
-  }),
-  registeredAddress: req("the registered office address", 400),
+  businessType: z.enum(["limited", "llp", "sole-trader", "partnership"], { error: "Choose what type of business you are" }),
+  legalName: req("your business name", 200),
+  companyNumber: z.string().trim().max(12).optional().default(""),
+  registeredAddress: req("your business address", 400),
   vatNumber: z.string().trim().regex(/^((GB)?\s?\d{3}\s?\d{4}\s?\d{2}(\d{3})?)?$/i, "Enter a VAT number, like GB123456789").optional().transform((v) => v || undefined),
   yearsTrading: z.enum(["under-1", "1-2", "3-5", "6-10", "over-10"], { error: "Choose how long you have been trading" }),
   size: z.enum(["sole", "micro", "small", "medium", "large"], { error: "Choose the size of your business" }),
@@ -120,6 +118,12 @@ const step1 = z.object({
   contactRole: z.string().trim().max(120).optional().transform((v) => v || undefined),
   phone: phone(true),
   regions: arr(1, "Choose at least one region you cover"),
+}).transform((d, ctx) => {
+  if (!isRegisteredBusiness(d.businessType)) return { ...d, companyNumber: "" };
+  const n = d.companyNumber ? normaliseCompanyNumber(d.companyNumber) : null;
+  if (!d.companyNumber) ctx.addIssue({ code: "custom", path: ["companyNumber"], message: "Enter your company number" });
+  else if (!n) ctx.addIssue({ code: "custom", path: ["companyNumber"], message: "Enter an 8-character company number, like 12345678 or SC123456" });
+  return { ...d, companyNumber: n ?? d.companyNumber };
 });
 
 const step2 = z
@@ -291,8 +295,9 @@ export async function submitApplication(_prev: FormState, form: FormData): Promi
 
   let ref: string;
   try {
-    const ch = await lookupCompany(d.company.companyNumber);
-    const chStatus = ch === null ? null : ch === "not-found" ? "not found" : ch.status;
+    const registered = isRegisteredBusiness(d.company.businessType);
+    const ch = registered ? await lookupCompany(d.company.companyNumber) : null;
+    const chStatus = !registered ? "not-applicable" : ch === null ? null : ch === "not-found" ? "not found" : ch.status;
     const now = new Date();
     const base = {
       email: d.email,
@@ -336,7 +341,7 @@ export async function submitApplication(_prev: FormState, form: FormData): Promi
           subject: `[${ref}] New supplier application: ${d.company.legalName}`,
           text: [
             `Reference: ${ref}`,
-            `Company: ${d.company.legalName} (${d.company.companyNumber})`,
+            `Business: ${d.company.legalName} (${d.company.companyNumber || businessTypeLabel(d.company.businessType)})`,
             `Companies House: ${chStatus ?? "not checked"}`,
             `Categories: ${d.work.categories.join(", ")}`,
             `Regions: ${d.company.regions.join(", ")}`,

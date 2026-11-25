@@ -100,3 +100,18 @@ describe("CSV export", () => {
     expect(toCsv(["a", "b"], [[1, "x,y"]])).toBe('a,b\r\n1,"x,y"\r\n');
   });
 });
+
+import { businessTypeLabel, isRegisteredBusiness } from "@/lib/suppliers/catalogue";
+
+describe("business types", () => {
+  it("asks for a company number only from companies and LLPs", () => {
+    expect(isRegisteredBusiness("limited")).toBe(true);
+    expect(isRegisteredBusiness("llp")).toBe(true);
+    expect(isRegisteredBusiness("sole-trader")).toBe(false);
+    expect(isRegisteredBusiness("partnership")).toBe(false);
+  });
+  it("treats older records without a type as limited companies", () => {
+    expect(isRegisteredBusiness(undefined)).toBe(true);
+    expect(businessTypeLabel(undefined)).toBe("Limited company");
+  });
+});

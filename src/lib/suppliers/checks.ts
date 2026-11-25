@@ -24,7 +24,9 @@ export function missingDocs(r: Pick<SupplierRecord, "work" | "accreditations" | 
 export function automaticChecks(r: Omit<SupplierRecord, "checks" | "status" | "suspended" | "prequalificationTask" | "remindersSent" | "submittedAt" | "declaration">, chStatus: string | null, now = new Date()): AutomaticCheck[] {
   const checks: AutomaticCheck[] = [];
   checks.push(
-    chStatus === null
+    chStatus === "not-applicable"
+      ? { check: "Companies House status", result: "not-checked", detail: "Sole trader or partnership: no company number. Coordinator to confirm identity, UTR and CIS status by phone" }
+      : chStatus === null
       ? { check: "Companies House status", result: "not-checked", detail: "Lookup unavailable; coordinator to check manually" }
       : { check: "Companies House status", result: chStatus === "active" ? "pass" : "fail", detail: `Status: ${chStatus}` },
   );

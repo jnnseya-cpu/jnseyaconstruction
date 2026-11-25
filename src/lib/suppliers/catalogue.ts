@@ -63,6 +63,17 @@ export const ssipSchemes = ["CHAS", "SMAS Worksafe", "Acclaim", "SafeContractor"
 export const isoStandards = ["ISO 9001", "ISO 14001", "ISO 45001"] as const;
 export const otherAccreditations = ["NICEIC", "NAPIT", "Gas Safe", "F-gas", "NERS", "Achilles UVDB", "CSCS cards for all operatives"] as const;
 
+/** Legal form. Only companies and LLPs have a Companies House number. */
+export const businessTypes = [
+  { value: "limited", label: "Limited company", hint: "Registered at Companies House" },
+  { value: "llp", label: "Limited liability partnership (LLP)", hint: "Registered at Companies House" },
+  { value: "sole-trader", label: "Sole trader", hint: "Self-employed, no company number" },
+  { value: "partnership", label: "Partnership", hint: "Ordinary partnership, no company number" },
+] as const;
+export const registeredBusinessTypes = ["limited", "llp"] as const;
+export const businessTypeLabel = (t?: string) => businessTypes.find((b) => b.value === t)?.label ?? "Limited company";
+export const isRegisteredBusiness = (t?: string) => !t || (registeredBusinessTypes as readonly string[]).includes(t);
+
 export const companySizes = [
   { value: "sole", label: "Sole trader" },
   { value: "micro", label: "1 to 9 people" },
