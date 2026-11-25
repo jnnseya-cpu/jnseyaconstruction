@@ -7,7 +7,7 @@ import { getCompany, getServices } from "@/lib/cms";
 import { group } from "@/content/settings";
 
 export const metadata: Metadata = {
-  title: "Nseya Construction: buildings, power and digital",
+  title: "Nseya Construction: buildings and power",
   description: "Buildings from renovation to mixed-use, and civils, M&E and HVAC for substations, 33kV and 132kV cable routes and data centres.",
   alternates: { canonical: "/construction" },
 };

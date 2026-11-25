@@ -479,3 +479,15 @@ table { font-variant-numeric: tabular-nums; }
 .legal-body h2 { margin-top: 2.2em; font-size: var(--fs-h3); }
 .legal-body h3 { margin-top: 1.6em; font-size: var(--fs-h4); }
 .legal-body .table-wrap { margin: 1em 0 1.5em; }
+
+/* Contrast on tinted backgrounds: the brand text shades pass 4.5:1 on white only. */
+.section--concrete, .notice, .filter-bar, .card--tint { --accent-text: #0f6e61; }
+[data-company="etablix"] .section--concrete, [data-company="etablix"] .notice, .section--concrete[data-company="etablix"], .notice[data-company="etablix"] { --accent-text: #855400; }
+[data-company="construction"] .section--concrete, [data-company="construction"] .notice { --accent-text: #1b519a; }
+/* Links inside running text are underlined (WCAG 1.4.1). */
+p a, li a, dd a, .newsletter__consent a, .choice a { text-decoration: underline; }
+.site-footer p a, .site-footer .newsletter__consent a { text-decoration: underline; }
+/* WCAG 2.2 target size (2.5.8): standalone links at least 24px tall. */
+.site-footer li a, .breadcrumb a, .switcher a { display: inline-block; min-height: 24px; padding-block: 2px; }
+.skip-link { min-height: 44px; }
+.hero a:not(.btn), .cta-band a:not(.btn) { color: var(--accent-on-dark); }

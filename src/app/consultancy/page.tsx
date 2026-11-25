@@ -6,7 +6,7 @@ import { PageHero } from "@/components/PageHero";
 import { getCompany, getServices } from "@/lib/cms";
 
 export const metadata: Metadata = {
-  title: "Nseya Consultancy: project and cost management",
+  title: "Nseya Consultancy: project and cost managers",
   description: "Project, cost and controls management, feasibility studies, tender and procurement support and Bid-On from Nseya Consultancy, Birmingham.",
   alternates: { canonical: "/consultancy" },
 };

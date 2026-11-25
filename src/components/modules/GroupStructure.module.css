@@ -21,7 +21,7 @@
 .node:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(14,42,59,0.12); }
 .node[aria-selected="true"] { background: var(--accent-tint); border-color: var(--accent); border-top-width: 5px; }
 .node strong { font-weight: 600; overflow-wrap: anywhere; }
-.count { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--accent-text); }
+.count { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--ink-2); }
 .shared { margin-top: 20px; border: 1.5px dashed var(--slate); padding: 14px 16px; background: var(--white); }
 .shared ul { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
 .shared li { margin: 0; font-size: 0.8125rem; padding: 3px 8px; border: 1px solid var(--line); background: var(--concrete-2); }

@@ -37,7 +37,7 @@
 .audiences { display: grid; gap: 0; }
 @media (min-width: 900px) { .audiences { grid-template-columns: 1fr 1fr; } }
 .aud { padding: clamp(32px, 5vw, 56px); }
-.audCareers { background: var(--concrete-2); border: 1px solid var(--line); }
+.audCareers { background: var(--concrete-2); border: 1px solid var(--line); --accent-text: #0f6e61; }
 .audSuppliers { background: var(--navy); color: var(--white); }
 .audSuppliers p, .audSuppliers li { color: rgba(255,255,255,0.86); }
 .audSuppliers :global(.label) { color: var(--accent-on-dark); }

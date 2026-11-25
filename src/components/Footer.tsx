@@ -69,7 +69,7 @@ export function Footer() {
       <div className="container">
         <div className="site-footer__top">
           <div>
-            <Link href="/" className="brand" aria-label="Nseya Groupe Construction, home">
+            <Link href="/" className="brand">
               <HexMark />
               <span className="brand__text">
                 <span className="brand__name">Nseya Groupe</span>

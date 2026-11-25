@@ -84,11 +84,12 @@ export function Header() {
       </div>
       <header className="site-header" data-company={company} data-scrolled={scrolled}>
         <div className="container site-header__inner">
-          <Link href="/" className="brand" aria-label="Nseya Groupe Construction, home">
+          <Link href="/" className="brand">
             <HexMark letter={company === "etablix" ? "E" : "N"} />
             <span className="brand__text">
               <span className="brand__name">Nseya Groupe</span>
               <span className="brand__sub">Construction</span>
+              <span className="visually-hidden">, home</span>
             </span>
           </Link>
           <button
