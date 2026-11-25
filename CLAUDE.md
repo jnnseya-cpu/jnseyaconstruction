@@ -9,7 +9,7 @@ Every page follows sections 5 to 9 of the *Nseya Group Construction — Website 
 - Uploads: browsers PUT files straight to a private S3-compatible bucket with signed URLs (`useDirectUploads` + `takeUpload`); forms carry only a signed receipt, so requests stay under Vercel's 4.5MB limit. Never under `/public`. Dev without `S3_BUCKET` uses `UPLOAD_DIR`. Every form with a file field uses `<form action={dispatch} onSubmit={onSubmit}>` so it still works without JavaScript.
 - Email: SMTP via `SMTP_URL`; dev writes to `storage/outbox`.
 - Hosting: Vercel Pro, functions in London (`lhr1`, `vercel.json`), PostgreSQL and the upload bucket in London. Daily job by Vercel Cron. Setup: `docs/deploy-vercel.md`.
-- Live address: https://www.nseyagroup.com. nseyagroup.com, nseyagroup.co.uk, nseya.uk and nseyagroupe.com 301 to it (`src/middleware.ts`, list in `src/content/settings.ts`). Main contact email: contact@nseyagroup.com. Other mailboxes: careers@, suppliers@, justin@.
+- Live address: https://www.nseyagroup.com. nseyagroup.com, nseyagroup.co.uk, nseya.uk and nseyagroupe.com 301 to it (`src/middleware.ts`, list in `src/content/settings.ts`). Main contact email: contact@nseyagroup.com (Microsoft 365). careers@ and suppliers@ are aliases into the contact@ inbox; justin@ is a separate mailbox for alerts. Site emails go through a transactional SMTP service: `docs/email-setup.md`.
 
 ## Brand tokens (section 3) — `src/app/globals.css`
 Navy #0E2A3B base; Teal #1BA996 (group, Consultancy); Amber #F2A20C (ETABLIX); Cobalt #1E5AA8 (Construction); Slate #5B6770; Concrete #E6E8EA; White.

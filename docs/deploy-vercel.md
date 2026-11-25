@@ -10,7 +10,7 @@ Nothing here is done without Justin's written go-ahead in the ticket: production
 | --- | --- | --- |
 | PostgreSQL | Neon (Vercel integration), region `aws-eu-west-2` | Use the **pooled** connection string for `DATABASE_URL`. Run `npm run db:migrate` once against it. Daily backups kept 30 days (section 8). |
 | Upload bucket | AWS S3 `eu-west-2`, or Google Cloud Storage `europe-west2` | Private: block all public access. One bucket per environment (staging, production). |
-| Email | Any SMTP provider that signs for nseyagroup.com | SPF, DKIM and DMARC on nseyagroup.com before launch. |
+| Email | Mailboxes on Microsoft 365; site emails through a transactional SMTP service | See `docs/email-setup.md`. SPF, DKIM and DMARC on nseyagroup.com before launch. |
 | Spam protection | Cloudflare Turnstile | Site key and secret key. |
 
 ### Bucket settings
