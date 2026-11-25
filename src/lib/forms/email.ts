@@ -22,7 +22,7 @@ export interface Email {
 let transport: ReturnType<typeof nodemailer.createTransport> | null = null;
 
 async function deliver(msg: Email) {
-  const from = process.env.EMAIL_FROM || `Nseya Groupe Construction <${mailboxes.hello}>`;
+  const from = process.env.EMAIL_FROM || `Nseya Groupe Construction <${mailboxes.contact}>`;
   if (process.env.SMTP_URL) {
     transport ??= nodemailer.createTransport(process.env.SMTP_URL);
     await transport.sendMail({ from, ...msg });
@@ -57,10 +57,10 @@ export async function sendEmail(msg: Email, context: string): Promise<boolean> {
 }
 
 export const inbox = {
-  group: () => process.env.INBOX_GROUP || mailboxes.hello,
-  consultancy: () => process.env.INBOX_CONSULTANCY || process.env.INBOX_GROUP || mailboxes.hello,
-  etablix: () => process.env.INBOX_ETABLIX || process.env.INBOX_GROUP || mailboxes.hello,
-  construction: () => process.env.INBOX_CONSTRUCTION || process.env.INBOX_GROUP || mailboxes.hello,
+  group: () => process.env.INBOX_GROUP || mailboxes.contact,
+  consultancy: () => process.env.INBOX_CONSULTANCY || process.env.INBOX_GROUP || mailboxes.contact,
+  etablix: () => process.env.INBOX_ETABLIX || process.env.INBOX_GROUP || mailboxes.contact,
+  construction: () => process.env.INBOX_CONSTRUCTION || process.env.INBOX_GROUP || mailboxes.contact,
   supplyChain: () => process.env.INBOX_SUPPLY_CHAIN || mailboxes.suppliers,
   people: () => process.env.INBOX_PEOPLE || mailboxes.careers,
   alerts: () => process.env.INBOX_ALERTS || mailboxes.justin,

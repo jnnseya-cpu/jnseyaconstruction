@@ -26,24 +26,26 @@ export const office = {
  * rendered). The mailboxes must exist before launch (WEB-13).
  */
 /**
- * Domains (spec section 3 and decision D1, decided 25 Nov 2026). The other
- * three domains redirect permanently to the canonical one (src/middleware.ts).
+ * Domains (spec section 3 and decision D1). The live address is
+ * www.nseyagroup.com; the bare nseyagroup.com and the other three domains
+ * redirect permanently to it (src/middleware.ts).
  */
 export const domains = {
-  canonical: "nseyagroup.com",
-  redirects: ["www.nseyagroup.com", "nseyagroup.co.uk", "www.nseyagroup.co.uk", "nseya.uk", "www.nseya.uk", "nseyagroupe.com", "www.nseyagroupe.com"],
+  canonical: "www.nseyagroup.com",
+  redirects: ["nseyagroup.com", "nseyagroup.co.uk", "www.nseyagroup.co.uk", "nseya.uk", "www.nseya.uk", "nseyagroupe.com", "www.nseyagroupe.com"],
 };
 
 /** Group mailboxes on the group domain (D1). Inbox routing in .env can override each. */
 export const mailboxes = {
-  hello: "hello@nseyagroup.com",
+  /** Main public contact address. */
+  contact: "contact@nseyagroup.com",
   careers: "careers@nseyagroup.com",
   suppliers: "suppliers@nseyagroup.com",
   justin: "justin@nseyagroup.com",
 };
 
 export const contact = {
-  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? mailboxes.hello,
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? mailboxes.contact,
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE ?? "",
   responseTime: "We reply to every enquiry within one working day.",
 };

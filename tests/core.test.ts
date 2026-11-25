@@ -62,3 +62,23 @@ describe("format", () => {
     expect(formatSalary({ min: 26000, max: 28000, period: "YEAR" })).toBe("£26,000 to £28,000 a year");
   });
 });
+
+import { NextRequest } from "next/server";
+import { middleware } from "@/middleware";
+import { contact, domains } from "@/content/settings";
+
+describe("live domain", () => {
+  it("is www.nseyagroup.com with contact@ as the main email", () => {
+    expect(domains.canonical).toBe("www.nseyagroup.com");
+    expect(contact.email).toBe("contact@nseyagroup.com");
+  });
+  it.each(["nseyagroup.com", "nseyagroup.co.uk", "nseya.uk", "www.nseyagroupe.com"])("redirects %s to www.nseyagroup.com with the path", (host) => {
+    const res = middleware(new NextRequest(`https://${host}/careers?x=1`, { headers: { host } }));
+    expect(res.status).toBe(301);
+    expect(res.headers.get("location")).toBe("https://www.nseyagroup.com/careers?x=1");
+  });
+  it("serves www.nseyagroup.com itself", () => {
+    const res = middleware(new NextRequest("https://www.nseyagroup.com/", { headers: { host: "www.nseyagroup.com" } }));
+    expect(res.status).toBe(200);
+  });
+});

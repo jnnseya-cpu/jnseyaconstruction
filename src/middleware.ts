@@ -2,8 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { domains } from "@/content/settings";
 
 /**
- * 301 redirects from the group's other domains (nseyagroup.co.uk, nseya.uk,
- * nseyagroupe.com and the www hosts) to https://nseyagroup.com, keeping the
+ * 301 redirects from nseyagroup.com and the group's other domains
+ * (nseyagroup.co.uk, nseya.uk, nseyagroupe.com) to https://www.nseyagroup.com, keeping the
  * path and query (decision D1). These can also be set at the load balancer;
  * this keeps them working if DNS points the extra domains at the app.
  */
