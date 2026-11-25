@@ -16,7 +16,7 @@ import numpy as np
 MASTERS = [
     # file, output name, colour for light parts on dark backgrounds (None: keep the original colour)
     ("design/brand/Nseya_Group_Construction.webp", "nseya-group", (27, 169, 150)),
-    ("design/brand/ETABLIX_Endorsed.png", "etablix", None),
+    ("design/brand/ETABLIX_Endorsed.webp", "etablix", None),
 ]
 OUT = "public/brand"
 PAD = 8
