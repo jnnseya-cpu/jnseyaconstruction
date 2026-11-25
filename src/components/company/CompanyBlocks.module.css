@@ -1,0 +1,26 @@
+.index ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; border-top: 1px solid var(--line-dark); }
+.index li { margin: 0; border-bottom: 1px solid var(--line-dark); }
+.index a { display: flex; gap: 14px; align-items: baseline; padding: 11px 0; color: rgba(255,255,255,0.92) !important; text-decoration: none; font-weight: 500; }
+.index a:hover { color: var(--white) !important; text-decoration: underline; }
+.index :global(.mono) { font-size: 0.75rem; color: var(--accent-on-dark); min-width: 22px; }
+
+.service { border-top: 1px solid var(--line); padding: 40px 0; }
+.service:first-child { border-top: 0; padding-top: 0; }
+.serviceHead { display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: start; margin-bottom: 20px; }
+.serviceHead h3 { margin: 0 0 6px; }
+.serviceHead p { margin: 0; }
+.serviceNo { font-family: var(--font-mono); font-size: 0.875rem; width: 44px; height: 44px; border: 1.5px solid var(--accent); color: var(--accent-text); display: grid; place-items: center; }
+.anchor { font-family: var(--font-mono); font-weight: 400; font-size: 0.8em; color: var(--ink-2); text-decoration: none; opacity: 0.6; }
+.anchor:hover, .anchor:focus-visible { opacity: 1; color: var(--accent-text); }
+.serviceBody { display: grid; gap: 8px 48px; grid-template-columns: 1fr; padding-left: 0; }
+@media (min-width: 900px) { .serviceBody { grid-template-columns: 1.2fr 1fr; padding-left: 72px; } }
+.subhead { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); margin: 16px 0 8px; }
+.ticks { list-style: none; padding: 0; }
+.ticks li { padding-left: 24px; position: relative; }
+.ticks li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 12px; height: 6px; border-left: 2px solid var(--accent-text); border-bottom: 2px solid var(--accent-text); transform: rotate(-45deg); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.sectors { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); border-top: 2px solid var(--ink); }
+.sectors li { margin: 0; padding: 20px 20px 20px 0; border-bottom: 1px solid var(--line); }
+.sectors h3 { font-size: 1.125rem; margin-bottom: 6px; }
+.sectors p { margin: 0; color: var(--ink-2); font-size: var(--fs-small); }
