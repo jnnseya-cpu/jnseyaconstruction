@@ -8,29 +8,11 @@ import { isSpam } from "./spam";
 import { addYears, nextReference, store } from "./store";
 import type { FormState } from "./types";
 import { isFile, saveUpload, type StoredFile } from "./uploads";
+import { budgetBands, companyOptions, enquiryTypeLabels, enquiryTypes } from "./enquiry-options";
 import { consent, email, formToObject, oneOf, opt, phone, req, zodErrors } from "./validate";
 
 /* FM-01 Project enquiry, FM-02 Site Systems Diagnostic, FM-05 General contact.
    Retention: enquiries 2 years (section 9). */
-
-export const companyOptions = ["consultancy", "etablix", "construction", "not-sure"] as const;
-export const enquiryTypes = [
-  "project",
-  "tender",
-  "framework",
-  "quote",
-  "partnership",
-  "other",
-] as const;
-export const enquiryTypeLabels: Record<(typeof enquiryTypes)[number], string> = {
-  project: "A project I want to discuss",
-  tender: "A tender or quotation request",
-  framework: "A framework or dynamic purchasing system",
-  quote: "A quote for home building work",
-  partnership: "Partnership or joint venture",
-  other: "Something else",
-};
-export const budgetBands = ["under-50k", "50k-250k", "250k-1m", "1m-5m", "over-5m", "unknown"] as const;
 
 const enquirySchema = z.object({
   name: req("your name", 120),

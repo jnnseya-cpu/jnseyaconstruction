@@ -3,6 +3,7 @@ import { getLegalEntity } from "@/lib/cms";
 import { contact } from "@/content/settings";
 import type { CompanyId } from "@/content/types";
 import { HexMark } from "./Logo";
+import { NewsletterForm } from "./forms/NewsletterForm";
 
 /** Legal-entity block: mandatory on every page (Companies Act 2006, section 3 of the spec). */
 export function LegalEntityBlock({ company = "group" }: { company?: CompanyId }) {
@@ -106,6 +107,10 @@ export function Footer() {
               </ul>
             </nav>
           ))}
+          <div>
+            <h2>Field notes</h2>
+            <NewsletterForm />
+          </div>
         </div>
         <LegalEntityBlock />
       </div>

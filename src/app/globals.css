@@ -468,3 +468,18 @@ table { font-variant-numeric: tabular-nums; }
   .site-header, .switcher, .site-footer .site-footer__top, .cookie-banner, .cta-band { display: none !important; }
   .hero, .section--dark { background: none !important; color: #000 !important; }
 }
+
+/* Newsletter (footer) */
+.newsletter { display: grid; gap: 8px; max-width: 360px; }
+.newsletter label { font-size: var(--fs-small); }
+.newsletter__row { display: flex; gap: 8px; }
+.newsletter__row .input { min-height: 44px; background: var(--white); }
+.newsletter__row .btn { min-height: 44px; padding: 8px 14px; }
+.newsletter__consent { display: flex; gap: 8px; align-items: flex-start; font-size: 0.8125rem; }
+.newsletter__consent input { width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0; }
+.site-footer .field-error { color: #ffb4a8; }
+
+/* Legal pages */
+.legal-body h2 { margin-top: 2.2em; font-size: var(--fs-h3); }
+.legal-body h3 { margin-top: 1.6em; font-size: var(--fs-h4); }
+.legal-body .table-wrap { margin: 1em 0 1.5em; }

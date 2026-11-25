@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import { budgetBands, enquiryTypeLabels, enquiryTypes, submitEnquiry } from "@/lib/forms/enquiry";
+import { submitEnquiry } from "@/lib/forms/enquiry";
+import { budgetBands, enquiryTypeLabels, enquiryTypes } from "@/lib/forms/enquiry-options";
 import { initialFormState } from "@/lib/forms/types";
 import { ChoiceGroup, Consent, ErrorSummary, FileField, Honeypot, SelectField, SubmitButton, Success, TextArea, TextField, Turnstile } from "./Fields";
 
