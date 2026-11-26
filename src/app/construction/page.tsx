@@ -98,7 +98,7 @@ export default function ConstructionPage() {
               From appraisal and pre-planning, through planning permission and the grid connection, to land made ready to build on:
               clearance, demolition, remediation, earthworks, roads, drainage and utilities.
             </p>
-            <ServiceAnchors services={pick(["pre-planning-to-handover", "grid-connection-works", "site-enabling-works"])} companyName={company.name} />
+            <ServiceAnchors services={pick(["land-appraisal", "planning", "grid-connections", "site-enabling-works"])} companyName={company.name} />
           </div>
           <div className="cards cards--2" style={{ marginTop: 20 }}>
             <div className="card" id="buildings">

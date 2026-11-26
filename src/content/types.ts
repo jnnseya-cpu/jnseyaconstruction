@@ -60,6 +60,8 @@ export interface Service {
   name: string;
   summary: string;
   sectors: SectorId[];
+  /** Other companies that also deliver this service. Listed once, under `company`. */
+  alsoBy?: TradingCompanyId[];
   /** Phase in which the service's own page (PG-07..18) goes live. */
   pagePhase: "P2" | "P3";
 }

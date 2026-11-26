@@ -32,7 +32,7 @@ export function ServicesFilter({ services, companies, sectors }: { services: Ser
   }, [company, sector, mounted]);
 
   const shown = useMemo(
-    () => services.filter((s) => (!company || s.company === company) && (!sector || s.sectors.includes(sector as Service["sectors"][number]))),
+    () => services.filter((s) => (!company || s.company === company || s.alsoBy?.includes(company as Service["company"])) && (!sector || s.sectors.includes(sector as Service["sectors"][number]))),
     [services, company, sector],
   );
   const byId = Object.fromEntries(companies.map((c) => [c.id, c]));
@@ -75,7 +75,7 @@ export function ServicesFilter({ services, companies, sectors }: { services: Ser
             return (
               <li key={s.slug} data-company={s.company} style={{ margin: 0, display: "flex" }}>
                 <div className="card card--company" style={{ minHeight: 0, width: "100%" }}>
-                  <span className="card__code">{c.name.toUpperCase()}</span>
+                  <span className="card__code">{[c, ...(s.alsoBy ?? []).map((id) => byId[id])].map((x) => x.name.toUpperCase()).join(" AND ")}</span>
                   <h3 style={{ fontSize: "1.25rem" }}>
                     <Link href={`${c.path}#${s.slug}`} className="stretched" style={{ color: "inherit", textDecoration: "none" }}>{s.name}</Link>
                   </h3>

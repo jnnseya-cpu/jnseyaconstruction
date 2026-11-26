@@ -30,7 +30,7 @@ export function getSectors() {
 }
 
 export function getServices(company?: Exclude<CompanyId, "group">) {
-  return company ? services.filter((s) => s.company === company) : services;
+  return company ? services.filter((s) => s.company === company || s.alsoBy?.includes(company)) : services;
 }
 
 /** End of the closing day, UK time (vacancy hides after this instant). */

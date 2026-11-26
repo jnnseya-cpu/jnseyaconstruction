@@ -25,7 +25,7 @@ export function ServicesMatrix({ services, companies, sectors }: { services: Ser
               <tr key={svc.slug} data-company={svc.company}>
                 <th scope="row">
                   {svc.name}
-                  <span className="mono" style={{ display: "block", fontSize: "0.6875rem", color: "var(--ink-2)", letterSpacing: "0.04em" }}>{c.shortName.toUpperCase()}</span>
+                  <span className="mono" style={{ display: "block", fontSize: "0.6875rem", color: "var(--ink-2)", letterSpacing: "0.04em" }}>{[c, ...(svc.alsoBy ?? []).map((id) => byId[id])].map((x) => x.shortName.toUpperCase()).join(" + ")}</span>
                 </th>
                 {sectors.map((sec) =>
                   svc.sectors.includes(sec.id) ? (
