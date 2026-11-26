@@ -1,6 +1,6 @@
 # Go-live runbook
 
-Everything in this list is done by Justin (accounts, secrets, DNS). The code is ready on the branch `claude/adoring-thompson-1rifxc`. Details for each step are in `docs/deploy-vercel.md` and `docs/email-setup.md`.
+Everything in this list is done by Justin (accounts, secrets, DNS). The code is ready on the `main` branch (created 26 Nov 2026 from `claude/adoring-thompson-1rifxc`). Details for each step are in `docs/deploy-vercel.md` and `docs/email-setup.md`.
 
 Work top to bottom. Steps 1 to 6 make a working site on a Vercel address; steps 7 and 8 put it on www.nseyagroup.com.
 
@@ -8,7 +8,7 @@ Work top to bottom. Steps 1 to 6 make a working site on a Vercel address; steps 
 
 | # | Step | Where | Time | If skipped |
 | --- | --- | --- | --- | --- |
-| 1 | Vercel **Pro** team; import the GitHub repository. Production branch: `claude/adoring-thompson-1rifxc` (or merge it into `main` first and use `main`). | vercel.com | 15 min | No site |
+| 1 | Vercel **Pro** team; import the GitHub repository. Production branch: `main`. Other branches get preview deployments. | vercel.com | 15 min | No site |
 | 2 | PostgreSQL in London (Neon via the Vercel integration, region `aws-eu-west-2`). Copy the **pooled** connection string into `DATABASE_URL`, then run `npm run db:migrate` once against it. | Vercel → Storage | 15 min | **Every form fails** (production refuses to run forms without a database) |
 | 3 | Transactional email service with an EU/UK region (Postmark, Resend, Brevo or Amazon SES). Verify nseyagroup.com, add its SPF include and DKIM records at Hostinger. Set `SMTP_URL` and `EMAIL_FROM="Nseya Group Construction <contact@nseyagroup.com>"`. | provider + Hostinger DNS | 30 min | Nobody gets reference numbers, acknowledgements or alerts |
 | 4 | Microsoft 365: contact@ mailbox with careers@ and suppliers@ as aliases; justin@ mailbox. MX, autodiscover, SPF, DKIM and DMARC at Hostinger. | Microsoft 365 + Hostinger | 45 min | Enquiries and replies are lost |
