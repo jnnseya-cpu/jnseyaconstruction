@@ -4,6 +4,8 @@ import { CapabilityCard, CrossLinks, EnquirySection, SectorsServed } from "@/com
 import { CompanyDrawing } from "@/components/company/CompanyDrawing";
 import { JsonLd } from "@/components/JsonLd";
 import { InformationCycle } from "@/components/modules/InformationCycle";
+import { LandToHandover } from "@/components/modules/LandToHandover";
+import type { Service } from "@/content/types";
 import { PageHero } from "@/components/PageHero";
 import { getCompany, getServices } from "@/lib/cms";
 import { serviceSchema } from "@/lib/schema";
@@ -40,6 +42,30 @@ const bim = [
   ["ISO 19650 readiness for contractors", " who need to prove capability to win frameworks."],
 ];
 
+const LAND = ["land-appraisal", "site-acquisition", "planning", "development-management"];
+
+function ServiceList({ services, start, companyName }: { services: Service[]; start: number; companyName: string }) {
+  return (
+    <ol className="service-list" start={start + 1}>
+      {services.map((s, i) => (
+        <li key={s.slug} id={s.slug === "bim-information-management" ? undefined : s.slug} data-reveal>
+          <span className="service-list__no" aria-hidden="true">{String(start + i + 1).padStart(2, "0")}</span>
+          <div>
+            <h4>{s.name}</h4>
+            <p>
+              {s.summary}
+              {s.slug === "bim-information-management" && (
+                <> <a className="link-arrow" href="#bim-information-management">See BIM</a></>
+              )}
+            </p>
+          </div>
+          <JsonLd data={serviceSchema(s.name, s.summary, companyName, `/consultancy#${s.slug}`)} />
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 function ReviewButton({ className = "btn" }: { className?: string }) {
   return reviewExternal ? (
     <a className={className} href={reviewHref} rel="noopener">Book a free 30-minute project review</a>
@@ -57,7 +83,7 @@ export default function ConsultancyPage() {
         crumbs={[{ name: "Nseya Consultancy", href: "/consultancy" }]}
         label="Nseya Consultancy"
         title="Know the cost, the risk and the route before you commit."
-        lede="Project management, cost management, project controls, feasibility studies and BIM — for buildings, housing, energy, data centres and the public estate."
+        lede="Land appraisal, acquisition and planning, then project management, cost management, project controls, feasibility studies and BIM — for buildings, housing, energy, data centres and the public estate."
         aside={<CompanyDrawing kind="consultancy" />}
       >
         <div className="btn-row" style={{ marginTop: 24 }}>
@@ -73,24 +99,26 @@ export default function ConsultancyPage() {
           <div className="span-4">
             <p className="label">What we do</p>
             <h2 id="services-title">What we do</h2>
+            <p className="muted">From the first look at a piece of land to handover. Use one service or all of them.</p>
           </div>
-          <ol className="span-8 service-list">
-            {services.map((s, i) => (
-              <li key={s.slug} id={s.slug === "bim-information-management" ? undefined : s.slug} data-reveal>
-                <span className="service-list__no" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-                <div>
-                  <h3>{s.name}</h3>
-                  <p>
-                    {s.summary}
-                    {s.slug === "bim-information-management" && (
-                      <> <a className="link-arrow" href="#bim-information-management">See BIM</a></>
-                    )}
-                  </p>
-                </div>
-                <JsonLd data={serviceSchema(s.name, s.summary, company.name, `${company.path}#${s.slug}`)} />
-              </li>
-            ))}
-          </ol>
+          <div className="span-8">
+            <h3 className="service-group">Land and development</h3>
+            <ServiceList services={services.filter((s) => LAND.includes(s.slug))} start={0} companyName={company.name} />
+            <h3 className="service-group">Project delivery</h3>
+            <ServiceList services={services.filter((s) => !LAND.includes(s.slug))} start={LAND.length} companyName={company.name} />
+          </div>
+        </div>
+      </section>
+
+      {/* From land to handover */}
+      <section className="section section--concrete" aria-labelledby="land-title">
+        <div className="container">
+          <p className="label">From land to handover</p>
+          <h2 id="land-title">From appraisal to handover</h2>
+          <p className="lede" style={{ color: "var(--ink)", marginBottom: 32 }}>
+            We can run the whole journey for landowners and developers, with Nseya Construction building and ETABLIX running the site.
+          </p>
+          <LandToHandover />
         </div>
       </section>
 

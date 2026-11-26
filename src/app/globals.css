@@ -521,3 +521,6 @@ p a, li a, dd a, .newsletter__consent a, .choice a { text-decoration: underline;
 .more-detail > .form { padding-bottom: 16px; }
 .submit-row { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
 .section--dark a.btn:not(.btn--ghost), .cta-band a.btn:not(.btn--ghost) { color: var(--accent-btn-fg); }
+.service-group { font: 500 0.8125rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-text); margin: 0 0 10px; }
+.service-list + .service-group { margin-top: 36px; }
+.service-list h4 { font-size: 1.125rem; margin: 0 0 4px; }

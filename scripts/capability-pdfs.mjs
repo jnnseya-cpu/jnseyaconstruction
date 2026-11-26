@@ -31,19 +31,22 @@ const COMPANIES = {
     mark: "N",
     dwg: "NGC-CS-C01",
     intro:
-      "Nseya Consultancy manages projects for clients and supports contractors with tenders. Every report shows the programme, the cost and the risks from one set of project data.",
+      "Nseya Consultancy takes land from appraisal, acquisition and planning to handover. Every report shows the programme, the cost and the risks from one set of project data.",
     services: [
-      ["Project management", "Client-side project management from brief to handover, run to RIBA Plan of Work stages and NEC4 contract management."],
-      ["Cost management", "Cost plans measured to NRM 1, change priced before instruction, monthly valuations and final accounts."],
-      ["Project controls", "Baseline programme, weekly progress, earned value, quantified risk and change control."],
-      ["Feasibility studies", "Site, cost and programme feasibility with an options appraisal, before design spend."],
-      ["BIM and information management", "Information requirements, BIM execution plan and a common data environment run to ISO 19650."],
-      ["Tender and procurement", "Procurement strategy, tender documents, evaluation and award under the Procurement Act 2023."],
-      ["Bid-On", "Bid management for contractors and suppliers: bid/no-bid, quality answers, pricing support and compliance."],
+      ["Land appraisal and acquisition", "Land value, viability, site finding and due diligence."],
+      ["Planning and development management", "Planning strategy, applications and one lead to handover."],
+      ["Project and programme management", "One accountable lead, one plan, from business case to handover."],
+      ["Cost management", "Cost plans, value engineering, valuations and final accounts."],
+      ["Project controls", "Programmes, earned value, risk and change, live in CONSTRUX."],
+      ["Feasibility studies", "Site, options, cost, programme and funding route."],
+      ["BIM and information management", "ISO 19650: requirements, BEP and a common data environment."],
+      ["Building safety and compliance", "Gateway 2 and 3 readiness, golden thread, CDM client advice."],
+      ["Tender and procurement", "Strategy, tender packs and evaluation under the Procurement Act."],
+      ["Bid-On for contractors", "Prequalification, framework and tender packs for SME contractors."],
     ],
     sectors: ["Public estate", "Social housing", "Energy and grid", "Data centres", "Commercial and mixed-use", "Residential"],
     how: [
-      "Fixed fee for a defined scope, day rate while the scope forms, or a monthly retainer.",
+      "Fixed fee, day rate or monthly retainer, quoted in writing.",
       "A named lead on every commission.",
       "Reports produced from CONSTRUX, the group's project system.",
     ],
@@ -85,6 +88,7 @@ const COMPANIES = {
     intro:
       "Nseya Construction works in two markets: buildings, from renovation to mixed-use, and power and digital, from substations and cable routes to data centres. Our managers and supervisors lead every job.",
     services: [
+      ["Site enabling and infrastructure", "Clearance, demolition, remediation, earthworks, roads, drainage and utility connections."],
       ["Buildings", "Renovations and extensions, design and build housing, commercial and mixed-use buildings and the public estate."],
       ["Substation and generation civils", "Plant foundations, transformer bunds, cable trenches, control-building shells and access roads."],
       ["33kV and 132kV cable civils", "Trenching, ducting, joint bays and HDD crossings, with street-works notices and traffic management."],
@@ -140,7 +144,7 @@ main{padding:6mm 16mm 0}
 h2{font-size:13pt;margin:0 0 4mm;font-weight:600}
 h2 .label{display:block;color:${c.accentText};margin-bottom:1mm}
 .svc{display:grid;grid-template-columns:1fr 1fr;gap:0 8mm;border-top:.6mm solid #0E2A3B}
-.svc div{border-bottom:.25mm solid #C9CED2;padding:1.9mm 0}
+.svc div{border-bottom:.25mm solid #C9CED2;padding:1.5mm 0}
 .svc b{display:block;font-size:10.5pt;font-weight:600}
 .svc span{color:#47535B;font-size:9pt}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:10mm;margin-top:5mm}
@@ -168,7 +172,7 @@ footer{position:absolute;left:16mm;right:16mm;bottom:9mm;background:#fff;border-
 <div><h2><span class="label">How</span>How we work</h2><ul>${c.how.map((h) => `<li>${esc(h)}</li>`).join("")}</ul></div>
 </div>
 <div class="box">
-<p><b>Part of Nseya Group Construction.</b> The group has three companies: Nseya Consultancy, ETABLIX and Nseya Construction. The companies start trading in 2027; this statement describes the services we offer, not past company projects.</p>
+<p><b>Part of Nseya Group Construction:</b> Nseya Consultancy, ETABLIX and Nseya Construction. Trading from 2027; this statement describes the services we offer, not past company projects.</p>
 <p>Contact us through the enquiry form at <b>${esc(site)}${esc(c.contactPath)}</b>. We reply within one working day.${c.extra ? ` Full ETABLIX details: <b>etablix.com</b>.` : ""}</p>
 </div>
 </main>

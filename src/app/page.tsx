@@ -7,6 +7,7 @@ import { legalEntityName, structureCompanies } from "@/components/home/structure
 import { GroupStructure } from "@/components/modules/GroupStructure";
 import { HeroDrawing } from "@/components/modules/HeroDrawing";
 import { HowWeDeliver } from "@/components/modules/HowWeDeliver";
+import { LandToHandover } from "@/components/modules/LandToHandover";
 import { group } from "@/content/settings";
 import { getCompanies, getLegalEntity } from "@/lib/cms";
 
@@ -32,7 +33,7 @@ const reasons = [
   },
 ];
 
-const sectors = ["Public estate", "Social housing", "Energy and grid", "Data centres", "Commercial and mixed-use", "Homeowners"];
+const sectors = ["Landowners and developers", "Public estate", "Social housing", "Energy and grid", "Data centres", "Commercial and mixed-use", "Homeowners"];
 
 /** TO CONFIRM (copy deck sign-off): all six published commitments, especially the five-working-day proposal. */
 const promises: [string, string, string][] = [
@@ -80,6 +81,19 @@ export default function HomePage() {
           <p className="label">Three companies</p>
           <h2 id="companies-title" style={{ marginBottom: 40 }}>Three companies. One standard.</h2>
           <CompanyCards companies={companies} />
+        </div>
+      </section>
+
+      {/* From land to handover */}
+      <section className="section section--tight" aria-labelledby="land-title">
+        <div className="container">
+          <p className="label">From land to handover</p>
+          <h2 id="land-title">From a piece of land to a finished building</h2>
+          <p className="lede" style={{ marginBottom: 32 }}>
+            Appraisal, acquisition, planning, design, build and handover, run by one group. Use the whole journey, or only the
+            stages you need.
+          </p>
+          <LandToHandover />
         </div>
       </section>
 

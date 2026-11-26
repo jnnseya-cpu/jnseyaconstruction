@@ -8,6 +8,41 @@ import type { Service } from "./types";
  */
 export const services: Service[] = [
   // Nseya Consultancy (PG-03)
+  // Land, from appraisal to handover (added 26 Nov 2026 at Justin's request).
+  // TO CONFIRM: wording of appraisal (not a RICS Red Book valuation unless a
+  // Registered Valuer signs it) and whether planning is in-house or with partners.
+  {
+    slug: "land-appraisal",
+    company: "consultancy",
+    name: "Land and development appraisal",
+    summary: "Residual land value, development appraisals and viability, so you know what a site is worth to your scheme before you buy.",
+    sectors: ["residential", "social-housing", "commercial-mixed-use", "public-estate", "data-centres", "energy-grid"],
+    pagePhase: "P2",
+  },
+  {
+    slug: "site-acquisition",
+    company: "consultancy",
+    name: "Site finding and acquisition",
+    summary: "Site searches and due diligence on title, ground, utilities, access and planning history, with acquisition support alongside your solicitors and agents.",
+    sectors: ["residential", "social-housing", "commercial-mixed-use", "public-estate", "data-centres", "energy-grid"],
+    pagePhase: "P2",
+  },
+  {
+    slug: "planning",
+    company: "consultancy",
+    name: "Planning strategy and applications",
+    summary: "Pre-application advice, planning strategy and applications managed end to end, with the surveys and reports each one needs.",
+    sectors: ["residential", "social-housing", "commercial-mixed-use", "public-estate", "data-centres", "energy-grid"],
+    pagePhase: "P2",
+  },
+  {
+    slug: "development-management",
+    company: "consultancy",
+    name: "Development management",
+    summary: "From appraisal to handover: one lead runs the site, planning, design, procurement, build and handover for landowners and developers.",
+    sectors: ["residential", "social-housing", "commercial-mixed-use", "public-estate"],
+    pagePhase: "P2",
+  },
   {
     slug: "project-management",
     company: "consultancy",
@@ -90,6 +125,14 @@ export const services: Service[] = [
     pagePhase: "P2",
   },
   // Nseya Construction (PG-05)
+  {
+    slug: "site-enabling-works",
+    company: "construction",
+    name: "Site enabling and infrastructure",
+    summary: "Clearance, demolition, remediation, earthworks, roads, drainage and utility connections that make land ready to build on.",
+    sectors: ["residential", "social-housing", "commercial-mixed-use", "public-estate", "data-centres", "energy-grid"],
+    pagePhase: "P2",
+  },
   {
     slug: "renovations-and-extensions",
     company: "construction",

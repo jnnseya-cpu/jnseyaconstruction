@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CapabilityCard, CrossLinks, EnquirySection, ExternalLink } from "@/components/company/CompanyBlocks";
 import { CompanyDrawing } from "@/components/company/CompanyDrawing";
 import { JsonLd } from "@/components/JsonLd";
+import { LandToHandover } from "@/components/modules/LandToHandover";
 import { PageHero } from "@/components/PageHero";
 import { getCompany, getServices } from "@/lib/cms";
 import { serviceSchema } from "@/lib/schema";
@@ -75,7 +76,7 @@ export default function ConstructionPage() {
         crumbs={[{ name: "Nseya Construction", href: "/construction" }]}
         label="Nseya Construction"
         title="Built on programme. Proven every week."
-        lede="Buildings and power infrastructure — civils, M&E, HVAC and building services — delivered BIM-led, with cost and programme reported to you every week."
+        lede="From enabling works on raw land to handover: buildings and power infrastructure — civils, M&E, HVAC and building services — delivered BIM-led, with cost and programme reported to you every week."
         aside={<CompanyDrawing kind="construction" />}
       >
         <div className="btn-row" style={{ marginTop: 24 }}>
@@ -90,7 +91,12 @@ export default function ConstructionPage() {
         <div className="container">
           <p className="label">What we build</p>
           <h2 id="markets-title">Two markets, one standard</h2>
-          <div className="cards cards--2" style={{ marginTop: 32 }}>
+          <div className="card" id="land" style={{ marginTop: 32 }}>
+            <h3>Land made ready to build on</h3>
+            <p>Clearance, demolition, remediation, earthworks, roads, drainage and utility connections, so a raw site is ready for the build.</p>
+            <ServiceAnchors services={pick(["site-enabling-works"])} companyName={company.name} />
+          </div>
+          <div className="cards cards--2" style={{ marginTop: 20 }}>
             <div className="card" id="buildings">
               <h3>Buildings</h3>
               <p>Renovations, extensions and refurbishments; heating, ventilation and electrical upgrades; new homes and estates; schools, health and commercial mixed-use.</p>
@@ -106,6 +112,18 @@ export default function ConstructionPage() {
               <ServiceAnchors services={pick(powerSlugs)} companyName={company.name} />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* From land to handover */}
+      <section className="section section--tight" aria-labelledby="land-title">
+        <div className="container">
+          <p className="label">From land to handover</p>
+          <h2 id="land-title">From appraisal to handover</h2>
+          <p className="lede" style={{ color: "var(--ink)", marginBottom: 32 }}>
+            Nseya Consultancy appraises, acquires and plans the site; we prepare the land, build and hand over.
+          </p>
+          <LandToHandover />
         </div>
       </section>
 
