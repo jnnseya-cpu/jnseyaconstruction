@@ -33,6 +33,10 @@ const nextConfig: NextConfig = {
   htmlLimitedBots: /.*/,
   distDir: process.env.NEXT_DIST_DIR || ".next",
   experimental: { serverActions: { bodySizeLimit: "25mb" } },
+  async redirects() {
+    // Homeowner advice moved under Nseya Consultancy (26 Nov 2026).
+    return [{ source: "/homeowners", destination: "/consultancy/homeowners", permanent: true }];
+  },
   async headers() {
     return [
       {

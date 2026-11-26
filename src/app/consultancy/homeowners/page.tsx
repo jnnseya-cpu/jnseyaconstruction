@@ -12,7 +12,7 @@ import styles from "./homeowners.module.css";
 export const metadata: Metadata = {
   title: { absolute: "Home extension advice, Birmingham | Nseya Consultancy" },
   description: "Independent, fixed-fee advice before you build an extension, loft or renovation. Your Feasibility Report within 5 working days of the visit.",
-  alternates: { canonical: "/homeowners" },
+  alternates: { canonical: "/consultancy/homeowners" },
 };
 
 const BOOK = homeownerEnquiryHref("feasibility-report");
@@ -43,7 +43,7 @@ export default function HomeownersPage() {
   return (
     <div data-company="consultancy">
       <PageHero
-        crumbs={[{ name: "Homeowners", href: "/homeowners" }]}
+        crumbs={[{ name: "Nseya Consultancy", href: "/consultancy" }, { name: "Homeowners", href: "/consultancy/homeowners" }]}
         label="For homeowners · Nseya Consultancy"
         title="Independent building advice before you spend £50k"
         lede="Planning an extension, a loft conversion or a major renovation, or buying a home to improve? Get builder-honest advice for a fixed fee, in writing, in five working days."
@@ -72,7 +72,7 @@ export default function HomeownersPage() {
                   <dt>Next step</dt><dd>{s.next}</dd>
                 </dl>
                 <Link className={s.core ? "btn" : "btn btn--ghost"} href={homeownerEnquiryHref(s.slug)}>Book {s.name}</Link>
-                <JsonLd data={serviceSchema(s.name, s.gets, "Nseya Consultancy", `/homeowners#${s.slug}`)} />
+                <JsonLd data={serviceSchema(s.name, s.gets, "Nseya Consultancy", `/consultancy/homeowners#${s.slug}`)} />
               </li>
             ))}
           </ol>

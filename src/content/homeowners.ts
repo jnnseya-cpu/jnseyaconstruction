@@ -1,6 +1,6 @@
 /**
  * Homeowner services (spec section 5c), sold by Nseya Consultancy.
- * Single source for names, prices and wording: used by /homeowners (HO-01) and
+ * Single source for names, and wording: used by /consultancy/homeowners (HO-01) and
  * the Consultancy and Construction pages. No online booking or payment (Justin,
  * 26 Nov 2026): every "Book" button opens the enquiry form with the service chosen.
  * No prices are published anywhere on the site (Justin, 26 Nov 2026): fees are

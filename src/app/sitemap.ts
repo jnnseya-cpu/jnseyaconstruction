@@ -4,7 +4,7 @@ import { getOpenVacancies, siteUrl } from "@/lib/cms";
 export const revalidate = 3600;
 
 const staticPaths = [
-  "/", "/about", "/consultancy", "/etablix", "/construction", "/services", "/homeowners",
+  "/", "/about", "/consultancy", "/etablix", "/construction", "/services", "/consultancy/homeowners",
   "/careers", "/careers/graduate-academy", "/careers/apprenticeships", "/careers/experienced",
   "/careers/vacancies", "/careers/how-we-recruit", "/careers/inclusion", "/careers/talent-pool",
   "/suppliers", "/suppliers/apply", "/suppliers/code-and-policies",

@@ -120,7 +120,7 @@ export default function ConsultancyPage() {
                 </li>
               ))}
             </ul>
-            <p style={{ marginTop: 16 }}><Link className="link-arrow" href="/homeowners">Homeowner services</Link></p>
+            <p style={{ marginTop: 16 }}><Link className="link-arrow" href="/consultancy/homeowners">Homeowner services</Link></p>
           </div>
         </div>
       </section>

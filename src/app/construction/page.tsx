@@ -145,7 +145,7 @@ export default function ConstructionPage() {
             </div>
             <p className="small" style={{ marginTop: 16 }}>
               Not sure yet what to build? Start with an independent{" "}
-              <Link href="/homeowners#feasibility-report">Feasibility Report</Link> from Nseya Consultancy.
+              <Link href="/consultancy/homeowners#feasibility-report">Feasibility Report</Link> from Nseya Consultancy.
             </p>
           </div>
           <div className="span-7">
