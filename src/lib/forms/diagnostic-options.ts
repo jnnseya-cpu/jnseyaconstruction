@@ -33,8 +33,7 @@ export interface ScoreInput {
 /**
  * Best-fit score for FM-02, 0 to 6, one point per criterion. Stored on the
  * lead and sent to the ETABLIX inbox; never shown to the visitor.
- * TO CONFIRM: replace with the six criteria in the BD plan. These are
- * provisional criteria derived from the form fields.
+ * The six best-fit criteria, Confirmed by Justin, 26 Nov 2026.
  */
 export function scoreDiagnostic(d: ScoreInput, now = new Date()) {
   const startWithin12Months = (() => {

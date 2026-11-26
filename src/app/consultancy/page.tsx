@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/consultancy" },
 };
 
-/** TO CONFIRM (copy deck sign-off): the free 30-minute project review offer. */
+/** Free 30-minute project review offer: Confirmed by Justin, 26 Nov 2026. */
 const reviewHref = process.env.NEXT_PUBLIC_BOOKING_URL || "/contact?company=consultancy&type=review#enquiry";
 const reviewExternal = reviewHref.startsWith("http");
 

@@ -22,8 +22,8 @@ export const office = {
 };
 
 /**
- * Public contact details. TO CONFIRM: phone number (empty values are not
- * rendered). The mailboxes must exist before launch (WEB-13).
+ * Public contact details, from the Phase 1 copy deck. Before launch (WEB-13):
+ * the phone line and the contact@ mailbox must be live (empty values are not rendered).
  */
 /**
  * Domains (spec section 3 and decision D1). The live address is

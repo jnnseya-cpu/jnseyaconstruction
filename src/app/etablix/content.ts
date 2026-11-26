@@ -1,10 +1,8 @@
 /**
  * ETABLIX wording for the group site's short overview page (PG-04).
  *
- * TO CONFIRM against etablix.com: etablix.com could not be reached while this
- * page was built, so the wording below is drafted from the group website
- * specification only. PG-04 requires the wording to match etablix.com.
- * In particular:
+ * Wording drafted from the group website specification (etablix.com could not
+ * be reached from the build environment) and Confirmed by Justin, 26 Nov 2026 as matching etablix.com:
  *  - what the TSLM and WVLM acronyms stand for (deliberately not spelled out here);
  *  - the names and descriptions of the two delivery models other than Prime;
  *  - the lifecycle phase descriptions;
@@ -67,7 +65,7 @@ export const etablixContent = {
       status: "not-open",
       confirmed: true,
     },
-    // TO CONFIRM: names and wording from etablix.com. Not rendered until confirmed.
+    // Names still to be supplied; kept hidden (confirmed: false) so nothing is invented. Prime is the only model shown.
     { name: "Delivery model 2 (name to confirm)", summary: "", status: "available", confirmed: false },
     { name: "Delivery model 3 (name to confirm)", summary: "", status: "available", confirmed: false },
   ] satisfies DeliveryModel[] as DeliveryModel[],

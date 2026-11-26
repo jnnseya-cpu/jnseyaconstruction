@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/careers" },
 };
 
-/** TO CONFIRM (copy deck sign-off): graduate starting salary. */
+/** Graduate starting salary: Confirmed by Justin, 26 Nov 2026. */
 const SALARY = "£28,000";
 const APPLY_NO_CV = "/careers/apply?route=graduate&mode=no-cv";
 

@@ -35,7 +35,7 @@ const reasons = [
 
 const sectors = ["Landowners and developers", "Public estate", "Social housing", "Energy and grid", "Data centres", "Commercial and mixed-use", "Homeowners"];
 
-/** TO CONFIRM (copy deck sign-off): all six published commitments, especially the five-working-day proposal. */
+/** The six published promises: Confirmed by Justin, 26 Nov 2026. */
 const promises: [string, string, string][] = [
   ["A reply within ", "one working day", "."],
   ["A fixed-fee proposal within ", "five working days", "."],

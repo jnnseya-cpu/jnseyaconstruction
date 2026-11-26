@@ -14,8 +14,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/careers/graduate-academy" },
 };
 
-/** TO CONFIRM (Justin): starting salary range and intake dates before launch. */
-/** TO CONFIRM (copy deck sign-off): graduate starting salary. */
+/** Starting salary confirmed by Justin, 26 Nov 2026. TO CONFIRM: intake dates (shown as planned). */
 const SALARY_RANGE = "£28,000 a year";
 const INTAKES = ["September 2027 (planned)", "January 2028 (planned)"];
 

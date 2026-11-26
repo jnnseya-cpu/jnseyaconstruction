@@ -4,7 +4,7 @@ import type { Vacancy } from "./types";
  * Vacancies (CMS "vacancy" type, edited by the Recruiter role).
  * A vacancy hides automatically after its closing date. Set status "draft"
  * to hold one back; drafts show only where SHOW_DRAFTS is set (staging).
- * TO CONFIRM before launch: salary, hours and closing dates of both roles.
+ * Salary, hours and closing dates of both roles: Confirmed by Justin, 26 Nov 2026.
  */
 export const vacancies: Vacancy[] = [
   {
