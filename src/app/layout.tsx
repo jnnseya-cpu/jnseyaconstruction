@@ -10,6 +10,7 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { Enhancements } from "@/components/Enhancements";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { StickyCta } from "@/components/StickyCta";
 import { JsonLd } from "@/components/JsonLd";
 import { organizationSchema } from "@/lib/schema";
 import { siteUrl } from "@/lib/cms";
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
         <Footer />
+        <StickyCta />
         <CookieConsent />
         <Enhancements />
         <JsonLd data={organizationSchema()} />

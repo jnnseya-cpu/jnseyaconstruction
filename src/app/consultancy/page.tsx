@@ -3,6 +3,8 @@ import Link from "next/link";
 import { CapabilityCard, CrossLinks, EnquirySection, SectorsServed } from "@/components/company/CompanyBlocks";
 import { CompanyDrawing } from "@/components/company/CompanyDrawing";
 import { JsonLd } from "@/components/JsonLd";
+import { Commitments, Reasons } from "@/components/company/Promises";
+import { homeownerServices } from "@/content/homeowners";
 import { InformationCycle } from "@/components/modules/InformationCycle";
 import { LandToHandover } from "@/components/modules/LandToHandover";
 import type { Service } from "@/content/types";
@@ -106,6 +108,19 @@ export default function ConsultancyPage() {
             <ServiceList services={services.filter((s) => LAND.includes(s.slug))} start={0} companyName={company.name} />
             <h3 className="service-group">Project delivery</h3>
             <ServiceList services={services.filter((s) => !LAND.includes(s.slug))} start={LAND.length} companyName={company.name} />
+            <h3 className="service-group" id="homeowners">For homeowners</h3>
+            <ul className="service-list">
+              {homeownerServices.map((h) => (
+                <li key={h.slug}>
+                  <span className="service-list__no" aria-hidden="true">{h.priceLabel.split(" ")[0]}</span>
+                  <div>
+                    <h4>{h.name} · {h.priceLabel}</h4>
+                    <p>{h.short}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <p style={{ marginTop: 16 }}><Link className="link-arrow" href="/homeowners">Homeowner services</Link></p>
           </div>
         </div>
       </section>
@@ -197,6 +212,9 @@ export default function ConsultancyPage() {
           </div>
         </div>
       </section>
+
+      <Reasons />
+      <Commitments />
 
       <EnquirySection
         company={company}

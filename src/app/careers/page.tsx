@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CareersNav } from "@/components/careers/CareersNav";
 import styles from "@/components/careers/careers.module.css";
 import { VacancyCard } from "@/components/careers/VacancyCard";
+import { CtaBand } from "@/components/CtaBand";
 import { PageHero } from "@/components/PageHero";
 import { getOpenVacancies, showDrafts } from "@/lib/cms";
 
@@ -26,6 +27,7 @@ const getList: [string, string][] = [
   ["Site qualifications:", " SSSTS or SMSTS in your first year."],
   ["A route to chartership", " with CIOB, RICS, ICE or IET."],
   ["A named mentor", " and the same digital tools our managers use."],
+  ["Power-site training:", " every power-site starter is trained to EUSR SHEA Power, and substation staff progress to National Grid NSI 30 Person and then Competent Person, paid for by the company."],
 ];
 
 const years = [
@@ -166,6 +168,8 @@ export default function CareersPage() {
           )}
         </div>
       </section>
+
+      <CtaBand title="Graduated, still waiting? Start here." text="Apply in about five minutes. No CV needed." href={APPLY_NO_CV} cta="Apply in 5 minutes — no CV needed" />
     </div>
   );
 }

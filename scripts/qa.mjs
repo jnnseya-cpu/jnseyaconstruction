@@ -2,6 +2,7 @@
 // Usage: BASE=http://localhost:3000 node scripts/qa.mjs [--shots dir]
 import { readFileSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
+import { syllable } from "syllable";
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
 const axeSource = readFileSync(require.resolve("axe-core/axe.min.js"), "utf8");
@@ -16,8 +17,22 @@ const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m
 const extra = ["/suppliers/account", "/careers/apply", "/does-not-exist"];
 const all = [...new Set([...paths, ...extra])];
 
+/** Flesch reading ease, with the `syllable` English syllable counter. */
+function flesch(text) {
+  const sentences = text
+    .split(/\n+/)
+    .flatMap((l) => l.split(/[.!?:;]+/))
+    .map((x) => x.trim())
+    .filter((x) => x.split(/\s+/).length >= 3);
+  const words = sentences.join(" ").match(/[A-Za-z][A-Za-z'-]*/g) ?? [];
+  if (words.length < 60) return null;
+  const s = words.reduce((n, w) => n + Math.max(1, syllable(w)), 0);
+  return 206.835 - 1.015 * (words.length / sentences.length) - 84.6 * (s / words.length);
+}
+
 const browser = await chromium.launch();
 const titles = new Map();
+const easeScores = [];
 let failures = 0;
 for (const p of all) {
   const problems = [];
@@ -37,6 +52,18 @@ for (const p of all) {
       else if (desc.length > 155) problems.push(`description ${desc.length} chars`);
       if (titles.has(title) && p !== "/does-not-exist") problems.push(`duplicate title with ${titles.get(title)}`);
       titles.set(title, p);
+      // Spec 7b: banned words and reading ease, on the page's own text (not header/footer).
+      const text = await page.evaluate(() => {
+        const m = document.querySelector("main")?.cloneNode(true);
+        if (!m) return "";
+        m.querySelectorAll("script, style, svg, .breadcrumb, .label, table, form, nav").forEach((e) => e.remove());
+        return m.innerText ?? m.textContent ?? "";
+      });
+      const banned = ["world-class", "leading", "cutting-edge", "solutions", "innovative", "seamless", "passionate", "synergy", "one-stop shop", "unlock", "elevate", "game-changer", "bespoke", "holistic", "empower"];
+      for (const w of banned) if (new RegExp(`\\b${w}\\b`, "i").test(text)) problems.push(`banned word: ${w}`);
+      const ease = flesch(text);
+      // Reported, not failed: the approved copy deck is the source text; Justin decides on rewrites.
+      if (ease !== null) easeScores.push([p, Math.round(ease)]);
       await page.addScriptTag({ content: axeSource });
       const result = await page.evaluate(async () =>
         axe.run(document, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"] } }),
@@ -51,5 +78,7 @@ for (const p of all) {
   console.log(`${problems.length ? "✗" : "✓"} ${p}${problems.length ? "\n    " + problems.join("\n    ") : ""}`);
 }
 await browser.close();
+console.log("\nReading ease (spec 7b target 50+):");
+for (const [p, e] of easeScores) console.log(`  ${e >= 50 ? "ok  " : "low "} ${String(e).padStart(3)}  ${p}`);
 console.log(`\n${all.length} pages, ${failures} with problems`);
 process.exit(failures ? 1 : 0);

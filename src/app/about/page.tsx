@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "@/components/home/about.module.css";
 import { legalEntityName, structureCompanies } from "@/components/home/structureData";
 import { GroupStructure } from "@/components/modules/GroupStructure";
+import { CtaBand } from "@/components/CtaBand";
 import { PageHero } from "@/components/PageHero";
 import { group, leadership } from "@/content/settings";
 import { getCompanies, getLegalEntity } from "@/lib/cms";
@@ -141,6 +142,7 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <CtaBand title="Have a project in mind?" text="Tell us about it today and get a fixed-fee proposal within five working days." href="/contact" cta="Start your enquiry" />
     </div>
   );
 }

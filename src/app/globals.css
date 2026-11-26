@@ -524,3 +524,12 @@ p a, li a, dd a, .newsletter__consent a, .choice a { text-decoration: underline;
 .service-group { font: 500 0.8125rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-text); margin: 0 0 10px; }
 .service-list + .service-group { margin-top: 36px; }
 .service-list h4 { font-size: 1.125rem; margin: 0 0 4px; }
+
+/* Sticky primary action on phones (spec 7b rule 6) */
+.sticky-cta { display: none; }
+@media (max-width: 760px) {
+  .sticky-cta { display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 80; padding: 10px max(16px, env(safe-area-inset-left, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--navy); border-top: 3px solid var(--accent); transform: translateY(110%); transition: transform 0.25s var(--ease); }
+  .sticky-cta[data-show="true"] { transform: none; }
+  .sticky-cta .btn { width: 100%; }
+  body { padding-bottom: 76px; }
+}

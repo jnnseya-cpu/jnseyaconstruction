@@ -22,6 +22,7 @@ const mainNav = [
   { href: "/consultancy", label: "Consultancy", dot: "var(--teal)" },
   { href: "/etablix", label: "ETABLIX", dot: "var(--amber)" },
   { href: "/construction", label: "Construction", dot: "var(--cobalt-light)" },
+  { href: "/homeowners", label: "Homeowners" },
   { href: "/careers", label: "Careers" },
   { href: "/suppliers", label: "Suppliers" },
 ];

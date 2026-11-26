@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaBand } from "@/components/CtaBand";
+import { Commitments, Reasons } from "@/components/company/Promises";
 import { CompanyCards } from "@/components/home/CompanyCards";
 import styles from "@/components/home/home.module.css";
 import { legalEntityName, structureCompanies } from "@/components/home/structureData";
@@ -20,30 +21,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const reasons = [
-  {
-    title: "Senior from day one.",
-    text: "Every appointment is led by a chartered professional, not handed to a junior. Our founder brings 14+ years on data centres, grid, offshore wind and rail.",
-  },
-  { title: "You see everything.", text: "Live cost, programme and risk in CONSTRUX, and a written report every week. No surprises at month end." },
-  { title: "Solved in the model, not on site.", text: "BIM-led delivery to ISO 19650. Clashes are found on screen, before they cost you money on site." },
-  {
-    title: "A supply chain that turns up.",
-    text: "Every subcontractor vetted, two per critical trade, paid in 30 days — so the best firms put our jobs first.",
-  },
-];
+
 
 const sectors = ["Landowners and developers", "Public estate", "Social housing", "Energy and grid", "Data centres", "Commercial and mixed-use", "Homeowners"];
 
-/** The six published promises: Confirmed by Justin, 26 Nov 2026. */
-const promises: [string, string, string][] = [
-  ["A reply within ", "one working day", "."],
-  ["A fixed-fee proposal within ", "five working days", "."],
-  ["A ", "named director", " accountable for your project."],
-  ["A written progress report ", "every week", "."],
-  ["Subcontractors paid within ", "30 days", "."],
-  ["", "No claim we cannot evidence.", ""],
-];
+
 
 export default function HomePage() {
   const companies = getCompanies();
@@ -97,21 +79,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Why clients choose us */}
-      <section className="section section--concrete drawing-grid--light" aria-labelledby="why-title">
-        <div className="container">
-          <p className="label">Why clients choose us</p>
-          <h2 id="why-title">Why clients choose us</h2>
-          <div className={styles.reasons}>
-            {reasons.map((r) => (
-              <div key={r.title} data-reveal>
-                <h3>{r.title}</h3>
-                <p>{r.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Reasons />
 
       {/* How we deliver */}
       <section className="section section--dark drawing-grid" id="how-we-deliver" aria-labelledby="deliver-title">
@@ -137,18 +105,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Our promises */}
-      <section className="section section--dark drawing-grid" aria-labelledby="promises-title">
-        <div className="container">
-          <p className="label">Our promises to you</p>
-          <h2 id="promises-title">Our promises to you</h2>
-          <ul className={styles.promises}>
-            {promises.map(([a, b, c]) => (
-              <li key={b} data-reveal>{a}<strong>{b}</strong>{c}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <Commitments />
 
       {/* Group structure explorer (spec section 7a) */}
       <section className="section" aria-labelledby="structure-title">

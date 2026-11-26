@@ -39,6 +39,7 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "^15.5.29",
     "server-only": "^0.0.1",
+    "syllable": "^5.0.1",
     "typescript": "5.9",
     "vitest": "^5.1.2"
   }

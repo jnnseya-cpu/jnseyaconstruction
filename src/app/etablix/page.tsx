@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { CapabilityCard, CrossLinks, ExternalLink, SectorsServed } from "@/components/company/CompanyBlocks";
 import { CompanyDrawing } from "@/components/company/CompanyDrawing";
+import { Commitments, Reasons } from "@/components/company/Promises";
 import { DiagnosticForm } from "@/components/forms/DiagnosticForm";
 import { JsonLd } from "@/components/JsonLd";
 import { LifecycleTimeline } from "@/components/modules/LifecycleTimeline";
@@ -140,6 +141,9 @@ export default function EtablixPage() {
           </div>
         </div>
       </section>
+
+      <Reasons />
+      <Commitments />
 
       <section className="section" id="diagnostic" aria-labelledby="diagnostic-title">
         <div className="container grid">

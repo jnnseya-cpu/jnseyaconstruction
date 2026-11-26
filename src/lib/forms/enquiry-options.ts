@@ -1,8 +1,12 @@
 /** Options shared by the enquiry forms (FM-01, FM-02). Kept out of the "use server" module, which may export only async functions. */
 export const companyOptions = ["consultancy", "etablix", "construction", "not-sure"] as const;
-export const enquiryTypes = ["project", "land", "grid", "review", "iso19650", "price", "power", "tender", "framework", "quote", "partnership", "other"] as const;
+export const enquiryTypes = ["project", "clarity-call", "feasibility-report", "project-roadmap", "home-project-management", "land", "grid", "review", "iso19650", "price", "power", "tender", "framework", "quote", "partnership", "other"] as const;
 export const enquiryTypeLabels: Record<(typeof enquiryTypes)[number], string> = {
   project: "A project I want to discuss",
+  "clarity-call": "Homeowner: Clarity Call (£149)",
+  "feasibility-report": "Homeowner: Feasibility Report (£595)",
+  "project-roadmap": "Homeowner: Project Roadmap (£900)",
+  "home-project-management": "Homeowner: Project Management (£750 a month)",
   land: "Land: appraisal, acquisition or planning",
   grid: "A grid connection",
   review: "A free 30-minute project review",
@@ -11,7 +15,7 @@ export const enquiryTypeLabels: Record<(typeof enquiryTypes)[number], string> = 
   power: "A power or grid project",
   tender: "A tender or quotation request",
   framework: "A framework or dynamic purchasing system",
-  quote: "A quote for home building work",
+  quote: "A fixed-price quote for home building work",
   partnership: "Partnership or joint venture",
   other: "Something else",
 };

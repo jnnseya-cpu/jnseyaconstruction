@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CapabilityCard, CrossLinks, EnquirySection, ExternalLink } from "@/components/company/CompanyBlocks";
 import { CompanyDrawing } from "@/components/company/CompanyDrawing";
 import { JsonLd } from "@/components/JsonLd";
+import { Commitments, Reasons } from "@/components/company/Promises";
 import { LandToHandover } from "@/components/modules/LandToHandover";
 import { PageHero } from "@/components/PageHero";
 import { getCompany, getServices } from "@/lib/cms";
@@ -102,7 +103,7 @@ export default function ConstructionPage() {
           <div className="cards cards--2" style={{ marginTop: 20 }}>
             <div className="card" id="buildings">
               <h3>Buildings</h3>
-              <p>Renovations, extensions and refurbishments; heating, ventilation and electrical upgrades; new homes and estates; schools, health and commercial mixed-use.</p>
+              <p>Home improvement for private homeowners — extensions, conversions and new builds — through to estates, schools, health and commercial mixed-use; heating, ventilation and electrical upgrades.</p>
               <ServiceAnchors services={pick(buildingsSlugs)} companyName={company.name} />
               <p className="small">
                 Home renovations, extensions and lofts are on <ExternalLink href={group.legacyResidentialUrl} className="">jnseya.co.uk</ExternalLink> until
@@ -127,6 +128,40 @@ export default function ConstructionPage() {
             With Nseya Consultancy we take a site from appraisal and pre-planning, through planning permission and grid connection, to build and handover.
           </p>
           <LandToHandover />
+        </div>
+      </section>
+
+      {/* For homeowners (spec 5c) */}
+      <section className="section section--concrete" id="homeowners" aria-labelledby="homeowners-title">
+        <div className="container grid">
+          <div className="span-5">
+            <p className="label">For homeowners</p>
+            <h2 id="homeowners-title">Your extension, built to a fixed price</h2>
+            <p className="lede" style={{ color: "var(--ink)" }}>
+              Extensions, conversions and new homes for private homeowners in the West Midlands.
+            </p>
+            <div className="btn-row">
+              <Link className="btn" href="/contact?company=construction&type=quote#enquiry">Get a fixed-price quote</Link>
+            </div>
+            <p className="small" style={{ marginTop: 16 }}>
+              Not sure yet what to build? Start with an independent{" "}
+              <Link href="/homeowners#feasibility-report">Feasibility Report</Link> from Nseya Consultancy.
+            </p>
+          </div>
+          <div className="span-7">
+            <dl className="dl">
+              <dt>Extensions</dt><dd>Single and double storey, side return, wrap-around.</dd>
+              <dt>Conversions</dt><dd>Loft, garage, basement and change of use.</dd>
+              <dt>New builds</dt><dd>Self-build and single homes on a plot.</dd>
+            </dl>
+            <ul className="tick-list" style={{ marginTop: 24 }}>
+              <li><strong>A written fixed-price quote</strong> before you commit.</li>
+              <li><strong>A named manager</strong> for your job.</li>
+              <li><strong>BIM-checked drawings</strong> before work starts.</li>
+              <li><strong>Weekly progress updates and photos</strong> in CONSTRUX.</li>
+              <li><strong>Vetted local trades</strong>, paid within 30 days.</li>
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -166,6 +201,10 @@ export default function ConstructionPage() {
               manager who has delivered grid and data-centre programmes. Specialist jointing and HV testing stay with approved
               specialists; we own the civils, the programme and every interface, and we can run the grid connection end to end,
               from application to energisation.
+            </p>
+            <p>
+              We train every power-site starter to EUSR SHEA Power, and our substation staff progress to National Grid NSI 30
+              Person and then Competent Person, paid for by the company.
             </p>
             <Link className="btn" href="/contact?company=construction&type=power#enquiry">Talk to our power team</Link>
           </div>
@@ -227,6 +266,9 @@ export default function ConstructionPage() {
           </div>
         </div>
       </section>
+
+      <Reasons />
+      <Commitments />
 
       <EnquirySection
         company={company}
