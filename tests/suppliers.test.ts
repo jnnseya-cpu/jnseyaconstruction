@@ -115,3 +115,154 @@ describe("business types", () => {
     expect(businessTypeLabel(undefined)).toBe("Limited company");
   });
 });
+
+import { automaticChecks } from "@/lib/suppliers/checks";
+import { construxCsv, construxHeaders } from "@/lib/suppliers/export";
+import { parseRegisterResponse } from "@/lib/suppliers/environmentAgency";
+import type { SupplierRecord } from "@/lib/suppliers/model";
+import {
+  computeOrderGates, gatedWorkFor, newlyBlocked, normaliseWasteCarrierNumber, requiredTickets, suspendingExpired, ticketStatus,
+} from "@/lib/suppliers/tickets";
+
+const work = (over: Partial<{ categories: string[]; trades: string[]; capabilities: string[] }> = {}) => ({ categories: ["trade"], trades: ["Groundworks"], capabilities: [], ...over });
+const file = { id: "f", name: "x.pdf", size: 10, type: "application/pdf", scan: "clean" } as unknown as SupplierRecord["documents"][number]["file"];
+const tdoc = (type: string, days?: number) => ({ id: type, type, label: type, expiry: days === undefined ? undefined : plus(days), file, uploadedAt: now.toISOString() });
+
+describe("which tickets a supplier needs", () => {
+  it("needs none for general trade work", () => {
+    expect(requiredTickets(work())).toEqual([]);
+  });
+  it("needs SHEA Power for power-site work (power category, HV or live substations)", () => {
+    for (const w of [work({ categories: ["power"] }), work({ capabilities: ["hv"] }), work({ capabilities: ["live-substation"] }), work({ trades: ["HV jointing"] })]) {
+      expect(requiredTickets(w).map((r) => r.ticket.id)).toEqual(["shea-power"]);
+    }
+  });
+  it("needs NSI 30 and SHEA Power inside National Grid substations", () => {
+    expect(gatedWorkFor(work({ capabilities: ["ng-substation"] })).map((g) => g.id)).toEqual(["power-site", "ng-substation"]);
+    expect(requiredTickets(work({ capabilities: ["ng-substation"] })).map((r) => r.ticket.id)).toEqual(["shea-power", "nsi30"]);
+  });
+  it("needs a waste carrier registration from anyone who removes waste", () => {
+    expect(requiredTickets(work({ capabilities: ["removes-waste"] })).map((r) => r.ticket.id)).toEqual(["waste-carrier"]);
+  });
+});
+
+describe("waste carrier number validation", () => {
+  it.each([
+    ["CBDU123456", "CBDU123456", "upper"],
+    ["cbdl 12345", "CBDL12345", "lower"],
+    ["CBDU-1", "CBDU1", "upper"],
+  ])("accepts %s", (input, n, tier) => expect(normaliseWasteCarrierNumber(input)).toEqual({ number: n, tier }));
+  it.each(["", "CBDX123", "CBDU", "CBD123456", "WEX123456", "CBDU12A456", "CBDU123456789"])("rejects %s", (input) => expect(normaliseWasteCarrierNumber(input)).toBeNull());
+});
+
+describe("ticket status and order gates", () => {
+  const holder = (tickets: SupplierRecord["accreditations"]["tickets"], documents: ReturnType<typeof tdoc>[], w = work({ capabilities: ["ng-substation", "removes-waste"] })) => ({
+    work: w, accreditations: { tickets }, documents,
+  });
+
+  it("blocks every gated work type when tickets are missing, but lists only work the supplier does", () => {
+    const gates = computeOrderGates(holder({}, []), now);
+    expect(gates.map((g) => [g.work, g.eligible])).toEqual([["power-site", false], ["ng-substation", false], ["waste-removal", false]]);
+    expect(gates[1].blockedBy.map((b) => b.ticket)).toEqual(["nsi30", "shea-power"]);
+    expect(gates[0].blockedBy[0]).toMatchObject({ reason: "missing", docType: "shea-power-cards" });
+    expect(computeOrderGates(holder({}, [], work()), now)).toEqual([]);
+  });
+  it("is eligible with live tickets and blocks only the work an expired ticket covers", () => {
+    const t = { "shea-power": { number: "123", expiry: plus(100) }, nsi30: { number: "N1", expiry: plus(-1) }, "waste-carrier": { number: "CBDU1", expiry: plus(200) } };
+    const gates = computeOrderGates(holder(t, [tdoc("shea-power-cards", 100), tdoc("nsi30-auth", -1), tdoc("waste-carrier-cert", 200)]), now);
+    expect(gates.map((g) => [g.work, g.eligible])).toEqual([["power-site", true], ["ng-substation", false], ["waste-removal", true]]);
+    expect(gates[1].blockedBy).toEqual([expect.objectContaining({ ticket: "nsi30", reason: "expired" })]);
+  });
+  it("needs the upload as well as the number", () => {
+    expect(ticketStatus(holder({ "shea-power": { number: "1", expiry: plus(10) } }, []), "shea-power", now).state).toBe("missing");
+  });
+  it("uses the renewed document's expiry and flags tickets expiring within 30 days", () => {
+    const h = holder({ "shea-power": { number: "1", expiry: plus(-5) } }, [tdoc("shea-power-cards", 20)]);
+    expect(ticketStatus(h, "shea-power", now)).toMatchObject({ state: "expiring", days: 20 });
+  });
+  it("blocks waste removal when the number is not on the register, but not when the register was unavailable", () => {
+    const w = (result: "fail" | "not-checked") => holder({ "waste-carrier": { number: "CBDU1", expiry: plus(300), register: { result, detail: "x", checkedAt: "" } } }, [tdoc("waste-carrier-cert", 300)], work({ capabilities: ["removes-waste"] }));
+    expect(computeOrderGates(w("fail"), now)[0]).toMatchObject({ eligible: false, blockedBy: [expect.objectContaining({ reason: "not-on-register" })] });
+    expect(computeOrderGates(w("not-checked"), now)[0].eligible).toBe(true);
+  });
+  it("treats lower-tier (CBDL) waste registrations as not expiring", () => {
+    const h = holder({ "waste-carrier": { number: "CBDL99" } }, [tdoc("waste-carrier-cert")], work({ capabilities: ["removes-waste"] }));
+    expect(ticketStatus(h, "waste-carrier", now).state).toBe("valid");
+    expect(ticketStatus(holder({ "waste-carrier": { number: "CBDU99" } }, [tdoc("waste-carrier-cert")]), "waste-carrier", now).state).toBe("missing");
+  });
+  it("prefers Constructionline Gold", () => {
+    const h = (level: string) => ({ accreditations: { constructionline: level, constructionlineNumber: "C1", constructionlineExpiry: plus(50) }, documents: [tdoc("constructionline-cert", 50)] });
+    expect(ticketStatus(h("gold"), "constructionline", now).state).toBe("valid");
+    expect(ticketStatus(h("silver"), "constructionline", now).state).toBe("below-gold");
+  });
+  it("reports newly blocked gates once", () => {
+    const before = computeOrderGates(holder({ "shea-power": { number: "1", expiry: plus(5) } }, [tdoc("shea-power-cards", 5)], work({ categories: ["power"] })), now);
+    const later = new Date(now.getTime() + 10 * 86400_000);
+    const after = computeOrderGates(holder({ "shea-power": { number: "1", expiry: plus(5) } }, [tdoc("shea-power-cards", 5)], work({ categories: ["power"] })), later);
+    expect(before[0].eligible).toBe(true);
+    expect(newlyBlocked(before, after).map((g) => g.work)).toEqual(["power-site"]);
+    expect(newlyBlocked(after, after)).toEqual([]);
+  });
+});
+
+describe("expiry: tickets block work, not the whole supplier", () => {
+  it("does not suspend from all awards for an expired ticket-only document", () => {
+    const docs = [tdoc("nsi30-auth", -1), tdoc("cyber-essentials-cert", -3), tdoc("pl", 10)];
+    expect(suspendingExpired(docs, now)).toEqual([]);
+    expect(suspendingExpired([...docs, tdoc("el", -1)], now).map((d) => d.type)).toEqual(["el"]);
+  });
+  it("still sends 30- and 7-day reminders for tickets", () => {
+    expect(remindersDue([tdoc("shea-power-cards", 25), tdoc("nsi30-auth", 6)], [], now).map((r) => `${r.doc.type}:${r.stage}`)).toEqual(["shea-power-cards:30", "nsi30-auth:7"]);
+  });
+  it("keeps the SSIP / Constructionline Gold skip rule", () => {
+    expect(skipsHealthAndSafety({ constructionline: "gold", constructionlineExpiry: plus(10) }, now)).toEqual({ skip: true, reason: "Constructionline Gold" });
+  });
+});
+
+describe("automatic checks and CONSTRUX export include the tickets", () => {
+  const rec: SupplierRecord = {
+    email: "a@example.com",
+    company: { legalName: "Test Ltd", companyNumber: "12345678", registeredAddress: "x", yearsTrading: "1-2", size: "micro", contactName: "A", phone: "0121", regions: ["London"] },
+    work: { ...work({ categories: ["power"], capabilities: ["removes-waste"] }), jobSize: "25k-100k" },
+    accreditations: { iso: [], other: [], tickets: { "waste-carrier": { number: "CBDU123", expiry: plus(400), register: { result: "pass", detail: "live", checkedAt: "" } } } },
+    insurance: { el: { limit: 10_000_000, expiry: plus(100) }, pl: { limit: 10_000_000, expiry: plus(100) } },
+    policies: { modernSlavery: true, antiBribery: true, supplierCode: true, platformRule: true, cis: "gross" },
+    documents: [tdoc("el", 100), tdoc("pl", 100), tdoc("hs-policy"), tdoc("waste-carrier-cert", 400)],
+    status: "applied", suspended: false, checks: [], prequalificationTask: "open", remindersSent: [], submittedAt: now.toISOString(),
+    declaration: { truthful: true, consent: true, at: now.toISOString() },
+  };
+  it("adds a register check and one check per order gate", () => {
+    const checks = automaticChecks(rec, "active", now);
+    expect(checks.find((c) => c.check === "Waste carrier register")?.result).toBe("pass");
+    expect(checks.find((c) => c.check === "Order gate: Power-site work")).toMatchObject({ result: "fail" });
+    expect(checks.find((c) => c.check === "Order gate: Removing waste from site")).toMatchObject({ result: "pass" });
+  });
+  it("exports ticket and gate columns with unique headers", () => {
+    expect(new Set(construxHeaders).size).toBe(construxHeaders.length);
+    const csv = construxCsv([{ ref: "SUP-2027-0001", data: rec }], now);
+    const [head, row] = csv.trim().split("\r\n");
+    const cols = head.split(",");
+    const vals = [...`${row},`.matchAll(/("(?:[^"]|"")*"|[^,]*),/g)].map((m) => m[1].replace(/^"|"$/g, "").replace(/""/g, '"'));
+    expect(vals.length).toBe(cols.length);
+    expect(vals[cols.indexOf("ticket_waste_carrier_number")]).toBe("CBDU123");
+    expect(vals[cols.indexOf("ticket_shea_power_status")]).toBe("missing");
+    expect(vals[cols.indexOf("orders_eligible")]).toBe("Removing waste from site");
+    expect(vals[cols.indexOf("orders_blocked")]).toBe("Power-site work: EUSR SHEA Power missing");
+  });
+});
+
+describe("Environment Agency register parsing (defensive)", () => {
+  it("reads a matching item", () => {
+    const j = { items: [{ registrationNumber: "CBDU123", expiryDate: "2099-01-01", holder: { name: "Test Ltd" } }] };
+    expect(parseRegisterResponse(j, "CBDU123")).toMatchObject({ number: "CBDU123", name: "Test Ltd", expiry: "2099-01-01", live: true, tier: "upper" });
+  });
+  it("finds the number in an @id and reads a revoked status", () => {
+    const j = { result: { items: [{ "@id": "http://x/registration/CBDU9", registrationStatus: { label: "Revoked" } }] } };
+    expect(parseRegisterResponse(j, "CBDU9")).toMatchObject({ live: false });
+  });
+  it("is not-found for an empty list, and unavailable for an unknown shape or non-matching items", () => {
+    expect(parseRegisterResponse({ items: [] }, "CBDU1")).toBe("not-found");
+    expect(parseRegisterResponse({ foo: 1 }, "CBDU1")).toBeNull();
+    expect(parseRegisterResponse({ items: [{ registrationNumber: "CBDU2" }] }, "CBDU1")).toBeNull();
+  });
+});

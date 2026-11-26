@@ -1,0 +1,30 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "npm start",
+      "url": [
+        "http://localhost:3000/",
+        "http://localhost:3000/about",
+        "http://localhost:3000/consultancy",
+        "http://localhost:3000/etablix",
+        "http://localhost:3000/construction",
+        "http://localhost:3000/homeowners",
+        "http://localhost:3000/services",
+        "http://localhost:3000/careers",
+        "http://localhost:3000/careers/vacancies",
+        "http://localhost:3000/suppliers",
+        "http://localhost:3000/contact"
+      ],
+      "settings": { "chromeFlags": "--no-sandbox" }
+    },
+    "assert": {
+      "assertions": {
+        "categories:seo": ["error", { "minScore": 1 }],
+        "categories:accessibility": ["error", { "minScore": 0.9 }],
+        "categories:best-practices": ["warn", { "minScore": 0.9 }],
+        "categories:performance": ["warn", { "minScore": 0.9 }]
+      }
+    },
+    "upload": { "target": "temporary-public-storage" }
+  }
+}

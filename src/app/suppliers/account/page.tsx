@@ -8,6 +8,7 @@ import { docTypeLabels, statusLabels } from "@/lib/suppliers/catalogue";
 import { activeDocs, missingDocs } from "@/lib/suppliers/checks";
 import { getSignedInSupplier } from "@/lib/suppliers/data";
 import { daysUntil } from "@/lib/suppliers/rules";
+import { allTicketStatuses, computeOrderGates, gatedWorkFor, ticketDocTypes } from "@/lib/suppliers/tickets";
 
 export const metadata: Metadata = {
   title: "Supplier account",
@@ -45,6 +46,12 @@ export default async function AccountPage() {
   const missing = missingDocs(r);
   const attention = docs.filter((d) => d.expiry && daysUntil(d.expiry) <= 30);
   const options = Object.entries(docTypeLabels).map(([value, label]) => ({ value, label }));
+  // Recomputed on view so a ticket that expired since the daily job already shows as blocked.
+  const gates = computeOrderGates(r);
+  const blocked = gates.filter((g) => !g.eligible);
+  const gatedTypes = new Set(gatedWorkFor(r.work).flatMap((g) => g.needs));
+  const ticketRows = allTicketStatuses(r).filter((t) => gatedTypes.has(t.ticket.id) || t.state !== "missing");
+  const firstBlockedDoc = blocked[0]?.blockedBy[0]?.docType;
 
   return (
     <>
@@ -62,6 +69,9 @@ export default async function AccountPage() {
               <dl className="dl">
                 <dt>Application</dt><dd><strong>{statusLabels[r.status] ?? r.status}</strong></dd>
                 <dt>New awards</dt><dd>{r.suspended ? <strong style={{ color: "var(--error)" }}>Suspended until expired documents are replaced</strong> : "Eligible"}</dd>
+                {gates.length > 0 && (
+                  <><dt>Ticket work</dt><dd>{blocked.length ? <strong style={{ color: "var(--error)" }}>{blocked.length} type{blocked.length === 1 ? "" : "s"} of work blocked: see below</strong> : "Eligible for all the ticket work you do"}</dd></>
+                )}
                 <dt>Submitted</dt><dd>{formatDate(r.submittedAt.slice(0, 10))}</dd>
               </dl>
             </div>
@@ -76,6 +86,55 @@ export default async function AccountPage() {
                     return <li key={d.id}>{d.label}: {days < 0 ? `expired on ${formatDate(d.expiry!)}` : `expires in ${days} day${days === 1 ? "" : "s"} (${formatDate(d.expiry!)})`}</li>;
                   })}
                 </ul>
+              </div>
+            )}
+
+            {(gates.length > 0 || ticketRows.length > 0) && (
+              <div id="tickets">
+                <h2>Orders and tickets</h2>
+                <p className="muted">No live ticket, no order. A missing or expired ticket does not affect your registration, but we cannot send you orders for the work that needs it.</p>
+                {gates.length > 0 && (
+                  <ul className="stack" style={{ ["--stack" as string]: "12px", listStyle: "none", paddingLeft: 0 }}>
+                    {gates.map((g) => (
+                      <li key={g.work} className={g.eligible ? "notice" : "notice notice--draft"}>
+                        <p style={{ margin: 0 }}>
+                          <strong>{g.label}</strong>{" "}
+                          {g.eligible ? <span className="tag">Can receive orders</span> : <span className="tag tag--warn">Blocked from new orders</span>}
+                        </p>
+                        {!g.eligible && (
+                          <ul style={{ marginBottom: 0 }}>
+                            {g.blockedBy.map((b) => (
+                              <li key={b.ticket}>
+                                {b.label}: {b.detail.toLowerCase()}. <a href="#replace">Upload {b.toUnblock}</a>.
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {ticketRows.length > 0 && (
+                  <div className="table-wrap">
+                    <table className="table">
+                      <thead><tr><th scope="col">Ticket</th><th scope="col">Number</th><th scope="col">Status</th></tr></thead>
+                      <tbody>
+                        {ticketRows.map((t) => (
+                          <tr key={t.ticket.id}>
+                            <th scope="row">{t.ticket.label}</th>
+                            <td className="mono">{t.number ?? "Not given"}</td>
+                            <td>
+                              {t.state === "valid" || t.state === "expiring" ? t.detail : <span className="tag tag--warn">{t.detail}</span>}
+                              {t.ticket.id === "waste-carrier" && r.accreditations.tickets?.["waste-carrier"]?.register && (
+                                <span className="small muted" style={{ display: "block" }}>Register check: {r.accreditations.tickets["waste-carrier"].register.detail}</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             )}
 
@@ -106,8 +165,8 @@ export default async function AccountPage() {
 
             <div id="replace">
               <h2>Replace a document</h2>
-              <p className="muted">Upload a renewed insurance certificate or accreditation. It replaces the old one straight away.</p>
-              <RenewalForm options={options} defaultType={attention[0]?.type ?? missing[0]?.type} />
+              <p className="muted">Upload a renewed insurance certificate, accreditation or ticket. It replaces the old one straight away.</p>
+              <RenewalForm options={options} ticketTypes={ticketDocTypes} defaultType={attention[0]?.type ?? missing[0]?.type ?? firstBlockedDoc} />
             </div>
           </div>
 

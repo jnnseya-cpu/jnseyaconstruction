@@ -1,6 +1,7 @@
 import type { StoredFile } from "@/lib/forms/uploads";
 import type { InsuranceSet } from "./minimums";
 import type { AccreditationAnswers } from "./rules";
+import type { OrderGate, TicketAnswers } from "./tickets";
 
 /** A document held on a supplier record. Bank details are never stored here. */
 export interface SupplierDoc {
@@ -44,6 +45,9 @@ export interface SupplierAccreditations extends AccreditationAnswers {
   iso: string[];
   other: string[];
   cscs?: string;
+  constructionlineNumber?: string;
+  /** Cyber Essentials, waste carrier, SHEA Power and NSI 30 (Constructionline uses the fields above). */
+  tickets?: TicketAnswers;
 }
 
 export interface SupplierPolicies {
@@ -86,6 +90,9 @@ export interface SupplierRecord {
   /** Suspended from new awards while any required document has expired. */
   suspended: boolean;
   checks: AutomaticCheck[];
+  /** Per ticket-gated work type: eligible for orders, or blocked and why. Refreshed by the daily job. */
+  orderGates?: OrderGate[];
+  orderGatesAt?: string;
   prequalificationTask: "open" | "done";
   remindersSent: string[];
   submittedAt: string;

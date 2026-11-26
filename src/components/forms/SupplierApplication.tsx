@@ -10,6 +10,7 @@ import {
 } from "@/lib/suppliers/catalogue";
 import type { SupplierDoc, SupplierDraftData } from "@/lib/suppliers/model";
 import { skipsHealthAndSafety } from "@/lib/suppliers/rules";
+import { allTicketStatuses, computeOrderGates, normaliseWasteCarrierNumber, requiredTickets, tickets, type TicketDef } from "@/lib/suppliers/tickets";
 import { ChoiceGroup, Consent, ErrorSummary, FileField, Honeypot, SelectField, SubmitButton, TextField, Turnstile, UploadStatus } from "./Fields";
 
 export const STEPS = ["Company", "What you do", "Accreditations", "Insurance", "Policies and declarations", "Review and submit"];
@@ -191,7 +192,7 @@ function Step2({ token, d }: { token: string; d: SupplierDraftData }) {
   const w = d.work;
   return (
     <StepForm token={token} step={2} title="What you do"
-      intro={<p style={{ margin: 0 }}>Site-services suppliers for ETABLIX (cabins, welfare, security, cleaning) register on <a href="https://etablix.com" rel="noopener">etablix.com<span className="visually-hidden"> (separate website)</span></a> instead.</p>}>
+      intro={<p style={{ margin: 0 }}>Site-services suppliers for ETABLIX (cabins, welfare, security, cleaning) register there instead: <a href="https://etablix.com" rel="noopener">Visit etablix.com<span className="visually-hidden"> (separate website)</span></a>.</p>}>
       {(state) => (
         <>
           <ChoiceGroup name="categories" label="Categories" hint="Choose all that apply." required multiple state={state} defaultValue={w?.categories}
@@ -214,8 +215,72 @@ function Step2({ token, d }: { token: string; d: SupplierDraftData }) {
 
 /* ---------------- Step 3: Accreditations ---------------- */
 
+const ticketField = (id: string) => id.replace(/-(\w)/g, (_m, c: string) => c.toUpperCase());
+
+/** Live check on the Environment Agency register. The form works without it: the server checks again. */
+function WasteCarrierLookup({ inputId }: { inputId: string }) {
+  const [msg, setMsg] = useState("");
+  const [busy, setBusy] = useState(false);
+  const lookup = async () => {
+    const input = document.getElementById(inputId) as HTMLInputElement | null;
+    const raw = input?.value.trim() ?? "";
+    const n = normaliseWasteCarrierNumber(raw);
+    if (!raw) return setMsg("Enter your waste carrier registration number first.");
+    if (!n) return setMsg("That does not look like a waste carrier number. It starts CBDU or CBDL followed by digits, like CBDU123456.");
+    setBusy(true);
+    setMsg("Checking the Environment Agency register…");
+    try {
+      const res = await fetch(`/api/environment-agency/${encodeURIComponent(n.number)}`);
+      if (res.status === 404) setMsg(`${n.number} is not on the Environment Agency register. Check the number. You can still continue, but you cannot receive orders to remove waste until it is on the register.`);
+      else if (!res.ok) setMsg("The Environment Agency register is not available just now. Carry on: we check the number again when you continue and before any order.");
+      else {
+        const j = (await res.json()) as { number: string; name?: string; live: boolean; expiry?: string };
+        setMsg(
+          j.live
+            ? `Found on the register: ${j.number}${j.name ? `, ${j.name}` : ""}${j.expiry ? `, expires ${j.expiry}` : ""}.`
+            : `${j.number} is on the register but not live (expired or revoked). You can continue, but you cannot receive orders to remove waste until it is renewed.`,
+        );
+      }
+    } catch {
+      setMsg("The Environment Agency register is not available just now. Carry on: we check the number again when you continue.");
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <div>
+      <button type="button" className="btn btn--ghost" onClick={lookup} disabled={busy}>Check on the Environment Agency register</button>
+      <p className="hint" role="status" aria-live="polite" style={{ marginTop: 8 }}>{msg}</p>
+    </div>
+  );
+}
+
+function TicketGroup({ t, neededFor, d, state }: { t: TicketDef; neededFor?: string[]; d: SupplierDraftData; state: FormState }) {
+  const f = ticketField(t.id);
+  const a = d.accreditations?.tickets?.[t.id];
+  return (
+    <fieldset className="fieldset" style={{ borderTop: "1px solid var(--line)", paddingTop: 20 }}>
+      <legend style={{ fontSize: "1.125rem" }}>{t.label} <span className="opt">(optional)</span></legend>
+      <p className="hint" style={{ margin: 0 }}>
+        {neededFor?.length
+          ? <>Needed for orders for: <strong>{neededFor.join(", ")}</strong>. You can register without it, but you cannot receive orders for that work until it is uploaded.</>
+          : "Leave blank if you do not hold it."}
+      </p>
+      <div className="form-row">
+        <TextField name={`${f}Number`} label={t.numberLabel} hint={t.numberHint} state={state} defaultValue={a?.number} maxLength={500} />
+        <TextField name={`${f}Expiry`} type="date" label="Expiry date" hint={t.expiryHint} state={state} defaultValue={a?.expiry} />
+      </div>
+      {t.id === "waste-carrier" && <WasteCarrierLookup inputId={`${f}Number`} />}
+      <FileField name={`${f}Cert`} label={t.id === "shea-power" ? "SHEA Power cards or EUSR register printout" : t.id === "nsi30" ? "NSI 30 authorisations" : "Certificate"}
+        hint={fileHint(d.documents, t.docType)} accept={DOC_ACCEPT} state={state} />
+    </fieldset>
+  );
+}
+
 function Step3({ token, d }: { token: string; d: SupplierDraftData }) {
   const a = d.accreditations;
+  const needed = requiredTickets(d.work);
+  const neededFor = (id: string) => needed.find((n) => n.ticket.id === id)?.for;
   return (
     <StepForm token={token} step={3} title="Accreditations"
       intro={<p style={{ margin: 0 }}>If you hold a valid SSIP certificate or Constructionline Gold, you skip the health and safety questions in step 5. This follows the industry&apos;s Common Assessment Standard.</p>}>
@@ -227,12 +292,26 @@ function Step3({ token, d }: { token: string; d: SupplierDraftData }) {
             <TextField name="ssipExpiry" type="date" label="SSIP certificate expiry date" hint="Needed if you chose a scheme" state={state} defaultValue={a?.ssipExpiry} />
             <FileField name="ssipCert" label="SSIP certificate" hint={fileHint(d.documents, "ssip-cert")} accept={DOC_ACCEPT} state={state} />
           </div>
+          <h3 style={{ fontSize: "1.25rem", marginBottom: 0 }}>Tickets</h3>
+          <p className="muted" style={{ margin: 0 }}>
+            We check five tickets before any order: Constructionline Gold, Cyber Essentials, waste carrier registration, EUSR SHEA Power and National Grid NSI 30. Give the number, expiry date and a copy of each one you hold.
+            {needed.length > 0 && <> From what you told us in step 2, your work needs: <strong>{needed.map((n) => n.ticket.label).join(", ")}</strong>.</>}
+          </p>
+          <fieldset className="fieldset" style={{ borderTop: "1px solid var(--line)", paddingTop: 20 }}>
+            <legend style={{ fontSize: "1.125rem" }}>Constructionline Gold <span className="opt">(optional)</span></legend>
+            <p className="hint" style={{ margin: 0 }}>Gold or above preferred. Gold also lets you skip the health and safety questions.</p>
           <SelectField name="constructionline" label="Constructionline level" required state={state} defaultValue={a?.constructionline ?? "none"} placeholder="Choose a level"
             options={[{ value: "none", label: "Not a member" }, { value: "bronze", label: "Bronze" }, { value: "silver", label: "Silver" }, { value: "gold", label: "Gold" }, { value: "platinum", label: "Platinum" }]} />
+          <TextField name="constructionlineNumber" label="Constructionline membership number" hint="Needed if you are a member" state={state} defaultValue={a?.constructionlineNumber} maxLength={50} />
           <div className="form-row">
             <TextField name="constructionlineExpiry" type="date" label="Constructionline expiry date" hint="Needed if you are a member" state={state} defaultValue={a?.constructionlineExpiry} />
             <FileField name="constructionlineCert" label="Constructionline certificate" hint={fileHint(d.documents, "constructionline-cert")} accept={DOC_ACCEPT} state={state} />
           </div>
+          </fieldset>
+          {tickets.filter((t) => t.id !== "constructionline").map((t) => (
+            <TicketGroup key={t.id} t={t} neededFor={neededFor(t.id)} d={d} state={state} />
+          ))}
+          <h3 style={{ fontSize: "1.25rem", marginBottom: 0 }}>Other accreditations</h3>
           <ChoiceGroup name="iso" label="ISO certification" multiple columns state={state} defaultValue={a?.iso} options={isoStandards.map((s) => ({ value: s, label: s }))} />
           <ChoiceGroup name="other" label="Other registrations" multiple columns state={state} defaultValue={a?.other} options={otherAccreditations.map((s) => ({ value: s, label: s }))} />
           <TextField name="cscs" label="CSCS and other cards" hint="For example, all operatives hold CSCS; 2 supervisors hold SSSTS" state={state} defaultValue={a?.cscs} />
@@ -361,7 +440,10 @@ function Step6({ token, d }: { token: string; d: SupplierDraftData }) {
         <h3 id="sum-acc" style={{ fontSize: "1.125rem" }}>Accreditations and insurance</h3>
         <dl className="dl">
           <Row k="SSIP" v={a?.ssipSchemes?.length ? `${a.ssipSchemes.join(", ")} (expires ${a.ssipExpiry})` : "None"} />
-          <Row k="Constructionline" v={a?.constructionline && a.constructionline !== "none" ? `${a.constructionline} (expires ${a.constructionlineExpiry})` : "Not a member"} />
+          <Row k="Constructionline" v={a?.constructionline && a.constructionline !== "none" ? `${a.constructionline}${a.constructionlineNumber ? `, ${a.constructionlineNumber}` : ""} (expires ${a.constructionlineExpiry})` : "Not a member"} />
+          {a && allTicketStatuses({ accreditations: a, documents: d.documents }).filter((s) => s.ticket.id !== "constructionline").map((s) => (
+            <Row key={s.ticket.id} k={s.ticket.label} v={s.state === "missing" ? "Not provided" : `${s.number}${s.expiry ? ` (expires ${s.expiry})` : ""}`} />
+          ))}
           <Row k="Other" v={[...(a?.iso ?? []), ...(a?.other ?? [])].join(", ") || "None"} />
           {(["el", "pl", "pi", "cw"] as const).map((k) =>
             d.insurance?.[k] ? <Row key={k} k={docTypeLabels[k].replace(" insurance certificate", "")} v={`${money(d.insurance[k]!.limit)}, expires ${d.insurance[k]!.expiry}`} /> : null,
@@ -369,6 +451,18 @@ function Step6({ token, d }: { token: string; d: SupplierDraftData }) {
           <Row k="CIS" v={cisStatuses.find((x) => x.value === d.policies?.cis)?.label} />
         </dl>
       </section>
+      {d.work && d.accreditations && computeOrderGates({ work: d.work, accreditations: d.accreditations, documents: d.documents }).length > 0 && (
+        <section aria-labelledby="sum-gates">
+          <h3 id="sum-gates" style={{ fontSize: "1.125rem" }}>Orders that need a ticket</h3>
+          <ul>
+            {computeOrderGates({ work: d.work, accreditations: d.accreditations, documents: d.documents }).map((g) => (
+              <li key={g.work}>
+                {g.label}: {g.eligible ? "you can receive orders" : <>blocked until you upload {g.blockedBy.map((b) => `${b.label} (${b.detail.toLowerCase()})`).join(" and ")}. You can still send your application.</>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <section aria-labelledby="sum-docs">
         <h3 id="sum-docs" style={{ fontSize: "1.125rem" }}>Documents uploaded</h3>
         <ul>{d.documents.map((doc) => <li key={doc.id}>{doc.label}: {doc.file.name}{doc.expiry ? ` (expires ${doc.expiry})` : ""}</li>)}</ul>

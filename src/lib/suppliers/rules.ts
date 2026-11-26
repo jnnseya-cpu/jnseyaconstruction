@@ -64,8 +64,8 @@ export const reminderKey = (doc: ExpiringDoc, stage: 30 | 7) => `${doc.id}:${doc
  * starts afresh. If the 30-day reminder was missed and only 7 days are left,
  * only the 7-day reminder is sent.
  */
-export function remindersDue(docs: ExpiringDoc[], sent: string[], now = new Date()): { doc: ExpiringDoc; stage: 30 | 7; days: number }[] {
-  const out: { doc: ExpiringDoc; stage: 30 | 7; days: number }[] = [];
+export function remindersDue<T extends ExpiringDoc>(docs: T[], sent: string[], now = new Date()): { doc: T; stage: 30 | 7; days: number }[] {
+  const out: { doc: T; stage: 30 | 7; days: number }[] = [];
   for (const doc of docs) {
     if (!doc.expiry || doc.superseded) continue;
     const d = daysUntil(doc.expiry, now);

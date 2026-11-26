@@ -38,7 +38,7 @@ export function VerifyForm({ token }: { token: string }) {
   );
 }
 
-export function RenewalForm({ options, defaultType }: { options: { value: string; label: string }[]; defaultType?: string }) {
+export function RenewalForm({ options, defaultType, ticketTypes = [] }: { options: { value: string; label: string }[]; defaultType?: string; ticketTypes?: string[] }) {
   const [state, dispatch] = useActionState(uploadRenewal, initialFormState);
   const { onSubmit, uploadStatus } = useDirectUploads(dispatch);
   return (
@@ -52,6 +52,8 @@ export function RenewalForm({ options, defaultType }: { options: { value: string
         <TextField name="expiry" type="date" label="New expiry date" hint="Not needed for policies" state={state} />
         <TextField name="limit" label="Insurance limit (£)" hint="Only if it has changed" inputMode="numeric" state={state} />
       </div>
+      <TextField name="number" label="Ticket or registration number" maxLength={500} state={state}
+        hint={`Only for ${options.filter((o) => ticketTypes.includes(o.value)).map((o) => o.label).join(", ")}. Leave blank to keep the number we hold. Waste carrier numbers start CBDU or CBDL.`} />
       <FileField name="file" label="New document" hint="PDF, JPG or PNG, up to 10MB." required accept=".pdf,.jpg,.jpeg,.png" state={state} />
       <UploadStatus status={uploadStatus} />
       <div><SubmitButton pendingText="Uploading…">Upload document</SubmitButton></div>

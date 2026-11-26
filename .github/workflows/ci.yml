@@ -19,16 +19,12 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
-      - name: Lighthouse (mobile) on key pages
-        run: |
-          npx --yes @lhci/cli@0.15.1 autorun \
-            --collect.startServerCommand="npm start" \
-            --collect.url=http://localhost:3000/ \
-            --collect.url=http://localhost:3000/consultancy \
-            --collect.url=http://localhost:3000/careers \
-            --collect.url=http://localhost:3000/suppliers \
-            --assert.assertions.categories:performance="warn" \
-            --assert.assertions.categories:accessibility="error" \
-            --upload.target=temporary-public-storage
+        env:
+          SITE_ENV: production
+          SITE_URL: http://localhost:3000
+      - name: Lighthouse on key pages (SEO must be 100)
+        run: npx --yes @lhci/cli@0.15.1 autorun
         env:
           ALLOW_FILE_STORE: "1"
+          SITE_ENV: production
+          SITE_URL: http://localhost:3000

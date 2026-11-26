@@ -28,6 +28,9 @@ const csp = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Keep <title> and <meta description> in <head> on every page (SEO), including
+  // pages that read the query string, instead of streaming them into the body.
+  htmlLimitedBots: /.*/,
   distDir: process.env.NEXT_DIST_DIR || ".next",
   experimental: { serverActions: { bodySizeLimit: "25mb" } },
   async headers() {

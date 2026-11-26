@@ -12,7 +12,9 @@ import { clearSupplierSession, hashToken, newToken, setSupplierSession } from "@
 import { getSignedInSupplier, loadDraft } from "@/lib/suppliers/data";
 import type { SupplierDoc, SupplierDraftData, SupplierRecord } from "@/lib/suppliers/model";
 import { businessTypeLabel, isRegisteredBusiness } from "@/lib/suppliers/catalogue";
-import { daysUntil, expiredDocs, normaliseCompanyNumber, skipsHealthAndSafety } from "@/lib/suppliers/rules";
+import { checkWasteCarrier } from "@/lib/suppliers/environmentAgency";
+import { daysUntil, normaliseCompanyNumber, skipsHealthAndSafety } from "@/lib/suppliers/rules";
+import { computeOrderGates, gateSummary, normaliseWasteCarrierNumber, suspendingExpired, ticketForDocType, tickets, type TicketAnswers } from "@/lib/suppliers/tickets";
 import { inbox, sendEmail, signature } from "./email";
 import { logEvent } from "./log";
 import { isSpam } from "./spam";
@@ -103,6 +105,61 @@ async function handleUpload(form: FormData, field: string, type: string, expiry:
 
 const has = (docs: SupplierDoc[], type: string) => docs.some((d) => d.type === type && !d.superseded);
 
+/** Form field prefix for a ticket: "waste-carrier" -> "wasteCarrier". */
+const ticketField = (id: string) => id.replace(/-(\w)/g, (_m, c: string) => c.toUpperCase());
+
+/**
+ * Step 3 ticket groups (Cyber Essentials, waste carrier, SHEA Power, NSI 30):
+ * each is optional, since a supplier without a ticket can still register,
+ * but once any part is given the number, expiry date and upload are needed.
+ * Expired dates are accepted: the ticket is stored and its work is blocked.
+ */
+async function readTickets(form: FormData, values: Record<string, string | string[]>, previous: TicketAnswers | undefined, docs: SupplierDoc[], errors: FieldErrors) {
+  const answers: TicketAnswers = {};
+  for (const t of tickets) {
+    if (t.id === "constructionline") continue;
+    const f = ticketField(t.id);
+    const rawNumber = String(values[`${f}Number`] ?? "").trim();
+    const rawExpiry = String(values[`${f}Expiry`] ?? "").trim();
+    if (!rawNumber && !rawExpiry && !hasUpload(form, `${f}Cert`)) {
+      docs = docs.filter((x) => x.type !== t.docType);
+      continue;
+    }
+    let number = rawNumber;
+    let expiryNeeded = true;
+    if (!rawNumber) errors[`${f}Number`] = `Enter the ${t.numberLabel.toLowerCase()}, or leave this ticket blank`;
+    else if (rawNumber.length > 500) errors[`${f}Number`] = `${t.numberLabel} must be 500 characters or fewer`;
+    else if (t.id === "waste-carrier") {
+      const n = normaliseWasteCarrierNumber(rawNumber);
+      if (!n) errors[`${f}Number`] = "Enter a waste carrier number that starts CBDU or CBDL followed by digits, like CBDU123456";
+      else {
+        number = n.number;
+        expiryNeeded = n.tier === "upper";
+      }
+    }
+    let expiry: string | undefined;
+    if (rawExpiry) {
+      const e = isoDate.safeParse(rawExpiry);
+      if (!e.success) errors[`${f}Expiry`] = e.error.issues[0].message;
+      else expiry = e.data;
+    } else if (expiryNeeded) errors[`${f}Expiry`] = `Enter the ${t.short} expiry date`;
+    const doc = await handleUpload(form, `${f}Cert`, t.docType, expiry, errors);
+    if (doc) docs = putDoc(docs, doc);
+    else if (!has(docs, t.docType) && !errors[`${f}Cert`]) errors[`${f}Cert`] = `Upload your ${t.label}`;
+    else if (!doc) docs = docs.map((x) => (x.type === t.docType && !x.superseded ? { ...x, expiry } : x));
+    const prev = previous?.[t.id];
+    answers[t.id] = { number, expiry, register: prev?.number === number ? prev.register : undefined };
+  }
+  return { answers, docs };
+}
+
+/** Live register check for the waste carrier number, unless it already passed or failed for this number. */
+async function refreshWasteCheck(answers: TicketAnswers | undefined): Promise<TicketAnswers | undefined> {
+  const w = answers?.["waste-carrier"];
+  if (!w?.number || (w.register && w.register.result !== "not-checked")) return answers;
+  return { ...answers, "waste-carrier": { ...w, register: await checkWasteCarrier(w.number) } };
+}
+
 /* ---------------- Steps 1-5 ---------------- */
 
 const step1 = z.object({
@@ -177,6 +234,10 @@ export async function saveStep(_prev: FormState, form: FormData): Promise<FormSt
     const p = schema.safeParse(values);
     if (!p.success) Object.assign(errors, zodErrors(p.error));
     const d = p.success ? p.data : undefined;
+    const constructionlineNumber = String(values.constructionlineNumber ?? "").trim().slice(0, 50) || undefined;
+    if (cl !== "none" && !constructionlineNumber) errors.constructionlineNumber = "Enter your Constructionline membership number";
+    const t = await readTickets(form, values, draft.accreditations?.tickets, docs, errors);
+    docs = t.docs;
     if (ssipSchemes.length) {
       const doc = await handleUpload(form, "ssipCert", "ssip-cert", d?.ssipExpiry, errors);
       if (doc) docs = putDoc(docs, doc);
@@ -190,10 +251,13 @@ export async function saveStep(_prev: FormState, form: FormData): Promise<FormSt
       else if (!doc && d?.constructionlineExpiry) docs = docs.map((x) => (x.type === "constructionline-cert" ? { ...x, expiry: d.constructionlineExpiry } : x));
     } else docs = docs.filter((x) => x.type !== "constructionline-cert");
     if (Object.keys(errors).length || !d) return { status: "error", errors, values };
+    const ticketAnswers = await refreshWasteCheck(t.answers);
     next = {
       ...draft,
       documents: docs,
       accreditations: {
+        constructionlineNumber: cl !== "none" ? constructionlineNumber : undefined,
+        tickets: ticketAnswers,
         ssipSchemes,
         ssipExpiry: ssipSchemes.length ? d.ssipExpiry : undefined,
         constructionline: d.constructionline,
@@ -298,11 +362,12 @@ export async function submitApplication(_prev: FormState, form: FormData): Promi
     const ch = registered ? await lookupCompany(d.company.companyNumber) : null;
     const chStatus = !registered ? "not-applicable" : ch === null ? null : ch === "not-found" ? "not found" : ch.status;
     const now = new Date();
+    const accreditations = { ...d.accreditations, tickets: await refreshWasteCheck(d.accreditations.tickets) };
     const base = {
       email: d.email,
       company: { ...d.company, companiesHouseStatus: chStatus ?? undefined },
       work: d.work,
-      accreditations: d.accreditations,
+      accreditations,
       insurance: d.insurance,
       policies: d.policies,
       documents: d.documents,
@@ -310,8 +375,10 @@ export async function submitApplication(_prev: FormState, form: FormData): Promi
     const record: SupplierRecord = {
       ...base,
       status: "applied",
-      suspended: expiredDocs(d.documents, now).length > 0,
+      suspended: suspendingExpired(d.documents, now).length > 0,
       checks: automaticChecks(base, chStatus, now),
+      orderGates: computeOrderGates(base, now),
+      orderGatesAt: now.toISOString(),
       prequalificationTask: "open",
       remindersSent: [],
       submittedAt: now.toISOString(),
@@ -324,6 +391,7 @@ export async function submitApplication(_prev: FormState, form: FormData): Promi
     await logEvent("form_submitted", { form: "FM-03", ref });
 
     const failed = record.checks.filter((c) => c.result !== "pass");
+    const gates = gateSummary(record.orderGates ?? []);
     await Promise.all([
       sendEmail(
         {
@@ -348,6 +416,9 @@ export async function submitApplication(_prev: FormState, form: FormData): Promi
             "Automatic checks:",
             ...record.checks.map((c) => `- ${c.check}: ${c.result.toUpperCase()} (${c.detail})`),
             "",
+            ...(record.orderGates?.length
+              ? ["Ticket order gates:", ...gates.eligible.map((g) => `- ${g}: eligible`), ...gates.blocked.map((g) => `- BLOCKED ${g}`), ""]
+              : []),
             failed.length ? `${failed.length} check(s) need attention.` : "All automatic checks passed.",
             "Prequalification task: open. Target decision: 10 working days.",
           ].join("\n"),
@@ -426,7 +497,23 @@ export async function uploadRenewal(_prev: FormState, form: FormData): Promise<F
   const type = String(values.docType ?? "");
   const errors: FieldErrors = {};
   if (!types.includes(type)) errors.docType = "Choose which document you are uploading";
-  const needsExpiry = !type.endsWith("-policy");
+  const ticket = ticketForDocType(type);
+  const tf = ticket && ticket.id !== "constructionline" ? ticket.id : undefined;
+  const prevTicket = tf ? rec.data.accreditations.tickets?.[tf] : undefined;
+  let number = String(values.number ?? "").trim() || (ticket?.id === "constructionline" ? rec.data.accreditations.constructionlineNumber : prevTicket?.number) || "";
+  let needsExpiry = !type.endsWith("-policy");
+  if (ticket) {
+    if (!number) errors.number = `Enter the ${ticket.numberLabel.toLowerCase()}`;
+    else if (number.length > 500) errors.number = "The number must be 500 characters or fewer";
+    else if (ticket.id === "waste-carrier") {
+      const n = normaliseWasteCarrierNumber(number);
+      if (!n) errors.number = "Enter a waste carrier number that starts CBDU or CBDL followed by digits, like CBDU123456";
+      else {
+        number = n.number;
+        if (n.tier === "lower" && !String(values.expiry ?? "").trim()) needsExpiry = false;
+      }
+    }
+  }
   let expiry: string | undefined;
   if (needsExpiry) {
     const e = futureDate("new").safeParse(String(values.expiry ?? ""));
@@ -452,17 +539,32 @@ export async function uploadRenewal(_prev: FormState, form: FormData): Promise<F
   }
   const accreditations = { ...data.accreditations };
   if (type === "ssip-cert") accreditations.ssipExpiry = expiry;
-  if (type === "constructionline-cert") accreditations.constructionlineExpiry = expiry;
-  const suspended = expiredDocs(documents).length > 0;
-  await store().update<SupplierRecord>("supplier", rec.id, { ...data, documents, insurance, accreditations, suspended });
+  if (type === "constructionline-cert") {
+    accreditations.constructionlineExpiry = expiry;
+    if (number) accreditations.constructionlineNumber = number;
+  }
+  if (tf) {
+    const sameNumber = prevTicket?.number === number;
+    // A renewed upload re-checks the waste carrier register (the registration may have been renewed).
+    accreditations.tickets = await refreshWasteCheck({ ...accreditations.tickets, [tf]: { number, expiry, register: sameNumber && tf !== "waste-carrier" ? prevTicket?.register : undefined } });
+  }
+  const suspended = suspendingExpired(documents).length > 0;
+  const now = new Date();
+  const orderGates = computeOrderGates({ ...data, documents, accreditations }, now);
+  const unblocked = (data.orderGates ?? []).filter((g) => !g.eligible && orderGates.some((n) => n.work === g.work && n.eligible)).map((g) => g.label);
+  await store().update<SupplierRecord>("supplier", rec.id, { ...data, documents, insurance, accreditations, suspended, orderGates, orderGatesAt: now.toISOString() });
   await logEvent("supplier_document_renewed", { ref: rec.ref ?? "", type });
   await sendEmail(
     {
       to: inbox.supplyChain(),
       subject: `[${rec.ref}] Document renewed: ${docTypeLabels[type]}`,
-      text: `${data.company.legalName} uploaded a renewed ${docTypeLabels[type]}${expiry ? `, expiring ${expiry}` : ""}${limit ? `, limit £${limit.toLocaleString("en-GB")}` : ""}.\nFile scan status: ${doc.file.scan}.${data.suspended && !suspended ? "\nNo documents are now expired: the supplier is no longer suspended from new awards." : ""}`,
+      text: `${data.company.legalName} uploaded a renewed ${docTypeLabels[type]}${expiry ? `, expiring ${expiry}` : ""}${limit ? `, limit £${limit.toLocaleString("en-GB")}` : ""}.\nFile scan status: ${doc.file.scan}.${data.suspended && !suspended ? "\nNo documents are now expired: the supplier is no longer suspended from new awards." : ""}${unblocked.length ? `\nNow eligible for orders: ${unblocked.join(", ")}.` : ""}${tf === "waste-carrier" ? `\nWaste carrier register: ${accreditations.tickets?.["waste-carrier"]?.register?.detail ?? "not checked"}.` : ""}`,
     },
     "SC-03 renewal alert",
   );
-  return { status: "success", message: `Thank you. Your ${docTypeLabels[type].toLowerCase()} has been updated.` };
+  const stillBlocked = orderGates.filter((g) => !g.eligible && g.blockedBy.some((b) => b.docType === type));
+  return {
+    status: "success",
+    message: `Thank you. Your ${ticket ? docTypeLabels[type] : docTypeLabels[type].toLowerCase()} ${ticket?.id === "nsi30" || type === "shea-power-cards" ? "have" : "has"} been updated.${unblocked.length ? ` You can now receive orders for: ${unblocked.join(", ")}.` : ""}${stillBlocked.length ? ` Still blocked: ${stillBlocked.map((g) => `${g.label} (${g.blockedBy.map((b) => b.detail).join("; ")})`).join(", ")}.` : ""}`,
+  };
 }

@@ -57,6 +57,8 @@ export const capabilities = [
   { id: "power-highway", label: "Power or highway work", hint: "Public liability minimum is £10 million for this work" },
   { id: "design", label: "We carry design responsibility", hint: "Professional indemnity is then required" },
   { id: "confined-spaces", label: "Confined spaces" },
+  { id: "ng-substation", label: "Work inside National Grid substations", hint: "Needs National Grid NSI 30 authorisations and EUSR SHEA Power" },
+  { id: "removes-waste", label: "We remove waste from site", hint: "Needs a waste carrier registration" },
 ] as const;
 
 export const ssipSchemes = ["CHAS", "SMAS Worksafe", "Acclaim", "SafeContractor", "Constructionline (SSIP)", "Other SSIP member scheme"] as const;
@@ -121,6 +123,10 @@ export const docTypeLabels: Record<string, string> = {
   "quality-policy": "Quality policy",
   "env-policy": "Environmental policy",
   "equality-policy": "Equality policy",
+  "cyber-essentials-cert": "Cyber Essentials certificate",
+  "waste-carrier-cert": "Waste carrier registration",
+  "shea-power-cards": "EUSR SHEA Power cards",
+  "nsi30-auth": "National Grid NSI 30 authorisations",
 };
 
 export const statusLabels: Record<string, string> = {
