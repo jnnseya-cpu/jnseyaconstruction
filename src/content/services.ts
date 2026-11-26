@@ -10,8 +10,9 @@ export const services: Service[] = [
   // Nseya Consultancy (PG-03)
   // Land, from appraisal to handover (added 26 Nov 2026 at Justin's request).
   // TO CONFIRM: wording of appraisal (not a RICS Red Book valuation unless a
-  // Registered Valuer signs it), whether planning is in-house or with partners,
-  // and NERS accreditation before claiming contestable grid works in-house.
+  // Registered Valuer signs it) and whether planning is in-house or with partners.
+  // Confirmed 26 Nov 2026: contestable grid works use NERS-accredited partners
+  // for now; update the grid connection wording if Nseya becomes accredited.
   {
     slug: "land-appraisal",
     company: "consultancy",
