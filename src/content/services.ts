@@ -9,10 +9,12 @@ import type { Service } from "./types";
 export const services: Service[] = [
   // Nseya Consultancy (PG-03)
   // Land, from appraisal to handover (added 26 Nov 2026 at Justin's request).
-  // TO CONFIRM: wording of appraisal (not a RICS Red Book valuation unless a
-  // Registered Valuer signs it) and whether planning is in-house or with partners.
-  // Confirmed 26 Nov 2026: contestable grid works use NERS-accredited partners
-  // for now; update the grid connection wording if Nseya becomes accredited.
+  // Wording confirmed by Justin, 26 Nov 2026:
+  // - "land appraisal" and "residual land value", not formal (RICS Red Book) valuation;
+  // - planning described as managed end to end, not as an in-house planning team;
+  // - acquisition is support for clients buying land, not the group buying land itself;
+  // - contestable grid works with NERS-accredited partners for now.
+  // Change these lines if any of that changes (e.g. a Registered Valuer joins, or NERS is held).
   {
     slug: "land-appraisal",
     company: "consultancy",
