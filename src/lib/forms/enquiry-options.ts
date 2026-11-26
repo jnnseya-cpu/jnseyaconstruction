@@ -3,10 +3,10 @@ export const companyOptions = ["consultancy", "etablix", "construction", "not-su
 export const enquiryTypes = ["project", "clarity-call", "feasibility-report", "project-roadmap", "home-project-management", "land", "grid", "review", "iso19650", "price", "power", "tender", "framework", "quote", "partnership", "other"] as const;
 export const enquiryTypeLabels: Record<(typeof enquiryTypes)[number], string> = {
   project: "A project I want to discuss",
-  "clarity-call": "Homeowner: Clarity Call (£149)",
-  "feasibility-report": "Homeowner: Feasibility Report (£595)",
-  "project-roadmap": "Homeowner: Project Roadmap (£900)",
-  "home-project-management": "Homeowner: Project Management (£750 a month)",
+  "clarity-call": "Homeowner: Clarity Call",
+  "feasibility-report": "Homeowner: Feasibility Report",
+  "project-roadmap": "Homeowner: Project Roadmap",
+  "home-project-management": "Homeowner: Project Management (monthly)",
   land: "Land: appraisal, acquisition or planning",
   grid: "A grid connection",
   review: "A free 30-minute project review",

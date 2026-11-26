@@ -110,11 +110,11 @@ export default function ConsultancyPage() {
             <ServiceList services={services.filter((s) => !LAND.includes(s.slug))} start={LAND.length} companyName={company.name} />
             <h3 className="service-group" id="homeowners">For homeowners</h3>
             <ul className="service-list">
-              {homeownerServices.map((h) => (
+              {homeownerServices.map((h, i) => (
                 <li key={h.slug}>
-                  <span className="service-list__no" aria-hidden="true">{h.priceLabel.split(" ")[0]}</span>
+                  <span className="service-list__no" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
                   <div>
-                    <h4>{h.name} · {h.priceLabel}</h4>
+                    <h4>{h.name}</h4>
                     <p>{h.short}</p>
                   </div>
                 </li>

@@ -11,7 +11,7 @@ import styles from "./homeowners.module.css";
 
 export const metadata: Metadata = {
   title: { absolute: "Home extension advice, Birmingham | Nseya Consultancy" },
-  description: "Independent, fixed-fee advice before you build an extension, loft or renovation. Feasibility Report £595, report in 5 working days.",
+  description: "Independent, fixed-fee advice before you build an extension, loft or renovation. Your Feasibility Report within 5 working days of the visit.",
   alternates: { canonical: "/homeowners" },
 };
 
@@ -65,7 +65,7 @@ export default function HomeownersPage() {
               <li key={s.slug} id={s.slug} className={s.core ? styles.core : undefined} data-reveal>
                 <span className={styles.step}>{String(i + 1).padStart(2, "0")}{s.core ? " · Most popular" : ""}</span>
                 <h3>{s.name}</h3>
-                <p className={styles.price}>{s.priceLabel}</p>
+                <p className={styles.billing}>{s.billing === "monthly" ? "Fixed monthly fee" : "Fixed fee"}, agreed in writing</p>
                 <p>{s.gets}</p>
                 <dl className={styles.meta}>
                   <dt>Delivery</dt><dd>{s.delivery}</dd>
@@ -76,7 +76,7 @@ export default function HomeownersPage() {
               </li>
             ))}
           </ol>
-          <p className="small muted" style={{ marginTop: 16 }}>Prices for {homeownerArea}.</p>
+          <p className="small muted" style={{ marginTop: 16 }}>We confirm the fixed fee in writing within one working day of your enquiry. {homeownerArea}.</p>
         </div>
       </section>
 
@@ -156,7 +156,7 @@ export default function HomeownersPage() {
         </div>
       </section>
 
-      <CtaBand title="Know before you build." text="Feasibility Report, £595. Your report within five working days of the visit." href={BOOK} cta="Book a Feasibility Report" />
+      <CtaBand title="Know before you build." text="A fixed fee, agreed in writing. Your Feasibility Report within five working days of the visit." href={BOOK} cta="Book a Feasibility Report" />
     </div>
   );
 }
