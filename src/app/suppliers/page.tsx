@@ -61,6 +61,7 @@ export default function SuppliersPage() {
         <div className="container">
           <p className="label">Why work with us</p>
           <h2 id="why-title">Why work with us</h2>
+          <p className="lede">About 80% of our work is delivered by subcontractors and suppliers, so our supply chain is central to everything we build.</p>
           <div className="cards" style={{ marginTop: 32 }}>
             {why.map((w) => (
               <div className="card" key={w.title} data-reveal>

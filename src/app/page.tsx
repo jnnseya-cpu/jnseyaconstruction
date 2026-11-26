@@ -118,6 +118,7 @@ export default function HomePage() {
         <div className="container">
           <p className="label">How we deliver</p>
           <h2 id="deliver-title">How we deliver</h2>
+          <p className="lede">About 80% of the work is delivered by vetted subcontractors, led by our own managers and supervisors.</p>
           <HowWeDeliver />
         </div>
       </section>

@@ -136,6 +136,7 @@ export default function ConstructionPage() {
           <div className="span-4">
             <p className="label">Delivery model</p>
             <h2 id="track-title">How we keep your job on track</h2>
+            <p className="muted">About 80% of the work is delivered by vetted subcontractors; our own managers and supervisors lead every job.</p>
             <p>
               <Link className="link-arrow" href="/suppliers">Register as a subcontractor</Link>
             </p>

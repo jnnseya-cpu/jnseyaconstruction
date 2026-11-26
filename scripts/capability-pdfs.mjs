@@ -100,7 +100,7 @@ const COMPANIES = {
     sectors: ["Public estate", "Social housing", "Energy and grid", "Data centres", "Commercial and mixed-use", "Residential"],
     how: [
       "Our own managers lead every job, as principal contractor under CDM 2015.",
-      "Contestable grid works with NERS-accredited partners; subcontractors paid in 30 days.",
+      "About 80% of the work by vetted subcontractors, paid in 30 days; grid works with NERS-accredited partners.",
       "Every subcontractor works in CONSTRUX or VERYX, whichever the project uses.",
     ],
     contactPath: "/construction#enquiry",
