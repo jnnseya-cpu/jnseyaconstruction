@@ -14,7 +14,9 @@ describe("upload receipts", () => {
     const [payload, mac] = r.slice(4).split(".");
     const forged = Buffer.from(JSON.stringify({ ...ticket, size: 99_000_000 })).toString("base64url");
     expect(decodeTicket(`upl.${forged}.${mac}`)).toBeNull();
-    expect(decodeTicket(`upl.${payload}.x${mac.slice(1)}`)).toBeNull();
+    // Always change the first character (a fixed "x" was a no-op when the MAC already began with "x").
+    const flipped = (mac[0] === "A" ? "B" : "A") + mac.slice(1);
+    expect(decodeTicket(`upl.${payload}.${flipped}`)).toBeNull();
   });
   it("rejects an expired receipt", () => {
     expect(decodeTicket(encodeTicket({ ...ticket, exp: Date.now() - 1 }))).toBeNull();
