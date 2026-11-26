@@ -1,14 +1,14 @@
-.track { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 2px solid var(--navy); counter-reset: st; }
-.track > li { margin: 0; padding: 18px 16px 20px 0; position: relative; counter-increment: st; border-bottom: 1px solid var(--line); }
-.track > li + li { padding-left: 16px; border-left: 1px solid var(--line); }
+.track { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; grid-template-columns: repeat(7, minmax(0, 1fr)); border-top: 2px solid var(--navy); counter-reset: st; }
+.track > li { margin: 0; padding: 18px 12px 20px 0; position: relative; counter-increment: st; border-bottom: 1px solid var(--line); }
+.track > li + li { padding-left: 12px; border-left: 1px solid var(--line); }
 .track > li::before { content: counter(st, decimal-leading-zero); display: block; font: 500 0.75rem var(--font-mono); color: var(--ink-2); margin-bottom: 8px; }
-.bar { position: absolute; top: -3px; left: 0; right: 16px; height: 4px; background: var(--accent); }
-.track > li + li .bar { left: 16px; }
+.bar { position: absolute; top: -3px; left: 0; right: 12px; height: 4px; background: var(--accent); }
+.track > li + li .bar { left: 12px; }
 .track h3 { font-size: 1.0625rem; margin: 0 0 6px; }
 .track p { font-size: var(--fs-small); color: var(--ink-2); margin: 0 0 10px; }
 .lead { font: 500 0.6875rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-text); display: block; margin-bottom: 6px; }
 .track a { font-size: var(--fs-small); }
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
   .track { grid-template-columns: 1fr; }
   .track > li, .track > li + li { padding: 16px 0 16px 20px; border-left: 4px solid var(--accent); }
   .bar { display: none; }

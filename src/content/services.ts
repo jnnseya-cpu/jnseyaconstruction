@@ -10,7 +10,8 @@ export const services: Service[] = [
   // Nseya Consultancy (PG-03)
   // Land, from appraisal to handover (added 26 Nov 2026 at Justin's request).
   // TO CONFIRM: wording of appraisal (not a RICS Red Book valuation unless a
-  // Registered Valuer signs it) and whether planning is in-house or with partners.
+  // Registered Valuer signs it), whether planning is in-house or with partners,
+  // and NERS accreditation before claiming contestable grid works in-house.
   {
     slug: "land-appraisal",
     company: "consultancy",
@@ -30,9 +31,17 @@ export const services: Service[] = [
   {
     slug: "planning",
     company: "consultancy",
-    name: "Planning strategy and applications",
-    summary: "Pre-application advice, planning strategy and applications managed end to end, with the surveys and reports each one needs.",
+    name: "Planning, from pre-planning to permission",
+    summary: "Site constraints and pre-application advice, the application with every survey and report it needs, then discharge of conditions.",
     sectors: ["residential", "social-housing", "commercial-mixed-use", "public-estate", "data-centres", "energy-grid"],
+    pagePhase: "P2",
+  },
+  {
+    slug: "grid-connections",
+    company: "consultancy",
+    name: "Grid connections, end to end",
+    summary: "Capacity checks and the connection application with the network operator, offer review and acceptance, wayleaves and easements, and every milestone to energisation.",
+    sectors: ["energy-grid", "data-centres", "commercial-mixed-use", "public-estate", "social-housing"],
     pagePhase: "P2",
   },
   {
@@ -125,6 +134,22 @@ export const services: Service[] = [
     pagePhase: "P2",
   },
   // Nseya Construction (PG-05)
+  {
+    slug: "pre-planning-to-handover",
+    company: "construction",
+    name: "Land appraisal and planning, from pre-planning",
+    summary: "With Nseya Consultancy, we take a site from appraisal and pre-planning through permission and conditions, then build it and hand it over.",
+    sectors: ["residential", "social-housing", "commercial-mixed-use", "public-estate", "data-centres", "energy-grid"],
+    pagePhase: "P2",
+  },
+  {
+    slug: "grid-connection-works",
+    company: "construction",
+    name: "Grid connection works, end to end",
+    summary: "The cable route, substation civils and connection works through to energisation. Contestable works are carried out with NERS-accredited partners.",
+    sectors: ["energy-grid", "data-centres", "commercial-mixed-use", "public-estate"],
+    pagePhase: "P2",
+  },
   {
     slug: "site-enabling-works",
     company: "construction",

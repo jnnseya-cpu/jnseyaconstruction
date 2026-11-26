@@ -42,7 +42,7 @@ const bim = [
   ["ISO 19650 readiness for contractors", " who need to prove capability to win frameworks."],
 ];
 
-const LAND = ["land-appraisal", "site-acquisition", "planning", "development-management"];
+const LAND = ["land-appraisal", "site-acquisition", "planning", "grid-connections", "development-management"];
 
 function ServiceList({ services, start, companyName }: { services: Service[]; start: number; companyName: string }) {
   return (
@@ -83,7 +83,7 @@ export default function ConsultancyPage() {
         crumbs={[{ name: "Nseya Consultancy", href: "/consultancy" }]}
         label="Nseya Consultancy"
         title="Know the cost, the risk and the route before you commit."
-        lede="Land appraisal, acquisition and planning, then project management, cost management, project controls, feasibility studies and BIM — for buildings, housing, energy, data centres and the public estate."
+        lede="Land appraisal, planning from pre-planning and grid connections, then project management, cost management, project controls, feasibility studies and BIM — for buildings, housing, energy, data centres and the public estate."
         aside={<CompanyDrawing kind="consultancy" />}
       >
         <div className="btn-row" style={{ marginTop: 24 }}>
@@ -102,7 +102,7 @@ export default function ConsultancyPage() {
             <p className="muted">From the first look at a piece of land to handover. Use one service or all of them.</p>
           </div>
           <div className="span-8">
-            <h3 className="service-group">Land and development</h3>
+            <h3 className="service-group">Land, planning and grid connection</h3>
             <ServiceList services={services.filter((s) => LAND.includes(s.slug))} start={0} companyName={company.name} />
             <h3 className="service-group">Project delivery</h3>
             <ServiceList services={services.filter((s) => !LAND.includes(s.slug))} start={LAND.length} companyName={company.name} />

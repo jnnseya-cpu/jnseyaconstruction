@@ -90,7 +90,7 @@ export default function HomePage() {
           <p className="label">From land to handover</p>
           <h2 id="land-title">From a piece of land to a finished building</h2>
           <p className="lede" style={{ marginBottom: 32 }}>
-            Appraisal, acquisition, planning, design, build and handover, run by one group. Use the whole journey, or only the
+            Appraisal, acquisition, planning from pre-planning, grid connection, design, build and handover, run by one group. Use the whole journey, or only the
             stages you need.
           </p>
           <LandToHandover />

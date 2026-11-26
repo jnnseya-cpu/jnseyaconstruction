@@ -76,7 +76,7 @@ export default function ConstructionPage() {
         crumbs={[{ name: "Nseya Construction", href: "/construction" }]}
         label="Nseya Construction"
         title="Built on programme. Proven every week."
-        lede="From enabling works on raw land to handover: buildings and power infrastructure — civils, M&E, HVAC and building services — delivered BIM-led, with cost and programme reported to you every week."
+        lede="From pre-planning and grid connection to handover: buildings and power infrastructure — civils, M&E, HVAC and building services — delivered BIM-led, with cost and programme reported to you every week."
         aside={<CompanyDrawing kind="construction" />}
       >
         <div className="btn-row" style={{ marginTop: 24 }}>
@@ -92,9 +92,12 @@ export default function ConstructionPage() {
           <p className="label">What we build</p>
           <h2 id="markets-title">Two markets, one standard</h2>
           <div className="card" id="land" style={{ marginTop: 32 }}>
-            <h3>Land made ready to build on</h3>
-            <p>Clearance, demolition, remediation, earthworks, roads, drainage and utility connections, so a raw site is ready for the build.</p>
-            <ServiceAnchors services={pick(["site-enabling-works"])} companyName={company.name} />
+            <h3>Land, planning and grid connection</h3>
+            <p>
+              From appraisal and pre-planning, through planning permission and the grid connection, to land made ready to build on:
+              clearance, demolition, remediation, earthworks, roads, drainage and utilities.
+            </p>
+            <ServiceAnchors services={pick(["pre-planning-to-handover", "grid-connection-works", "site-enabling-works"])} companyName={company.name} />
           </div>
           <div className="cards cards--2" style={{ marginTop: 20 }}>
             <div className="card" id="buildings">
@@ -121,7 +124,7 @@ export default function ConstructionPage() {
           <p className="label">From land to handover</p>
           <h2 id="land-title">From appraisal to handover</h2>
           <p className="lede" style={{ color: "var(--ink)", marginBottom: 32 }}>
-            Nseya Consultancy appraises, acquires and plans the site; we prepare the land, build and hand over.
+            With Nseya Consultancy we take a site from appraisal and pre-planning, through planning permission and grid connection, to build and handover.
           </p>
           <LandToHandover />
         </div>
@@ -160,7 +163,8 @@ export default function ConstructionPage() {
             <p className="lede">
               Trenching, ductbanks, joint bays, HDD interfaces, substation foundations, plinths and control buildings — run by a
               manager who has delivered grid and data-centre programmes. Specialist jointing and HV testing stay with approved
-              specialists; we own the civils, the programme and every interface.
+              specialists; we own the civils, the programme and every interface, and we can run the grid connection end to end,
+              from application to energisation.
             </p>
             <Link className="btn" href="/contact?company=construction&type=power#enquiry">Talk to our power team</Link>
           </div>
