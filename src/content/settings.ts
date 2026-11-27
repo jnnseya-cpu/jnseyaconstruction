@@ -41,7 +41,7 @@ export const mailboxes = {
   contact: "contact@nseyagroup.com",
   careers: "careers@nseyagroup.com",
   suppliers: "suppliers@nseyagroup.com",
-  justin: "justin@nseyagroup.com",
+  justin: "justin.n@nseyagroup.com",
 };
 
 export const contact = {
